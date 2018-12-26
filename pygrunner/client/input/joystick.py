@@ -1,20 +1,57 @@
-import copy
+from pygrunner.core.keymap import Keymap
 
 
-class JoystickMotion(object):
+class JoystickInput(object):
+    """
+    This object turns Joystick Motions/Buttons into Game Actions
+    """
     THRESHOLD = 0.2
     MAX_SPEED_PER_TICK = 20
 
-    def __init__(self, joystick):
-        self.last_motions = 0, 0, 0, 0
+    def __init__(self, joystick, mapping):
         self.joystick = joystick
+        self.mapping = mapping
 
-    def update(self, dt):
-        motion = [self.joystick.x, self.joystick.y, self.joystick.rx, self.joystick.ry]
-        speed_values = copy.copy(motion)
-        for number, value in enumerate(self.last_motions):
-            if motion[number] == value:
-                speed_values[number] += value if not speed_values[number] + value > self.MAX_SPEED_PER_TICK else self.MAX_SPEED_PER_TICK
-        self.last_motions = motion
+    def get_keymaps(self):
+        motions = self.joystick.x, self.joystick.y, self.joystick.rx, self.joystick.ry
+        buttons_pressed = [i for i, pressed in enumerate(self.joystick.buttons) if pressed]
+        keymaps = self.mapping.get(motions, buttons_pressed)
 
-        return speed_values
+        return keymaps
+
+    def on_key_press(self, symbol, modifiers):
+        pass
+
+    def on_key_release(self, symbol, modifiers):
+        pass
+
+
+class JoystickMapping(object):
+    def __init__(self, a, b):
+        self._mapping = {
+            a: Keymap.Up,
+            b: Keymap.Down
+        }
+
+    def get(self, motions, buttons_pressed):
+        joy_x, joy_y, joy_rx, joy_ry = motions
+        maps = [self._mapping.get(button) for button in buttons_pressed]
+        if joy_x > 0:
+            maps.append(Keymap.Right)
+        elif joy_x < 0:
+            maps.append(Keymap.Left)
+
+        if joy_y > 0:
+            maps.append(Keymap.Down)
+        elif joy_y < 0:
+            maps.append(Keymap.Up)
+
+        return maps
+
+    @classmethod
+    def default(cls):
+        # TODO Determine suitable Default
+        return cls(
+            a=0,
+            b=1
+        )
