@@ -35,16 +35,16 @@ class JoystickMapping(object):
 
     def get(self, motions, buttons_pressed):
         joy_x, joy_y, joy_rx, joy_ry = motions
-        maps = [self._mapping.get(button) for button in buttons_pressed]
+        maps = {self._mapping.get(button) for button in buttons_pressed}
         if joy_x > 0:
-            maps.append(Keymap.Right)
+            maps.add(Keymap.Right)
         elif joy_x < 0:
-            maps.append(Keymap.Left)
+            maps.add(Keymap.Left)
 
         if joy_y > 0:
-            maps.append(Keymap.Down)
+            maps.add(Keymap.Down)
         elif joy_y < 0:
-            maps.append(Keymap.Up)
+            maps.add(Keymap.Up)
 
         return maps
 

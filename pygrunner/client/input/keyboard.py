@@ -12,7 +12,7 @@ class KeyboardInput(object):
         self.mapping = mapping
 
     def get_keymaps(self):
-        return [self.mapping.get(key) for key in self.pressed_keys]
+        return {self.mapping.get(key) for key in self.pressed_keys}
 
     def on_key_press(self, symbol, modifiers):
         if self.mapping.handles_keypress(symbol):
@@ -33,6 +33,9 @@ class KeyboardMapping(object):
             a: Keymap.A,
             b: Keymap.B
         }
+
+    def get(self, symbol):
+        return self._mapping.get(symbol)
 
     def handles_keypress(self, symbol):
         if symbol in self._mapping:
