@@ -2,6 +2,7 @@ class SceneManager(object):
     def __init__(self):
         self.scenes = []
         self.scene_stack = []
+        self.inputs = None
 
     @property
     def active_scene(self):
@@ -10,10 +11,8 @@ class SceneManager(object):
     def on_draw(self):
         self.active_scene.on_draw()
 
-    def on_key_press(self, symbol, modifiers):
-        self.active_scene.on_key_press(symbol, modifiers)
-
-    def start(self):
+    def start(self, inputs):
+        self.inputs = inputs
         self.scene_stack.append(self.scenes[0])
 
     def update(self, dt):

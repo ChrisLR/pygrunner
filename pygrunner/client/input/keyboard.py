@@ -3,7 +3,7 @@ import pyglet
 from pygrunner.core.keymap import Keymap
 
 
-class KeyboardInput(object):
+class Keyboard(object):
     """
     This object receives keypresses and turn them into Game Actions
     """

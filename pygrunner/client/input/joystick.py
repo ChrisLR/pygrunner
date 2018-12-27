@@ -1,7 +1,7 @@
 from pygrunner.core.keymap import Keymap
 
 
-class JoystickInput(object):
+class Joystick(object):
     """
     This object turns Joystick Motions/Buttons into Game Actions
     """
