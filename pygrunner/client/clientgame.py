@@ -1,8 +1,7 @@
 import pyglet
 
-from pygrunner.client.graphics.spriteloader import SpriteLoader
-from pygrunner.core import controllers
 from pygrunner.client import input
+from pygrunner.client.graphics.spriteloader import SpriteLoader
 
 
 class ClientGame(object):
@@ -32,8 +31,8 @@ class ClientGame(object):
         self.initialize_joystick_players()
         self.initialize_ui()
         pyglet.clock.schedule_interval(self.update, 1 / 1000)
+        self.scene_manager.start(self.inputs, self.window)
         pyglet.app.run()
-        self.scene_manager.start(self.inputs)
 
     def initialize_keyboard_players(self):
         # TODO Handle customized Mapping
@@ -46,6 +45,7 @@ class ClientGame(object):
         self.window = pyglet.window.Window()
         self.window.event(self.on_draw)
         self.window.event(self.on_key_press)
+        self.window.event(self.on_key_release)
 
     def initialize_joystick_players(self):
         joysticks = pyglet.input.get_joysticks()

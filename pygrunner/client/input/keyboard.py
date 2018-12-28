@@ -20,7 +20,7 @@ class Keyboard(object):
 
     def on_key_release(self, symbol, modifiers):
         if symbol in self.pressed_keys:
-            del self.pressed_keys[symbol]
+            self.pressed_keys.remove(symbol)
 
 
 class KeyboardMapping(object):
