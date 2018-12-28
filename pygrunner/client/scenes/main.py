@@ -5,8 +5,8 @@ from pygrunner.core.keymap import Keymap
 
 
 class MainMenu(Scene):
-    def __init__(self, inputs, window):
-        super().__init__(inputs, window)
+    def __init__(self, inputs, window, game):
+        super().__init__(inputs, window, game)
         self.labels = [
             pyglet.text.Label(
                 'Start',

@@ -1,7 +1,8 @@
 class Scene(object):
-    def __init__(self, inputs, window):
+    def __init__(self, inputs, window, game):
         self.inputs = inputs
         self.window = window
+        self.game = game
         self.last_keymap_input = set()
 
     def on_draw(self):
