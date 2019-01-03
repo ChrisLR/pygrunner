@@ -9,9 +9,11 @@ class Factory(object):
     known_recipes = {}
 
     def __init__(self, sprite_loader, object_pool):
-
         self.sprite_loader = sprite_loader
         self.object_pool = object_pool
+
+    def destroy(self, game_object):
+        self.object_pool.add(game_object)
 
     def get_or_create(self, recipe, location):
         recipe = self._get_recipe(recipe)

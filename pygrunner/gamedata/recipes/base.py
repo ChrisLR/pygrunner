@@ -11,7 +11,7 @@ class Recipe(metaclass=abc.ABCMeta):
     animations = {}
 
     @abc.abstractmethod
-    def create(self, location, sprite_loader):
+    def create(self, sprite_loader):
         """
         Creates a game object and assigns proper components
         """

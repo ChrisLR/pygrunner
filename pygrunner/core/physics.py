@@ -15,9 +15,26 @@ class PhysicsEngine(object):
         self._set_static_collisions(current_level, game_object)
 
     def move_object(self, current_level, game_object):
+        object_physics = game_object.physics
+        self._stop_static_colliding_objects(object_physics)
+        
         # TODO Move the object, update the velocity and gravity depending on collisions and frictions
         pass
 
+    def _stop_static_colliding_objects(self, object_physics):
+        if object_physics.velocity_x > 0:
+            if object_physics.right_collisions:
+                object_physics.velocity_x = 0
+        elif object_physics.velocity_x < 0:
+            if object_physics.left_collisions:
+                object_physics.velocity_x = 0
+
+        if object_physics.velocity_y > 0:
+            if object_physics.bottom_collisions:
+                object_physics.velocity_y = 0
+        elif object_physics.velocity_y < 0:
+            if object_physics.top_collisions:
+                object_physics.velocity_y = 0
 
     def _set_object_collisions(self, all_object_collisions, current_level, game_object):
         intersect_collisions = []
