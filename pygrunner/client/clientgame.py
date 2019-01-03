@@ -16,12 +16,12 @@ class ClientGame(object):
         self.scene_manager.on_draw()
 
     def on_key_press(self, symbol, modifiers):
-        for controller in self.inputs:
-            controller.on_key_press(symbol, modifiers)
+        for input_ in self.inputs:
+            input_.on_key_press(symbol, modifiers)
 
     def on_key_release(self, symbol, modifiers):
-        for controller in self.inputs:
-            controller.on_key_release(symbol, modifiers)
+        for input_ in self.inputs:
+            input_.on_key_release(symbol, modifiers)
 
     def update(self, dt):
         self.scene_manager.update(dt)

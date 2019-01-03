@@ -2,12 +2,13 @@ class GameObject(object):
     """
     An Object with a presence in-game
 
-    This object has at a minimum a display, location and properties
+    This object has at a minimum a display, location, physics and properties
     """
-    def __init__(self, name, display, location, properties, size):
+    def __init__(self, name, display, location, physics, properties, size):
         self.name = name
         self.display = display
         self.location = location
+        self.physics = physics
         self.properties = properties
         self.size = size
 
@@ -25,20 +26,20 @@ class StaticObject(GameObject):
     at the cost of a more intensive move cost.
     """
 
-    def __init__(self, name, display, location, properties, size):
-        super().__init__(name, display, location, properties, size)
+    def __init__(self, name, display, location, physics, properties, size):
+        super().__init__(name, display, location, physics, properties, size)
 
 
 class Actor(GameObject):
     """
     A controllable object with a presence in-game
 
-    This object has at a minimum an action_set, controller, display, location, properties
+    This object has at a minimum a controller, display, location, properties, stance
     """
-    def __init__(self, name, action_set, controller, display, location, properties, size):
-        super().__init__(name, display, location, properties, size)
-        self.action_set = action_set
+    def __init__(self, name, controller, display, location, physics, properties, size, stance):
+        super().__init__(name, display, location, physics, properties, size)
         self.controller = controller
+        self.stance = stance
 
     def update(self):
         self.controller.update()

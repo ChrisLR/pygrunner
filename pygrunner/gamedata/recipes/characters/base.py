@@ -15,6 +15,7 @@ class Character(Recipe):
         Creates a game object and assigns proper components
         """
         pyglet_animations = self._set_animations(sprite_loader)
+        controller = components.AIController()
         display = components.Display(Layer.middle, pyglet_animations)
         actor = Actor(self.name, )
 

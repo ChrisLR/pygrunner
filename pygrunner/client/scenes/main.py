@@ -25,7 +25,8 @@ class MainMenu(Scene):
                 anchor_x='center',
                 anchor_y='center')
         ]
-        self.focused_label_index = 0
+        self.focused_label_index = -1
+        self.cycle_focus_next()
 
     def on_draw(self):
         # TODO UI Controls should be batched
