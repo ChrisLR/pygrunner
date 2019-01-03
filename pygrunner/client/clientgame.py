@@ -31,7 +31,7 @@ class ClientGame(object):
         self.initialize_joystick_players()
         self.initialize_ui()
         pyglet.clock.schedule_interval(self.update, 1 / 1000)
-        self.scene_manager.start(self.inputs, self.window)
+        self.scene_manager.start(self.inputs, self.window, self)
         pyglet.app.run()
 
     def initialize_keyboard_players(self):
