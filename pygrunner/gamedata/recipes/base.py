@@ -9,6 +9,7 @@ class Recipe(metaclass=abc.ABCMeta):
     """
     name = ""
     animations = {}
+    initial_stock = 0
 
     @abc.abstractmethod
     def create(self, sprite_loader):

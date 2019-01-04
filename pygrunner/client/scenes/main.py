@@ -43,6 +43,8 @@ class MainMenu(Scene):
             self.cycle_focus_previous()
         elif Keymap.Down in keymap_input:
             self.cycle_focus_next()
+        elif Keymap.A in keymap_input:
+            self.enter_game_scene()
 
     def cycle_focus_next(self):
         # TODO This will be necessary in many scenes, need composition
@@ -63,3 +65,7 @@ class MainMenu(Scene):
         new_label = self.labels[self.focused_label_index]
         old_label.color = (255, 255, 255, 255)
         new_label.color = (0, 255, 255, 255)
+
+    def enter_game_scene(self):
+        # TODO This must set the new scene
+        pass

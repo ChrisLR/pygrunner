@@ -12,6 +12,13 @@ class Display(Component):
         self.animations = animations
         self.current = animations.get('idle')
         self.sprite = None
+        self.batch = None
+        self.group = None
+        self._sprites = {}
+
+    def assign(self, batch, group):
+        self.batch = batch
+        self.group = group
 
     def add(self, name, animation):
         self.animations[name] = animation
@@ -19,13 +26,16 @@ class Display(Component):
     def update(self):
         self.animations.current.position = self.host.location.tuple()
 
-    def play(self, name, batch, group):
+    def play(self, name):
         animation = self.animations.get(name)
         if animation is not None:
-            self.current = pyglet.sprite.Sprite(animation, batch=batch, group=group)
+            if self.current is not None:
+                self.current.visible = False
+
+            self.current = self._sprites.get(name, pyglet.sprite.Sprite(animation, batch=self.batch, group=self.group))
+            self.current.visible = True
             self.current.position = self.host.location.tuple()
             self.current.scale = 1.5
 
     def reset(self):
         self.current = self.animations.get('idle')
-

@@ -13,16 +13,15 @@ class Factory(object):
         self.object_pool = object_pool
 
     def destroy(self, game_object):
-        self.object_pool.add(game_object)
+        self.object_pool.refund(game_object)
 
-    def get_or_create(self, recipe, location):
+    def get_or_create(self, recipe):
         recipe = self._get_recipe(recipe)
         game_object = self.object_pool.get(recipe)
         if game_object:
-            game_object.location = location
             return game_object
         else:
-            game_object = recipe.create(location, self.sprite_loader)
+            game_object = recipe.create(self.sprite_loader)
             return game_object
 
     def _get_recipe(self, recipe):
@@ -36,6 +35,23 @@ class Factory(object):
 
         raise Exception("Recipe '%s' is not valid.")
 
+    def restock(self, recipe):
+        initial_max = recipe.initial_stock
+        if initial_max == 0:
+            return
+
+        used_count = self.object_pool.used_count.get(recipe, 0)
+        current_max = self.object_pool.max_count.get(recipe, initial_max)
+        available = current_max - used_count
+        if available < initial_max:
+            new_max = current_max * 2
+            self.object_pool.max_count[recipe] = new_max
+            for i in range(new_max):
+                self.object_pool.add(recipe.create(self.sprite_loader))
+
+    def restock_all(self):
+        for recipe in self.known_recipes.values():
+            self.restock(recipe)
 
     @classmethod
     def register(cls, recipe):
