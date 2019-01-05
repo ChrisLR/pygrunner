@@ -1,9 +1,10 @@
 from pygrunner.client.scenes.main import MainMenu
+from pygrunner.client.scenes.game import GameScene
 
 
 class SceneManager(object):
     def __init__(self):
-        self.scenes = [MainMenu]
+        self.scenes = [MainMenu, GameScene]
         self.scene_stack = []
         self.inputs = None
         self.game = None
@@ -20,7 +21,12 @@ class SceneManager(object):
         self.inputs = inputs
         self.window = window
         self.game = game
-        self.scene_stack.append(self.scenes[0](inputs, window, game))
+        self.scene_stack.append(self.scenes[0](inputs, self, game))
 
     def update(self, dt):
         self.active_scene.update(dt)
+
+    def change_to(self, scene_name):
+        scene = next(scene for scene in self.scenes if scene.name == scene_name)
+        self.scene_stack.append(scene(self.inputs, self, self.game))
+        

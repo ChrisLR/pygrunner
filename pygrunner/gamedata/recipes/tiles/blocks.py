@@ -14,10 +14,10 @@ class Block(Tile):
 @Factory.register
 class RedBlockTop(Block):
     name = "Red Block Top"
-    animations = {'idle': [SpriteInfo('packed.png', 'red_block_top', 12, 0)]}
+    animations = {'idle': [SpriteInfo('packed', 'red_block_top', 8, 0)]}
 
 
 @Factory.register
 class RedBlockMiddle(Block):
     name = "Red Block Top"
-    animations = {'idle': [SpriteInfo('packed.png', 'red_block_middle', 13, 0)]}
+    animations = {'idle': [SpriteInfo('packed', 'red_block_middle', 9, 0)]}

@@ -10,8 +10,12 @@ class GameObject(object):
         self.location = location
         self.physics = physics
         self.size = size
+        self.display.register(self)
+        self.location.register(self)
+        self.physics.register(self)
+        self.size.register(self)
 
-    def update(self):
+    def update(self, dt):
         self.display.update()
         self.location.update()
         self.size.update()
@@ -39,7 +43,10 @@ class Actor(GameObject):
         super().__init__(name, display, location, physics, size)
         self.controller = controller
         self.stance = stance
+        self.controller.register(self)
+        self.stance.register(self)
 
-    def update(self):
+    def update(self, dt):
         self.controller.update()
-        super().update()
+        self.stance.update()
+        super().update(dt)

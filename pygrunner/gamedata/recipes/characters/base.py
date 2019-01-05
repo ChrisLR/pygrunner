@@ -10,22 +10,24 @@ class Character(Recipe):
     jump_height = 1
     initial_stock = 10
 
-    def create(self, sprite_loader):
+    @classmethod
+    def create(cls, sprite_loader):
         """
         Creates a game object and assigns proper components
         """
-        pyglet_animations = self._set_animations(sprite_loader)
+        pyglet_animations = cls._set_animations(sprite_loader)
         controller = components.AIController(None)
         display = components.Display(Layer.middle, pyglet_animations)
         location = components.Location(0, 0)
         physics = components.Physics()
         size = components.Size()
         stance = components.Stance(stances.Walking, (stances.Idle, stances.Walking))
-        actor = Actor(self.name, controller, display, location, physics, size, stance)
+        actor = Actor(cls.name, controller, display, location, physics, size, stance)
 
         return actor
 
-    def reset(self, game_object):
+    @classmethod
+    def reset(cls, game_object):
         """
         Reinitialize components for re-use
         """

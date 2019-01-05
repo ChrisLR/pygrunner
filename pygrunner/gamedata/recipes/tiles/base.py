@@ -9,20 +9,22 @@ class Tile(Recipe):
     initial_stock = 200
     layer = Layer.background
 
-    def create(self, sprite_loader):
+    @classmethod
+    def create(cls, sprite_loader):
         """
         Creates a game object and assigns proper components
         """
-        pyglet_animations = self._set_animations(sprite_loader)
-        display = components.Display(self.layer, pyglet_animations)
+        pyglet_animations = cls._set_animations(sprite_loader)
+        display = components.Display(cls.layer, pyglet_animations)
         location = components.Location(0, 0)
         physics = components.Physics()
         size = components.Size()
-        tile = StaticObject(self.name, display, location, physics, size)
+        tile = StaticObject(cls.name, display, location, physics, size)
 
         return tile
 
-    def reset(self, game_object):
+    @classmethod
+    def reset(cls, game_object):
         """
         Reinitialize components for re-use
         """

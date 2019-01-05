@@ -5,23 +5,25 @@ from pygrunner.core.keymap import Keymap
 
 
 class MainMenu(Scene):
-    def __init__(self, inputs, window, game):
-        super().__init__(inputs, window, game)
+    name = "main"
+
+    def __init__(self, inputs, manager, game):
+        super().__init__(inputs, manager, game)
         self.labels = [
             pyglet.text.Label(
                 'Start',
                 font_name='Times New Roman',
                 font_size=36,
-                x=window.width // 2,
-                y=window.height // 2,
+                x=self.window.width // 2,
+                y=self.window.height // 2,
                 anchor_x='center',
                 anchor_y='center'),
             pyglet.text.Label(
                 'Exit',
                 font_name='Times New Roman',
                 font_size=36,
-                x=window.width // 2,
-                y=window.height // 2 - 36,
+                x=self.window.width // 2,
+                y=self.window.height // 2 - 36,
                 anchor_x='center',
                 anchor_y='center')
         ]
@@ -67,5 +69,4 @@ class MainMenu(Scene):
         new_label.color = (0, 255, 255, 255)
 
     def enter_game_scene(self):
-        # TODO This must set the new scene
-        pass
+        self.manager.change_to('game')

@@ -11,23 +11,26 @@ class Recipe(metaclass=abc.ABCMeta):
     animations = {}
     initial_stock = 0
 
+    @classmethod
     @abc.abstractmethod
-    def create(self, sprite_loader):
+    def create(cls, sprite_loader):
         """
         Creates a game object and assigns proper components
         """
         pass
 
+    @classmethod
     @abc.abstractmethod
-    def reset(self, game_object):
+    def reset(cls, game_object):
         """
         Reinitialize components for re-use
         """
         pass
 
-    def _set_animations(self, sprite_loader):
+    @classmethod
+    def _set_animations(cls, sprite_loader):
         animations = {}
-        for animation_name, sprite_infos in self.animations.items():
+        for animation_name, sprite_infos in cls.animations.items():
             frames = []
             for sprite_info in sprite_infos:
                 sheet = sprite_loader.get_by_name(sprite_info.spritesheet_name)

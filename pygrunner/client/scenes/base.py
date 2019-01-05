@@ -1,7 +1,8 @@
 class Scene(object):
-    def __init__(self, inputs, window, game):
+    def __init__(self, inputs, manager, game):
         self.inputs = inputs
-        self.window = window
+        self.manager = manager
+        self.window = manager.window
         self.game = game
         self.last_keymap_input = set()
 

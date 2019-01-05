@@ -1,9 +1,12 @@
 from pygrunner.client.scenes.base import Scene
+import pyglet
 
 
 class GameScene(Scene):
-    def __init__(self, inputs, window, game):
-        super().__init__(inputs, window, game)
+    name = "game"
+
+    def __init__(self, inputs, manager, game):
+        super().__init__(inputs, manager, game)
         self.game._start_level()
 
         # TODO This scene is responsible for drawing the game
@@ -14,7 +17,7 @@ class GameScene(Scene):
         self.game.batch.draw()
 
     def update(self, dt):
-        level = self.game.current_level
+        level = self.game.level
         for game_object in level.game_objects:
             game_object.update(dt)
 

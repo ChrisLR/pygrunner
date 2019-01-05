@@ -3,6 +3,8 @@ from pygrunner.core.components.base import Component
 
 
 class Location(Component):
+    name = "location"
+
     def __init__(self, x, y):
         super().__init__()
         self.x = x
@@ -15,3 +17,7 @@ class Location(Component):
     @property
     def tuple(self):
         return self.x, self.y
+
+    def reset(self):
+        self.x = 0
+        self.y = 0

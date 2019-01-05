@@ -33,7 +33,7 @@ class Factory(object):
             if hasattr(recipe, 'create') and hasattr(recipe, 'reset'):
                 return recipe
 
-        raise Exception("Recipe '%s' is not valid.")
+        raise Exception("Recipe '%s' is not valid." % recipe)
 
     def restock(self, recipe):
         initial_max = recipe.initial_stock
@@ -56,3 +56,4 @@ class Factory(object):
     @classmethod
     def register(cls, recipe):
         cls.known_recipes[recipe.name] = recipe
+        return recipe
