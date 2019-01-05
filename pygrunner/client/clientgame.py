@@ -74,19 +74,19 @@ class ClientGame(object):
         self.level = Level("basic", 100, 100)
         self.factory.restock_all()
 
-        y = 16
+        y = 2
         top_recipe = tiles.RedBlockTop
         middle_recipe = tiles.RedBlockMiddle
         for x in range(100):
             top = self.factory.get_or_create(top_recipe)
             middle = self.factory.get_or_create(middle_recipe)
-            # TODO Not yet very clear when we must assign batches/groups
             # TODO These multipliers aren't explicit, will need an explicit way to convert from
             # TODO World to Screen using a camera
-            top.location.x = x * 16
-            top.location.y = y * 16
-            middle.location.x = x * 16
-            middle.location.y = (y * 16) + 16
+            top.location.x = x
+            top.location.y = y
+            middle.location.x = x
+            middle.location.y = y + 1
+            # TODO Not yet very clear when we must assign batches/groups
             top.display.assign(self.batch, self.groups[top_recipe.layer])
             middle.display.assign(self.batch, self.groups[top_recipe.layer])
             self.level.add_static(top)

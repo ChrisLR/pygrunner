@@ -11,7 +11,6 @@ class Display(Component):
         self.layer = layer
         self.animations = animations
         self.current = None
-        self.sprite = None
         self.batch = None
         self.group = None
         self._sprites = {}
@@ -24,9 +23,6 @@ class Display(Component):
     def add(self, name, animation):
         self.animations[name] = animation
 
-    def update(self):
-        self.current.position = self.host.location.tuple
-
     def play(self, name):
         animation = self.animations.get(name)
         if animation is not None:
@@ -34,8 +30,6 @@ class Display(Component):
                 self.current.visible = False
 
             self.current = self._sprites.get(name, pyglet.sprite.Sprite(animation, batch=self.batch, group=self.group))
-            self.current.visible = True
-            self.current.position = self.host.location.tuple
             self.current.scale = 1
 
     def reset(self):
