@@ -42,7 +42,10 @@ class SpriteSheet(object):
     def get_region_by_name(self, name):
         region_tuple = self.region_names.get(name)
         if region_tuple is not None:
-            return self.image_grid[region_tuple]
+            image = self.image_grid[region_tuple]
+            image.anchor_x = image.width / 2
+            image.anchor_y = image.height / 2
+            return image
 
         return None
 

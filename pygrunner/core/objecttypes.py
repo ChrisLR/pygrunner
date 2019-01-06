@@ -14,6 +14,7 @@ class GameObject(object):
         self.location.register(self)
         self.physics.register(self)
         self.size.register(self)
+        self.flipped = False
 
     def update(self, dt):
         self.display.update()

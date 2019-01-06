@@ -20,6 +20,9 @@ class Idle(Stance):
 
     @classmethod
     def do_keymaps(cls, game_object, keymaps):
+        if not keymaps:
+            game_object.display.play('idle')
+
         if Keymap.Left in keymaps:
             if WalkLeft.can_execute(game_object):
                 WalkLeft.execute(game_object)

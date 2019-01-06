@@ -12,6 +12,8 @@ class WalkRight(Action):
             game_object.physics.velocity_x += 1
         else:
             game_object.physics.velocity_x = 1
+        game_object.flipped = False
+        game_object.display.play('run')
 
 class WalkLeft(Action):
     @classmethod
@@ -20,6 +22,8 @@ class WalkLeft(Action):
             game_object.physics.velocity_x -= 1
         else:
             game_object.physics.velocity_x = -1
+        game_object.flipped = True
+        game_object.display.play('run')
 
     @classmethod
     def can_execute(cls, game_object):

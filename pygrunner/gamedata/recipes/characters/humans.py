@@ -7,13 +7,13 @@ from pygrunner.gamedata.recipes.characters.base import Character
 class HumanMale1(Character):
     name = "Human Male 1"
     animations = {
-        'idle': [SpriteInfo('packed', 'human_male_1_idle_0', 30, 13)],
+        'idle': [SpriteInfo('packed', 'human_male_1_idle_0', 30, 12)],
         'run': [
-            SpriteInfo('packed', 'human_male_1_run_0', 30, 14),
-            SpriteInfo('packed', 'human_male_1_run_1', 30, 15),
+            SpriteInfo('packed', 'human_male_1_run_0', 30, 13),
+            SpriteInfo('packed', 'human_male_1_run_1', 30, 14),
         ],
         'climb':[
-            SpriteInfo('packed', 'human_male_1_climb_0', 30, 16),
+            SpriteInfo('packed', 'human_male_1_climb_0', 30, 15),
             SpriteInfo('packed', 'human_male_1_climb_1', 30, 16, True),
         ],
         'punch': [

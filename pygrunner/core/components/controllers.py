@@ -21,8 +21,7 @@ class PlayerController(Component):
 
     def update(self):
         keymaps = self.get_keymaps()
-        if keymaps:
-            self.host.stance.do_keymaps(keymaps)
+        self.host.stance.do_keymaps(keymaps)
 
 
 class AIController(Component):
