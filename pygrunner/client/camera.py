@@ -20,7 +20,7 @@ class Camera(object):
         return self.location.x + pixel_x, self.location.y + pixel_y
 
     def coord_to_pixel(self, coord_x, coord_y):
-        return (coord_x - self.location.x) * 16, (coord_y - self.location.y) * 16
+        return coord_x - self.location.x, self.size.height - (coord_y - self.location.y)
 
     def is_visible(self, game_object):
         if self.size.rectangle.intersects(game_object.size.rectangle):

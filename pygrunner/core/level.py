@@ -1,3 +1,6 @@
+import math
+
+
 class Level(object):
     """
     A container of objects and statics representing a game level.
@@ -41,8 +44,8 @@ class CollisionMap(object):
 
     def check_collision_rect(self, rectangle):
         collisions = set()
-        for x in range(rectangle.left, rectangle.right):
-            for y in range(rectangle.top, rectangle.bottom):
+        for x in range(int(rectangle.left), int(math.ceil(rectangle.right))):
+            for y in range(int(rectangle.top), int(math.ceil(rectangle.bottom))):
                 collision = self._collision_map.get((x, y))
                 if collision is not None:
                     collisions.add(collision)

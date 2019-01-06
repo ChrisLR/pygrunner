@@ -24,9 +24,13 @@ class PhysicsEngine(object):
     def _move_object(self, game_object, object_physics):
         direction_x = util.sign(object_physics.velocity_x)
         direction_y = util.sign(object_physics.velocity_y)
+
+        speed_x = min(abs(direction_x), abs(object_physics.velocity_x))
+        speed_y = min(abs(direction_y), abs(object_physics.velocity_y))
         # TODO We will want speed to vary in many situations
-        game_object.location.x += direction_x
-        game_object.location.y += direction_y
+        # TODO To handle this, we will need to check collisions by projecting further
+        # TODO To avoid sprites getting stuck
+        game_object.location.add(speed_x * direction_x, speed_y * direction_y)
 
     def _stop_static_colliding_objects(self, object_physics):
         if object_physics.velocity_x > 0:
@@ -46,15 +50,18 @@ class PhysicsEngine(object):
     def _apply_friction_and_gravity(self, object_physics):
         if object_physics.velocity_x != 0:
             if object_physics.bottom_collisions:
-                object_physics.velocity_x *= self.ground_friction
+                object_physics.velocity_x /= (1 + self.ground_friction)
             else:
-                object_physics.velocity_x *= self.air_friction
+                object_physics.velocity_x /= (1 + self.air_friction)
+            object_physics.velocity_x = object_physics.velocity_x if abs(object_physics.velocity_x) > 0.01 else 0
 
-        if object_physics.velocity_y != 0:
-            if object_physics.bottom_collisions:
-                object_physics.velocity_y = 0
+        if object_physics.bottom_collisions:
+            object_physics.velocity_y = 0
+        else:
+            if -0.5 <= object_physics.velocity_y < 0.1:
+                object_physics.velocity_y += 0.05
             else:
-                object_physics.velocity_y *= self.gravity
+                object_physics.velocity_y += self.gravity
 
 
     def _set_object_collisions(self, all_object_collisions, current_level, game_object):
@@ -79,10 +86,10 @@ class PhysicsEngine(object):
     def _set_static_collisions(self, current_level, game_object):
         static_map = current_level.static_collision_map
         rectangles = [
-            "bottom", game_object.size.bottom_rectangle,
-            "right", game_object.size.right_rectangle,
-            "left", game_object.size.left_rectangle,
-            "top", game_object.size.top_rectangle,
+            ("bottom", game_object.size.bottom_rectangle),
+            ("right", game_object.size.right_rectangle),
+            ("left", game_object.size.left_rectangle),
+            ("top", game_object.size.top_rectangle),
         ]
 
         for name, rectangle in rectangles:

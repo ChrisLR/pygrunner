@@ -15,11 +15,9 @@ class PlayerController(Component):
     def get_keymaps(self):
         return self.game_input.get_keymaps()
 
-    def on_key_press(self, symbol, modifiers):
-        self.game_input.on_key_press(symbol, modifiers)
-
-    def on_key_release(self, symbol, modifiers):
-        self.game_input.on_key_release(symbol, modifiers)
+    def reset(self):
+        # TODO This might need a proper reset
+        pass
 
     def update(self):
         keymaps = self.get_keymaps()
@@ -46,3 +44,7 @@ class AIController(Component):
         keymaps = self.get_keymaps()
         if keymaps:
             self.host.stance.do_keymaps(keymaps)
+
+    def reset(self):
+        # TODO AIs will have state to reset
+        pass

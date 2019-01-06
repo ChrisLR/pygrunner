@@ -21,7 +21,7 @@ class Stance(Component):
 
 
     def do_keymaps(self, keymaps):
-        self.current.do_keymaps(keymaps)
+        self.current.do_keymaps(self.host, keymaps)
 
 
     def reset(self):
