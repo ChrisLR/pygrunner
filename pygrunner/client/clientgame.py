@@ -77,7 +77,7 @@ class ClientGame(object):
         y = 10
         top_recipe = tiles.RedBlockTop
         middle_recipe = tiles.RedBlockMiddle
-        for x in range(100):
+        for x in range(30):
             top = self.factory.get_or_create(top_recipe)
             middle = self.factory.get_or_create(middle_recipe)
             top.location.set(x * 16, y * 16)

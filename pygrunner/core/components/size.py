@@ -10,8 +10,8 @@ class Size(Component):
         self.height = height
         self.width = width
         self.rectangle = geom.Rectangle(0, 0, width, height)
-        self.bottom_rectangle = geom.Rectangle(0, height, width, 1)
-        self.top_rectangle = geom.Rectangle(0, 0, width, 1)
+        self.bottom_rectangle = geom.Rectangle(1, height, width - 2, 1)
+        self.top_rectangle = geom.Rectangle(1, 0, width - 2, 1)
         self.right_rectangle = geom.Rectangle(width, 0, 1, height)
         self.left_rectangle = geom.Rectangle(0, 0, 1, height)
 
@@ -23,9 +23,9 @@ class Size(Component):
 
         self.rectangle.x = new_x
         self.rectangle.y = new_y
-        self.bottom_rectangle.x = new_x
+        self.bottom_rectangle.x = new_x + 1
         self.bottom_rectangle.y = new_y + self.height
-        self.top_rectangle.x = new_x
+        self.top_rectangle.x = new_x + 1
         self.top_rectangle.y = new_y
         self.left_rectangle.x = new_x
         self.left_rectangle.y = new_y
