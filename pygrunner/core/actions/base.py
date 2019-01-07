@@ -33,4 +33,5 @@ class Action(metaclass=abc.ABCMeta):
         return False
 
     def reset(self):
-        self.actor = None
+        # TODO If the action pool is shared, this will need to handle swapping actors
+        pass

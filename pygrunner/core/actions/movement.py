@@ -29,6 +29,32 @@ class WalkLeft(Action):
         return True
 
 
+class GlideLeft(Action):
+    def execute(self):
+        actor = self.actor
+        if actor.physics.velocity_x >= 0:
+            actor.physics.velocity_x -= 0.5
+        else:
+            actor.physics.velocity_x = -0.5
+        actor.flipped = True
+
+    def can_execute(self):
+        return True
+
+
+class GlideRight(Action):
+    def can_execute(self):
+        return True
+
+    def execute(self):
+        actor = self.actor
+        if actor.physics.velocity_x <= 0:
+            actor.physics.velocity_x += 0.5
+        else:
+            actor.physics.velocity_x = 0.5
+        actor.flipped = False
+
+
 class Jump(Action):
     def execute(self):
         actor = self.actor
