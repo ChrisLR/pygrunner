@@ -7,7 +7,6 @@ class ObjectPool(object):
         self.used_count = {}
         self.max_count = {}
 
-
     def add(self, recipe, game_object):
         """
         Adds a game object to the pool
@@ -19,7 +18,6 @@ class ObjectPool(object):
             self._pool[recipe].append(game_object)
         else:
             self._pool[recipe] = [game_object]
-
 
     def get(self, recipe):
         """
