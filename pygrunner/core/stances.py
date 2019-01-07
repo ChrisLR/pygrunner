@@ -8,8 +8,7 @@ class Stance(object):
     """
     name = ""
 
-    def __init__(self, action_pool, actor):
-        self.action_pool = action_pool
+    def __init__(self, actor):
         self.actor = actor
         self.executing_actions = {}
 
@@ -22,7 +21,11 @@ class Stance(object):
 
         if cancels is not None:
             could_cancel = True
-            for cancelled_action in cancels:
+            for cancelled_action_type in cancels:
+                cancelled_action = self.executing_actions.get(cancelled_action_type)
+                if cancelled_action is None:
+                    continue
+                    
                 if cancelled_action.cancelable:
                     cancelled_action.on_cancel()
                     del self.executing_actions[cancelled_action]
@@ -35,12 +38,11 @@ class Stance(object):
         action = self.executing_actions.get(action_type)
         if action is None:
             just_started = True
-            action = self.action_pool.get_or_create(action_type)
+            action = action_type(self.actor)
 
         if action.can_execute():
             if just_started:
                 action.on_start()
-                self.action_pool[action_type] = action
             action.execute()
 
         if action.finished:
