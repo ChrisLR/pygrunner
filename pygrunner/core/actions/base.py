@@ -3,6 +3,7 @@ import abc
 
 class Action(metaclass=abc.ABCMeta):
     cancelable = True
+    continuous = False
 
     def __init__(self, actor):
         self.actor = actor
@@ -13,9 +14,6 @@ class Action(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def execute(self):
-        pass
-
-    def on_cancel(self):
         pass
 
     def on_start(self):

@@ -1,1 +1,1 @@
-from pygrunner.core.actions.movement import WalkRight, WalkLeft, Jump, GlideLeft, GlideRight
+from pygrunner.core.actions.movement import WalkRight, WalkLeft, Jump, GlideLeft, GlideRight, Idle
