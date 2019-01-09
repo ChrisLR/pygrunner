@@ -16,6 +16,7 @@ class Idle(Action):
     def on_stop(self):
         pass
 
+
 class WalkRight(Action):
     continuous = True
 
@@ -26,7 +27,7 @@ class WalkRight(Action):
         actor = self.actor
         if actor.physics.velocity_x <= 0:
             actor.physics.velocity_x += 1
-        else:
+        elif 0 < actor.physics.velocity_x < 1:
             actor.physics.velocity_x = 1
         actor.flipped = False
 
@@ -43,7 +44,7 @@ class WalkLeft(Action):
         actor = self.actor
         if actor.physics.velocity_x >= 0:
             actor.physics.velocity_x -= 1
-        else:
+        elif 0 > actor.physics.velocity_x > -1:
             actor.physics.velocity_x = -1
         actor.flipped = True
 
@@ -62,9 +63,9 @@ class GlideLeft(Action):
     def execute(self):
         actor = self.actor
         if actor.physics.velocity_x >= 0:
-            actor.physics.velocity_x -= 0.1
-        else:
-            actor.physics.velocity_x = -0.1
+            actor.physics.velocity_x -= 0.5
+        elif actor.physics.velocity_x > -0.5:
+            actor.physics.velocity_x = -0.5
         actor.flipped = True
 
     def can_execute(self):
@@ -80,9 +81,9 @@ class GlideRight(Action):
     def execute(self):
         actor = self.actor
         if actor.physics.velocity_x <= 0:
-            actor.physics.velocity_x += 0.1
-        else:
-            actor.physics.velocity_x = 0.1
+            actor.physics.velocity_x += 0.5
+        elif 0 < actor.physics.velocity_x < 0.5:
+            actor.physics.velocity_x = 0.5
         actor.flipped = False
 
 
@@ -95,9 +96,9 @@ class Jump(Action):
 
     def on_start(self):
         actor = self.actor
-        if actor.physics.velocity_y == 0:
-            actor.physics.velocity_y -= 16
-            actor.stance.change_stance('jumping')
+        actor.physics.velocity_y -= 16
+        actor.physics.velocity_x += actor.physics.velocity_x
+        actor.stance.change_stance('jumping')
 
     def finished(self):
         return self.actor.physics.bottom_collisions

@@ -29,14 +29,10 @@ class Stance(object):
 
         new_action = action_type(self.actor)
         if new_action.can_execute():
-            print('Starting new action {}'.format(new_action))
+            self.executing_action = new_action
             new_action.on_start()
             new_action.execute()
-            if new_action.finished:
-                new_action.on_stop()
-                self.executing_action = None
-            else:
-                self.executing_action = new_action
+
 
     def continue_current_action(self, stop_continuous=False):
         if self.executing_action is None:
@@ -45,7 +41,6 @@ class Stance(object):
         if self.executing_action.can_execute():
             self.executing_action.execute()
             if self.executing_action.finished or (stop_continuous and self.executing_action.continuous):
-                print('Stopping action {}'.format(self.executing_action))
                 self.executing_action.on_stop()
                 self.executing_action = None
         else:
@@ -86,7 +81,8 @@ class Jumping(Stance):
         elif Keymap.Right in keymaps:
             self.start_or_continue(actions.GlideRight)
 
-        if self.actor.physics.bottom_collisions:
-            self.start_or_continue(actions.Idle)
-        elif self.executing_action:
+        if not keymaps and self.executing_action:
             self.continue_current_action(stop_continuous=True)
+
+        if self.actor.physics.velocity_y >= 0 and self.actor.physics.bottom_collisions:
+            self.start_or_continue(actions.Idle)

@@ -15,18 +15,17 @@ class Stance(Component):
         self.next_stance_name = None
 
     def update(self):
-        if self.next_stance_name:
-            next_stance_name = self.next_stance_name
-            self.next_stance_name = None
-            print('Changing stance to %s' % next_stance_name)
+        pass
+
+    def change_stance(self, next_stance_name):
+        if next_stance_name and (self.current and next_stance_name != self.current.name):
             new_stance = self.stances.get(next_stance_name)
+            # TODO This indicates that actions should be shared
+            new_stance.executing_action = self.current.executing_action
             if new_stance:
                 self.current = new_stance
             else:
                 self.current = self.stances.get(self.default_stance.name)
-
-    def change_stance(self, new_stance_name):
-        self.next_stance_name = new_stance_name
 
     def do_keymaps(self, keymaps):
         self.current.do_keymaps(keymaps)
