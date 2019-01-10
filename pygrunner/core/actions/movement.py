@@ -1,41 +1,104 @@
 from pygrunner.core.actions.base import Action
 
 
-class WalkRight(Action):
-    @classmethod
-    def can_execute(cls, game_object):
+class Idle(Action):
+    def can_execute(self):
         return True
 
-    @classmethod
-    def execute(cls, game_object):
-        if game_object.physics.velocity_x <= 0:
-            game_object.physics.velocity_x += 1
-        else:
-            game_object.physics.velocity_x = 1
-        game_object.flipped = False
-        game_object.display.play('run')
+    def execute(self):
+        pass
+
+    def on_start(self):
+        actor = self.actor
+        actor.display.play('idle')
+        actor.stance.change_stance('idle')
+
+    def on_stop(self):
+        pass
+
+
+class WalkRight(Action):
+    continuous = True
+
+    def can_execute(self):
+        return True
+
+    def execute(self):
+        actor = self.actor
+        if actor.physics.velocity_x <= 0:
+            actor.physics.velocity_x += 1
+        elif 0 < actor.physics.velocity_x < 1:
+            actor.physics.velocity_x = 1
+        actor.flipped = False
+
+    def on_start(self):
+        actor = self.actor
+        actor.display.play('run')
+        actor.stance.change_stance('running')
+
 
 class WalkLeft(Action):
-    @classmethod
-    def execute(cls, game_object):
-        if game_object.physics.velocity_x >= 0:
-            game_object.physics.velocity_x -= 1
-        else:
-            game_object.physics.velocity_x = -1
-        game_object.flipped = True
-        game_object.display.play('run')
+    continuous = True
 
-    @classmethod
-    def can_execute(cls, game_object):
+    def execute(self):
+        actor = self.actor
+        if actor.physics.velocity_x >= 0:
+            actor.physics.velocity_x -= 1
+        elif 0 > actor.physics.velocity_x > -1:
+            actor.physics.velocity_x = -1
+        actor.flipped = True
+
+    def can_execute(self):
         return True
+
+    def on_start(self):
+        actor = self.actor
+        actor.display.play('run')
+        actor.stance.change_stance('running')
+
+
+class GlideLeft(Action):
+    continuous = True
+
+    def execute(self):
+        actor = self.actor
+        if actor.physics.velocity_x >= 0:
+            actor.physics.velocity_x -= 0.5
+        elif actor.physics.velocity_x > -0.5:
+            actor.physics.velocity_x = -0.5
+        actor.flipped = True
+
+    def can_execute(self):
+        return True
+
+
+class GlideRight(Action):
+    continuous = True
+
+    def can_execute(self):
+        return True
+
+    def execute(self):
+        actor = self.actor
+        if actor.physics.velocity_x <= 0:
+            actor.physics.velocity_x += 0.5
+        elif 0 < actor.physics.velocity_x < 0.5:
+            actor.physics.velocity_x = 0.5
+        actor.flipped = False
 
 
 class Jump(Action):
-    @classmethod
-    def execute(cls, game_object):
-        if game_object.physics.velocity_y == 0:
-            game_object.physics.velocity_y -= 16
+    def execute(self):
+        pass
 
-    @classmethod
-    def can_execute(cls, game_object):
-        return game_object.physics.bottom_collisions
+    def can_execute(self):
+        return self.actor.physics.bottom_collisions
+
+    def on_start(self):
+        actor = self.actor
+        actor.physics.velocity_y -= 16
+        actor.physics.velocity_x += actor.physics.velocity_x
+        actor.stance.change_stance('jumping')
+
+    def finished(self):
+        return self.actor.physics.bottom_collisions

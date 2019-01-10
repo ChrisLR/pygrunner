@@ -48,6 +48,6 @@ class Actor(GameObject):
         self.stance.register(self)
 
     def update(self, dt):
-        self.controller.update()
         self.stance.update()
+        self.controller.update()
         super().update(dt)

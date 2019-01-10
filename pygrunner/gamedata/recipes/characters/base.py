@@ -21,7 +21,7 @@ class Character(Recipe):
         location = components.Location(0, 0)
         physics = components.Physics()
         size = components.Size()
-        stance = components.Stance(stances.Idle, (stances.Idle, stances.Walking))
+        stance = components.Stance(stances.Idle, (stances.Idle, stances.Running, stances.Jumping))
         actor = Actor(cls.name, controller, display, location, physics, size, stance)
 
         return actor

@@ -1,7 +1,6 @@
 import abc
 
 
-
 class Component(metaclass=abc.ABCMeta):
     @classmethod
     @abc.abstractmethod
