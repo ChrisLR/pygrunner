@@ -63,7 +63,6 @@ class PhysicsEngine(object):
             else:
                 object_physics.velocity_y += self.gravity
 
-
     def _set_object_collisions(self, all_object_collisions, current_level, game_object):
         intersect_collisions = []
         for other_game_object in current_level.game_objects:
