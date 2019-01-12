@@ -9,6 +9,7 @@ from pygrunner.gamedata.factory import Factory
 from pygrunner.gamedata.objectpool import ObjectPool
 from pygrunner.gamedata.recipes import characters, tiles
 
+
 class ClientGame(object):
     def __init__(self, scene_manager):
         self.scene_manager = scene_manager
