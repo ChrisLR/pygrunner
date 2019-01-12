@@ -17,6 +17,7 @@ class Ladder(Tile):
         """
         tile = super().create(sprite_loader)
         tile.physics.solid = False
+        tile.physics.platform = True
 
         return tile
 

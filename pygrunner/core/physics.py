@@ -98,3 +98,6 @@ class PhysicsEngine(object):
             non_solids = collisions.difference(solids)
             game_object.physics.collisions[name] = solids
             game_object.physics.triggers[name] = non_solids
+            if name == "bottom":
+                platforms = {collision for collision in non_solids if collision.physics.platform}
+                game_object.physics.collisions[name].update(platforms)

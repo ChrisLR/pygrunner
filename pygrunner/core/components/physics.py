@@ -8,7 +8,7 @@ class Physics(Component):
 
     name = "physics"
 
-    def __init__(self, velocity_x = 0, velocity_y = 0, solid=True):
+    def __init__(self, velocity_x = 0, velocity_y = 0, solid=True, platform=False):
         super().__init__()
         self.velocity_x = velocity_x
         self.velocity_y = velocity_y
@@ -16,6 +16,7 @@ class Physics(Component):
         self.triggers = {}
         self.solid = solid
         self._initial_solid = solid
+        self.platform = platform
 
     def reset(self):
         self.velocity_x = 0
