@@ -89,8 +89,12 @@ class PhysicsEngine(object):
             ("right", game_object.size.right_rectangle),
             ("left", game_object.size.left_rectangle),
             ("top", game_object.size.top_rectangle),
+            ("center", game_object.size.center_rectangle)
         ]
 
         for name, rectangle in rectangles:
             collisions = static_map.check_collision_rect(rectangle)
-            game_object.physics.collisions[name] = collisions
+            solids = {collision for collision in collisions if collision.physics.solid}
+            non_solids = collisions.difference(solids)
+            game_object.physics.collisions[name] = solids
+            game_object.physics.triggers[name] = non_solids

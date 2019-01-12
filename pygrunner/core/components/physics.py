@@ -13,6 +13,7 @@ class Physics(Component):
         self.velocity_x = velocity_x
         self.velocity_y = velocity_y
         self.collisions = {}
+        self.triggers = {}
         self.solid = solid
         self._initial_solid = solid
 
@@ -20,6 +21,7 @@ class Physics(Component):
         self.velocity_x = 0
         self.velocity_y = 0
         self.collisions.clear()
+        self.triggers = {}
         self.solid = self._initial_solid
 
     @property
@@ -39,5 +41,29 @@ class Physics(Component):
         return self.collisions["left"]
 
     @property
+    def center_collisions(self):
+        return self.collisions["center"]
+
+    @property
     def intersects(self):
         return self.collisions["intersects"]
+
+    @property
+    def bottom_triggers(self):
+        return self.triggers["bottom"]
+
+    @property
+    def top_triggers(self):
+        return self.triggers["top"]
+
+    @property
+    def right_triggers(self):
+        return self.triggers["right"]
+
+    @property
+    def left_triggers(self):
+        return self.triggers["left"]
+
+    @property
+    def center_triggers(self):
+        return self.triggers["center"]
