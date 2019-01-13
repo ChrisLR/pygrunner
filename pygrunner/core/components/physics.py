@@ -19,7 +19,6 @@ class Physics(Component):
         self.platform = platform
         self.climbable = climbable
         self.climbables = {}
-        # TODO Might have to do a climbing bool also
         self.climbing_down = False
         self.affected_by_gravity = True
 
