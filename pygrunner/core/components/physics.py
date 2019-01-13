@@ -8,7 +8,7 @@ class Physics(Component):
 
     name = "physics"
 
-    def __init__(self, velocity_x = 0, velocity_y = 0, solid=True, platform=False):
+    def __init__(self, velocity_x = 0, velocity_y = 0, solid=True, platform=False, climbable=False):
         super().__init__()
         self.velocity_x = velocity_x
         self.velocity_y = velocity_y
@@ -17,6 +17,10 @@ class Physics(Component):
         self.solid = solid
         self._initial_solid = solid
         self.platform = platform
+        self.climbable = climbable
+        self.climbables = {}
+        # TODO Might have to do a climbing bool also
+        self.climbing_down = False
 
     def reset(self):
         self.velocity_x = 0
@@ -24,6 +28,7 @@ class Physics(Component):
         self.collisions.clear()
         self.triggers = {}
         self.solid = self._initial_solid
+        self.climbing_down = False
 
     @property
     def bottom_collisions(self):
@@ -68,3 +73,23 @@ class Physics(Component):
     @property
     def center_triggers(self):
         return self.triggers["center"]
+
+    @property
+    def bottom_climbables(self):
+        return self.climbables["bottom"]
+
+    @property
+    def top_climbables(self):
+        return self.climbables["top"]
+
+    @property
+    def right_climbables(self):
+        return self.climbables["right"]
+
+    @property
+    def left_climbables(self):
+        return self.climbables["left"]
+
+    @property
+    def center_climbables(self):
+        return self.climbables["center"]

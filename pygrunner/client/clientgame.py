@@ -89,11 +89,21 @@ class ClientGame(object):
             self.level.add_static(top)
             self.level.add_static(middle)
 
-        ladder_recipe = tiles.RedLadder
-        ladder = self.factory.get_or_create(ladder_recipe)
-        ladder.location.set(160, 128)
-        ladder.display.assign(self.batch, self.groups[ladder_recipe.layer])
-        self.level.add_static(ladder)
+        y = 128
+        for i in range(6):
+            ladder_recipe = tiles.RedLadder
+            ladder = self.factory.get_or_create(ladder_recipe)
+            ladder.location.set(160, y - (i * 16))
+            ladder.display.assign(self.batch, self.groups[ladder_recipe.layer])
+            self.level.add_static(ladder)
+
+        y = 64
+        for i in range(6):
+            ladder_recipe = tiles.RedLadder
+            ladder = self.factory.get_or_create(ladder_recipe)
+            ladder.location.set(176 + (i * 16), y)
+            ladder.display.assign(self.batch, self.groups[ladder_recipe.layer])
+            self.level.add_static(ladder)
 
         # TODO This is just for development
         actor = self.factory.get_or_create(characters.HumanMale1)

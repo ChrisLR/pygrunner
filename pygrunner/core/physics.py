@@ -56,6 +56,7 @@ class PhysicsEngine(object):
             object_physics.velocity_x = object_physics.velocity_x if abs(object_physics.velocity_x) > 0.01 else 0
 
         if object_physics.velocity_y > 0 and object_physics.bottom_collisions:
+
             object_physics.velocity_y = 0
         else:
             if -0.5 <= object_physics.velocity_y < 0.1:
@@ -91,13 +92,18 @@ class PhysicsEngine(object):
             ("top", game_object.size.top_rectangle),
             ("center", game_object.size.center_rectangle)
         ]
-
+        game_object.physics.collisions.clear()
+        game_object.physics.climbables.clear()
+        game_object.physics.triggers.clear()
         for name, rectangle in rectangles:
             collisions = static_map.check_collision_rect(rectangle)
             solids = {collision for collision in collisions if collision.physics.solid}
             non_solids = collisions.difference(solids)
             game_object.physics.collisions[name] = solids
             game_object.physics.triggers[name] = non_solids
+            climbables = {trigger for trigger in non_solids if trigger.physics.climbable}
+            game_object.physics.climbables[name] = climbables
             if name == "bottom":
-                platforms = {collision for collision in non_solids if collision.physics.platform}
-                game_object.physics.collisions[name].update(platforms)
+                if not game_object.physics.climbing_down:
+                    platforms = {collision for collision in non_solids if collision.physics.platform}
+                    game_object.physics.collisions[name].update(platforms)

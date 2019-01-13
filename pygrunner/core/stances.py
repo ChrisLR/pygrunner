@@ -67,6 +67,11 @@ class Idle(Stance):
         if Keymap.B in keymaps:
             self.start_or_continue(actions.Jump)
 
+        if Keymap.Up in keymaps:
+            self.start_or_continue(actions.ClimbUp)
+        elif Keymap.Down in keymaps:
+            self.start_or_continue(actions.ClimbDown)
+
 
 class Running(Idle):
     name = "running"
@@ -86,3 +91,32 @@ class Jumping(Stance):
 
         if self.actor.physics.velocity_y >= 0 and self.actor.physics.bottom_collisions:
             self.start_or_continue(actions.Idle)
+
+
+class Climbing(Stance):
+    name = "climbing"
+
+    def do_keymaps(self, keymaps):
+        if Keymap.Up in keymaps:
+            self.start_or_continue(actions.ClimbUp)
+        elif Keymap.Down in keymaps:
+            self.start_or_continue(actions.ClimbDown)
+
+        if Keymap.Left in keymaps:
+            self.start_or_continue(actions.ClimbLeft)
+        elif Keymap.Right in keymaps:
+            self.start_or_continue(actions.ClimbRight)
+
+        if not keymaps:
+            self.continue_current_action(stop_continuous=True)
+
+        if not any(self.actor.physics.climbables):
+            if self.executing_action:
+                self.executing_action.on_stop()
+                self.executing_action = None
+            self.actor.stance.change_stance('idle')
+
+        # TODO Handle ClimbUp, ClimbLeft, ClimbRight, ClimbDown, Jump
+        # TODO This stance must also disable gravity
+        # TODO Stance must stop if ClimbDown touches ground
+        # TODO Stance must stop if ClimbUp puts character above ladder and no longer center
