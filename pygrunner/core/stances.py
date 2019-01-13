@@ -110,13 +110,9 @@ class Climbing(Stance):
         if not keymaps:
             self.continue_current_action(stop_continuous=True)
 
-        if not any(self.actor.physics.climbables):
+        if not any(self.actor.physics.climbables.values()):
             if self.executing_action:
                 self.executing_action.on_stop()
                 self.executing_action = None
             self.actor.stance.change_stance('idle')
-
-        # TODO Handle ClimbUp, ClimbLeft, ClimbRight, ClimbDown, Jump
-        # TODO This stance must also disable gravity
-        # TODO Stance must stop if ClimbDown touches ground
-        # TODO Stance must stop if ClimbUp puts character above ladder and no longer center
+            self.actor.physics.affected_by_gravity = True

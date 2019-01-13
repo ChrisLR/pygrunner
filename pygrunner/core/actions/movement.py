@@ -112,7 +112,7 @@ class ClimbUp(Action):
         self.actor.physics.velocity_y = -1
 
     def can_execute(self):
-        if self.actor.physics.top_climbables or self.actor.physics.center_climbables:
+        if any(self.actor.physics.climbables.values()):
             return True
         return False
 
@@ -120,15 +120,18 @@ class ClimbUp(Action):
         actor = self.actor
         actor.stance.change_stance('climbing')
         actor.display.play('climb')
+        actor.physics.affected_by_gravity = False
 
     def on_stop(self):
         actor = self.actor
-        if not self.actor.physics.top_climbables and not self.actor.physics.center_climbables:
+        self.actor.physics.velocity_y = 0
+        if not any(self.actor.physics.climbables.values()):
             actor.stance.change_stance('idle')
+            actor.physics.affected_by_gravity = True
 
     @property
     def finished(self):
-        return not self.actor.physics.top_climbables and not self.actor.physics.center_climbables
+        return not any(self.actor.physics.climbables.values())
 
 
 class ClimbDown(Action):
@@ -138,7 +141,7 @@ class ClimbDown(Action):
         self.actor.physics.velocity_y = 1
 
     def can_execute(self):
-        if any(self.actor.physics.climbables):
+        if any(self.actor.physics.climbables.values()):
             return True
         return False
 
@@ -147,17 +150,19 @@ class ClimbDown(Action):
         actor.stance.change_stance('climbing')
         actor.display.play('climb')
         actor.physics.climbing_down = True
+        actor.physics.affected_by_gravity = False
 
     def on_stop(self):
         actor = self.actor
         actor.physics.climbing_down = False
         self.actor.physics.velocity_y = 0
-        if not any(self.actor.physics.climbables) or self.actor.physics.bottom_collisions:
+        if not any(self.actor.physics.climbables.values()) or self.actor.physics.bottom_collisions:
             actor.stance.change_stance('idle')
+            actor.physics.affected_by_gravity = True
 
     @property
     def finished(self):
-        return not any(self.actor.physics.climbables) or self.actor.physics.bottom_collisions
+        return not any(self.actor.physics.climbables.values()) or self.actor.physics.bottom_collisions
 
 
 class ClimbLeft(Action):
@@ -167,7 +172,7 @@ class ClimbLeft(Action):
         self.actor.physics.velocity_x = -1
 
     def can_execute(self):
-        if self.actor.physics.center_climbables or self.actor.physics.left_climbables:
+        if any(self.actor.physics.climbables.values()):
             return True
         return False
 
@@ -175,15 +180,17 @@ class ClimbLeft(Action):
         actor = self.actor
         actor.stance.change_stance('climbing')
         actor.display.play('climb')
+        actor.physics.affected_by_gravity = False
 
     def on_stop(self):
         actor = self.actor
-        if not self.actor.physics.center_climbables and not self.actor.physics.left_climbables:
+        if not any(self.actor.physics.climbables.values()):
             actor.stance.change_stance('idle')
+            actor.physics.affected_by_gravity = True
 
     @property
     def finished(self):
-        return not self.actor.physics.center_climbables and not self.actor.physics.left_climbables
+        return not any(self.actor.physics.climbables.values())
 
 
 class ClimbRight(Action):
@@ -193,7 +200,7 @@ class ClimbRight(Action):
         self.actor.physics.velocity_x = 1
 
     def can_execute(self):
-        if self.actor.physics.center_climbables or self.actor.physics.right_climbables:
+        if any(self.actor.physics.climbables.values()):
             return True
         return False
 
@@ -201,13 +208,14 @@ class ClimbRight(Action):
         actor = self.actor
         actor.stance.change_stance('climbing')
         actor.display.play('climb')
+        actor.physics.affected_by_gravity = False
 
     def on_stop(self):
         actor = self.actor
-        if not actor.physics.center_climbables and not actor.physics.right_climbables:
+        if not any(self.actor.physics.climbables.values()):
             actor.stance.change_stance('idle')
+            actor.physics.affected_by_gravity = True
 
     @property
     def finished(self):
-        actor = self.actor
-        return not actor.physics.center_climbables and not actor.physics.right_climbables
+        return not any(self.actor.physics.climbables.values())

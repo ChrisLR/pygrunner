@@ -49,16 +49,15 @@ class PhysicsEngine(object):
 
     def _apply_friction_and_gravity(self, object_physics):
         if object_physics.velocity_x != 0:
-            if object_physics.bottom_collisions:
+            if object_physics.bottom_collisions or any(object_physics.climbables.values()):
                 object_physics.velocity_x /= (1 + self.ground_friction)
             else:
                 object_physics.velocity_x /= (1 + self.air_friction)
             object_physics.velocity_x = object_physics.velocity_x if abs(object_physics.velocity_x) > 0.01 else 0
 
         if object_physics.velocity_y > 0 and object_physics.bottom_collisions:
-
             object_physics.velocity_y = 0
-        else:
+        elif object_physics.affected_by_gravity:
             if -0.5 <= object_physics.velocity_y < 0.1:
                 object_physics.velocity_y += 0.05
             else:
