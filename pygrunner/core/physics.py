@@ -49,7 +49,7 @@ class PhysicsEngine(object):
 
     def _apply_friction_and_gravity(self, object_physics):
         if object_physics.velocity_x != 0:
-            if object_physics.bottom_collisions:
+            if object_physics.bottom_collisions or any(object_physics.climbables.values()):
                 object_physics.velocity_x /= (1 + self.ground_friction)
             else:
                 object_physics.velocity_x /= (1 + self.air_friction)
@@ -57,12 +57,11 @@ class PhysicsEngine(object):
 
         if object_physics.velocity_y > 0 and object_physics.bottom_collisions:
             object_physics.velocity_y = 0
-        else:
+        elif object_physics.affected_by_gravity:
             if -0.5 <= object_physics.velocity_y < 0.1:
                 object_physics.velocity_y += 0.05
             else:
                 object_physics.velocity_y += self.gravity
-
 
     def _set_object_collisions(self, all_object_collisions, current_level, game_object):
         intersect_collisions = []
@@ -90,8 +89,20 @@ class PhysicsEngine(object):
             ("right", game_object.size.right_rectangle),
             ("left", game_object.size.left_rectangle),
             ("top", game_object.size.top_rectangle),
+            ("center", game_object.size.center_rectangle)
         ]
-
+        game_object.physics.collisions.clear()
+        game_object.physics.climbables.clear()
+        game_object.physics.triggers.clear()
         for name, rectangle in rectangles:
             collisions = static_map.check_collision_rect(rectangle)
-            game_object.physics.collisions[name] = collisions
+            solids = {collision for collision in collisions if collision.physics.solid}
+            non_solids = collisions.difference(solids)
+            game_object.physics.collisions[name] = solids
+            game_object.physics.triggers[name] = non_solids
+            climbables = {trigger for trigger in non_solids if trigger.physics.climbable}
+            game_object.physics.climbables[name] = climbables
+            if name == "bottom":
+                if not game_object.physics.climbing_down:
+                    platforms = {collision for collision in non_solids if collision.physics.platform}
+                    game_object.physics.collisions[name].update(platforms)

@@ -14,7 +14,7 @@ class HumanMale1(Character):
         ],
         'climb':[
             SpriteInfo('packed', 'human_male_1_climb_0', 30, 15),
-            SpriteInfo('packed', 'human_male_1_climb_1', 30, 16, True),
+            SpriteInfo('packed', 'human_male_1_climb_1', 30, 15, True),
         ],
         'punch': [
             SpriteInfo('packed', 'human_male_1_punch_0', 30, 15),
@@ -35,7 +35,7 @@ class HumanFemale1(Character):
         ],
         'climb':[
             SpriteInfo('packed', 'human_female_1_climb_0', 29, 15),
-            SpriteInfo('packed', 'human_female_1_climb_1', 29, 16, True),
+            SpriteInfo('packed', 'human_female_1_climb_1', 29, 15, True),
         ],
         'punch': [
             SpriteInfo('packed', 'human_female_1_punch_0', 29, 15),
