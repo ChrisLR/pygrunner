@@ -100,5 +100,122 @@ class Jump(Action):
         actor.physics.velocity_x += actor.physics.velocity_x
         actor.stance.change_stance('jumping')
 
+    @property
     def finished(self):
         return self.actor.physics.bottom_collisions
+
+
+class ClimbUp(Action):
+    continuous = True
+
+    def execute(self):
+        self.actor.physics.velocity_y = -1
+
+    def can_execute(self):
+        if any(self.actor.physics.climbables.values()):
+            return True
+        return False
+
+    def on_start(self):
+        actor = self.actor
+        actor.stance.change_stance('climbing')
+        actor.display.play('climb')
+        actor.physics.affected_by_gravity = False
+
+    def on_stop(self):
+        actor = self.actor
+        self.actor.physics.velocity_y = 0
+        if not any(self.actor.physics.climbables.values()):
+            actor.stance.change_stance('idle')
+            actor.physics.affected_by_gravity = True
+
+    @property
+    def finished(self):
+        return not any(self.actor.physics.climbables.values())
+
+
+class ClimbDown(Action):
+    continuous = True
+
+    def execute(self):
+        self.actor.physics.velocity_y = 1
+
+    def can_execute(self):
+        if any(self.actor.physics.climbables.values()):
+            return True
+        return False
+
+    def on_start(self):
+        actor = self.actor
+        actor.stance.change_stance('climbing')
+        actor.display.play('climb')
+        actor.physics.climbing_down = True
+        actor.physics.affected_by_gravity = False
+
+    def on_stop(self):
+        actor = self.actor
+        actor.physics.climbing_down = False
+        self.actor.physics.velocity_y = 0
+        if not any(self.actor.physics.climbables.values()) or self.actor.physics.bottom_collisions:
+            actor.stance.change_stance('idle')
+            actor.physics.affected_by_gravity = True
+
+    @property
+    def finished(self):
+        return not any(self.actor.physics.climbables.values()) or self.actor.physics.bottom_collisions
+
+
+class ClimbLeft(Action):
+    continuous = True
+
+    def execute(self):
+        self.actor.physics.velocity_x = -1
+
+    def can_execute(self):
+        if any(self.actor.physics.climbables.values()):
+            return True
+        return False
+
+    def on_start(self):
+        actor = self.actor
+        actor.stance.change_stance('climbing')
+        actor.display.play('climb')
+        actor.physics.affected_by_gravity = False
+
+    def on_stop(self):
+        actor = self.actor
+        if not any(self.actor.physics.climbables.values()):
+            actor.stance.change_stance('idle')
+            actor.physics.affected_by_gravity = True
+
+    @property
+    def finished(self):
+        return not any(self.actor.physics.climbables.values())
+
+
+class ClimbRight(Action):
+    continuous = True
+
+    def execute(self):
+        self.actor.physics.velocity_x = 1
+
+    def can_execute(self):
+        if any(self.actor.physics.climbables.values()):
+            return True
+        return False
+
+    def on_start(self):
+        actor = self.actor
+        actor.stance.change_stance('climbing')
+        actor.display.play('climb')
+        actor.physics.affected_by_gravity = False
+
+    def on_stop(self):
+        actor = self.actor
+        if not any(self.actor.physics.climbables.values()):
+            actor.stance.change_stance('idle')
+            actor.physics.affected_by_gravity = True
+
+    @property
+    def finished(self):
+        return not any(self.actor.physics.climbables.values())
