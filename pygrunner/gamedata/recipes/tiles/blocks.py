@@ -19,5 +19,5 @@ class RedBlockTop(Block):
 
 @Factory.register
 class RedBlockMiddle(Block):
-    name = "Red Block Top"
+    name = "Red Block Middle"
     animations = {'idle': [SpriteInfo('packed', 'red_block_middle', 9, 0)]}

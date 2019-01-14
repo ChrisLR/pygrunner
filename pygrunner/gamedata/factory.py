@@ -1,6 +1,3 @@
-
-
-
 class Factory(object):
     """
     The factory spawns game objects in the game space.
