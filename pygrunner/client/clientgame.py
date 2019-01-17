@@ -4,10 +4,11 @@ from pygrunner.client import input
 from pygrunner.client.graphics.spriteloader import SpriteLoader
 from pygrunner.core import components
 from pygrunner.core.layers import Layer
-from pygrunner.core.level import Level
 from pygrunner.gamedata.factory import Factory
 from pygrunner.gamedata.objectpool import ObjectPool
-from pygrunner.gamedata.recipes import characters, tiles
+from pygrunner.gamedata.recipes import characters
+from pygrunner.tmx.loader import TmxLoader
+
 
 
 class ClientGame(object):
@@ -72,43 +73,17 @@ class ClientGame(object):
 
     def _start_level(self):
         # TODO This is only in the meantime so we can develop further.
-        self.level = Level("basic", 1600, 1600)
         self.factory.restock_all()
+        self.level = TmxLoader(self.factory).load_map('simple.json')
 
-        y = 10
-        top_recipe = tiles.RedBlockTop
-        middle_recipe = tiles.RedBlockMiddle
-        for x in range(30):
-            top = self.factory.get_or_create(top_recipe)
-            middle = self.factory.get_or_create(middle_recipe)
-            top.location.set(x * 16, y * 16)
-            middle.location.set(x * 16, (y - 1) * 16)
-            # TODO Not yet very clear when we must assign batches/groups
-            top.display.assign(self.batch, self.groups[top_recipe.layer])
-            middle.display.assign(self.batch, self.groups[top_recipe.layer])
-            self.level.add_static(top)
-            self.level.add_static(middle)
-
-        y = 128
-        for i in range(6):
-            ladder_recipe = tiles.RedLadder
-            ladder = self.factory.get_or_create(ladder_recipe)
-            ladder.location.set(160, y - (i * 16))
-            ladder.display.assign(self.batch, self.groups[ladder_recipe.layer])
-            self.level.add_static(ladder)
-
-        y = 64
-        for i in range(6):
-            ladder_recipe = tiles.RedLadder
-            ladder = self.factory.get_or_create(ladder_recipe)
-            ladder.location.set(176 + (i * 16), y)
-            ladder.display.assign(self.batch, self.groups[ladder_recipe.layer])
-            self.level.add_static(ladder)
+        # TODO This is wrong, its the camera's job
+        for static_object in self.level.statics:
+            static_object.display.assign(self.batch, self.groups[Layer.foreground])
 
         # TODO This is just for development
         actor = self.factory.get_or_create(characters.HumanMale1)
         actor.location.set(32, 16)
-        actor.display.assign(self.batch, self.groups[top_recipe.layer])
+        actor.display.assign(self.batch, self.groups[Layer.foreground])
         actor.controller = components.PlayerController(1, self.inputs[0])
         # TODO Not the way it should be done
         actor.controller.register(actor)

@@ -26,6 +26,7 @@ class Factory(object):
             recipe = self.known_recipes.get(recipe)
             if recipe is None:
                 raise Exception("Recipe '%s' not known." % recipe)
+            return recipe
         else:
             if hasattr(recipe, 'create') and hasattr(recipe, 'reset'):
                 return recipe
