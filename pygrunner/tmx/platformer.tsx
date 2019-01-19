@@ -4,4 +4,7 @@
  <tile id="388" type="Red Ladder"/>
  <tile id="492" type="Red Block Top"/>
  <tile id="533" type="Red Block Middle"/>
+ <tile id="753" type="Silver Coin"/>
+ <tile id="861" type="Red Block Top Shadow"/>
+ <tile id="902" type="Red Block Middle Shadow"/>
 </tileset>

@@ -15,50 +15,36 @@ class TmxLoader(object):
         return TmxTileset.from_xml('tmx\\platformer.tsx')
 
     def load_map(self, map_name):
-        with open('tmx\\%s' % map_name, 'r') as map_file:
-            json_level = json.load(map_file)
+        map_file_name = "tmx\\%s.tmx" % map_name
+        tmx_map = TmxMap.from_xml(map_file_name)
+        level = Level(map_name, tmx_map.pixel_width, tmx_map.pixel_height)
+        for layer in tmx_map.layers:
 
-        new_level = Level(map_name, json_level['width'], json_level['height'])
-        if json_level['renderorder'] != "left-down":
-            # TODO Support multiple render orders
-            raise Exception("Bad render order")
+    def _handle_tile_layer(self, layer, level):
+        pass
 
-        for layer in json_level['layers']:
-            if layer['name'] != 'foreground':
-                # TODO We'll want to support multi layers in a more pythonic way
-                continue
-
-            layer_data = (tile_id for tile_id in layer['data'])
-            layer_width = layer['width']
-            layer_height = layer['height']
-            # TODO Might have to support more than one tileset
-            first_gid = json_level['tilesets'][0]['firstgid']
-            for y in range(layer_height):
-                for x in range(layer_width):
-                    tile_id = next(layer_data) - first_gid
-                    tile_type = self.tileset_map.get(tile_id)
-                    if tile_type:
-                        tile = self.factory.get_or_create(tile_type)
-                        tile.location.set(x * 16, y * 16)
-                        new_level.add_static(tile)
-
-        # TODO We need to support objects, such as spawn points
-
-        return new_level
-
-    def load_map_xml(self, map_name):
+    def _handle_object_layer(self, layer, level):
         pass
 
 
 class TmxMap(object):
-    def __init__(self, width, height, tilesets, layers, render_order, tile_height, tile_width):
+    def __init__(self, width, height, tilesets, layers, object_layers, render_order, tile_height, tile_width):
         self.width = width
         self.height = height
         self.tilesets = tilesets
         self.layers = layers
+        self.object_layers = object_layers
         self.render_order = render_order
         self.tile_height = tile_height
         self.tile_width = tile_width
+
+    @property
+    def pixel_width(self):
+        return self.width * self.tile_width
+
+    @property
+    def pixel_height(self):
+        return self.height * self.tile_height
 
     @classmethod
     def from_xml(cls, xml_file_name):
@@ -72,10 +58,11 @@ class TmxMap(object):
         map_height = int(root.attrib.get('height'))
         tilesets = []
         layers = []
+        object_layers = []
         for child in root:
             if child.tag == 'tileset':
                 first_gid = int(child.attrib.get('firstgid'))
-                tileset_source = child.attrib.get('source')
+                tileset_source = "tmx\\" + child.attrib.get('source')
                 tmx_tileset = TmxTileset.from_xml(tileset_source)
                 tmx_tileset.first_gid = first_gid
                 tilesets.append(tmx_tileset)
@@ -98,8 +85,24 @@ class TmxMap(object):
                     else:
                         layer_tile_data.append(None)
                 layers.append(TmxLayer(layer_id, layer_name, layer_width, layer_height, layer_tile_data))
+            elif child.tag == 'objectgroup':
+                layer_id = child.attrib.get('id')
+                layer_name = child.attrib.get('name')
+                tmx_objects = [
+                    TmxObject(
+                        tmx_object.attrib['object_id'],
+                        tmx_object.attrib['object_gid'],
+                        tmx_object.attrib['x'],
+                        tmx_object.attrib['y'],
+                        tmx_object.attrib['width'],
+                        tmx_object.attrib['height'])
+                    for tmx_object in child]
+                object_layers.append(TmxObjectLayer(layer_id, layer_name, tmx_objects))
 
-        return TmxMap(map_width, map_height, tilesets, layers, render_order, tile_height, tile_width)
+        return TmxMap(map_width, map_height, tilesets, layers, object_layers, render_order, tile_height, tile_width)
+
+    def get_tileset_used_by_gid(self):
+        pass
 
 
 class TmxLayer(object):
@@ -109,6 +112,13 @@ class TmxLayer(object):
         self.width = width
         self.height = height
         self.tiles = tiles
+
+
+class TmxObjectLayer(object):
+    def __init__(self, layer_id, name, objects):
+        self.layer_id = layer_id
+        self.name = name
+        self.objects = objects
 
 
 class TmxTileset(object):
@@ -143,6 +153,19 @@ class TmxTile(object):
     def __init__(self, tile_id, tile_type):
         self.tile_id = tile_id
         self.tile_type = tile_type
+
+
+class TmxObject(object):
+    __slots__ = ('object_id', 'object_gid', 'x', 'y', 'width', 'height', 'object_type')
+
+    def __init__(self, object_id, object_gid, x, y, width, height, object_type):
+        self.object_id = object_id
+        self.object_gid = object_gid
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.object_type = object_type
 
 
 if __name__ == '__main__':
