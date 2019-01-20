@@ -1,6 +1,3 @@
-
-
-
 class Factory(object):
     """
     The factory spawns game objects in the game space.
@@ -24,16 +21,17 @@ class Factory(object):
             game_object = recipe.create(self.sprite_loader)
             return game_object
 
-    def _get_recipe(self, recipe):
-        if isinstance(recipe, str):
-            recipe = self.known_recipes.get(recipe)
+    def _get_recipe(self, recipe_or_name):
+        if isinstance(recipe_or_name, str):
+            recipe = self.known_recipes.get(recipe_or_name)
             if recipe is None:
-                raise Exception("Recipe '%s' not known." % recipe)
+                raise Exception("Recipe '%s' not known." % recipe_or_name)
+            return recipe
         else:
-            if hasattr(recipe, 'create') and hasattr(recipe, 'reset'):
-                return recipe
+            if hasattr(recipe_or_name, 'create') and hasattr(recipe_or_name, 'reset'):
+                return recipe_or_name
 
-        raise Exception("Recipe '%s' is not valid." % recipe)
+        raise Exception("Recipe '%s' is not valid." % recipe_or_name)
 
     def restock(self, recipe):
         initial_max = recipe.initial_stock
