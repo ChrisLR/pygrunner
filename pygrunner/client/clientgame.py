@@ -7,8 +7,7 @@ from pygrunner.core.layers import Layer
 from pygrunner.gamedata.factory import Factory
 from pygrunner.gamedata.objectpool import ObjectPool
 from pygrunner.gamedata.recipes import characters
-from pygrunner.tmx.loader import TmxLoader
-
+from pygrunner.tmx import TmxLoader
 
 
 class ClientGame(object):
