@@ -4,7 +4,7 @@ class GameObject(object):
 
     This object has at a minimum a display, location, physics and size
     """
-    def __init__(self, name, display, location, physics, size):
+    def __init__(self, name, display, location, physics, size, recipe=None):
         self.name = name
         self.display = display
         self.location = location
@@ -15,6 +15,7 @@ class GameObject(object):
         self.physics.register(self)
         self.size.register(self)
         self.flipped = False
+        self.recipe = recipe
 
     def update(self, dt):
         self.display.update()
@@ -30,8 +31,8 @@ class StaticObject(GameObject):
     at the cost of a more intensive move cost.
     """
 
-    def __init__(self, name, display, location, physics, size):
-        super().__init__(name, display, location, physics, size)
+    def __init__(self, name, display, location, physics, size, recipe=None):
+        super().__init__(name, display, location, physics, size, recipe)
 
 
 class Actor(GameObject):
@@ -40,8 +41,8 @@ class Actor(GameObject):
 
     This object has at a minimum a controller, display, location, stance
     """
-    def __init__(self, name, controller, display, location, physics, size, stance):
-        super().__init__(name, display, location, physics, size)
+    def __init__(self, name, controller, display, location, physics, size, stance, recipe):
+        super().__init__(name, display, location, physics, size, recipe)
         self.controller = controller
         self.stance = stance
         self.controller.register(self)

@@ -1,5 +1,3 @@
-import json
-
 from lxml import etree
 
 from pygrunner.core.level import Level
@@ -19,12 +17,28 @@ class TmxLoader(object):
         tmx_map = TmxMap.from_xml(map_file_name)
         level = Level(map_name, tmx_map.pixel_width, tmx_map.pixel_height)
         for layer in tmx_map.layers:
+            self._handle_tile_layer(layer, level)
+
+        for layer in tmx_map.object_layers:
+            self._handle_object_layer(layer, level)
+
+        return level
 
     def _handle_tile_layer(self, layer, level):
-        pass
+        layer_data = (tile for tile in layer.tiles)
+        for y in range(layer.height):
+            for x in range(layer.width):
+                tile_type = next(layer_data)
+                if tile_type:
+                    tile = self.factory.get_or_create(tile_type)
+                    tile.location.set(x * 16, y * 16)
+                    level.add_static(tile)
 
     def _handle_object_layer(self, layer, level):
-        pass
+        for tmx_object in layer.objects:
+            game_object = self.factory.get_or_create(tmx_object.object_type)
+            game_object.location.set(tmx_object.x, tmx_object.y)
+            level.add_game_object(game_object)
 
 
 class TmxMap(object):
@@ -77,9 +91,7 @@ class TmxMap(object):
                     tile_id = tile_data.get('gid')
                     if tile_id:
                         tile_id = int(tile_id)
-                        current_tileset = max(
-                            (tileset for tileset in tilesets if tileset.first_gid <= tile_id),
-                            key=lambda t:t.first_gid)
+                        current_tileset = cls.get_tileset_used_by_gid(tilesets, tile_id)
                         tileset_tile = current_tileset.id_mapping.get(tile_id - current_tileset.first_gid)
                         layer_tile_data.append(tileset_tile.tile_type)
                     else:
@@ -88,21 +100,27 @@ class TmxMap(object):
             elif child.tag == 'objectgroup':
                 layer_id = child.attrib.get('id')
                 layer_name = child.attrib.get('name')
-                tmx_objects = [
-                    TmxObject(
-                        tmx_object.attrib['object_id'],
-                        tmx_object.attrib['object_gid'],
-                        tmx_object.attrib['x'],
-                        tmx_object.attrib['y'],
-                        tmx_object.attrib['width'],
-                        tmx_object.attrib['height'])
-                    for tmx_object in child]
+                tmx_objects = []
+                for tmx_object in child:
+                    attribs = tmx_object.attrib
+                    object_gid = int(attribs['gid'])
+                    tileset = cls.get_tileset_used_by_gid(tilesets, object_gid)
+                    object_type = tileset.id_mapping.get(object_gid - tileset.first_gid)
+
+                    tmx_objects.append(
+                        TmxObject(
+                            attribs['id'], object_gid,
+                            float(attribs['x']), float(attribs['y']) - 16,
+                            int(attribs['width']), int(attribs['height']), object_type.tile_type))
+
                 object_layers.append(TmxObjectLayer(layer_id, layer_name, tmx_objects))
 
         return TmxMap(map_width, map_height, tilesets, layers, object_layers, render_order, tile_height, tile_width)
 
-    def get_tileset_used_by_gid(self):
-        pass
+    @classmethod
+    def get_tileset_used_by_gid(cls, tilesets, gid):
+        return max((tileset for tileset in tilesets if tileset.first_gid <= gid),
+                   key=lambda t: t.first_gid)
 
 
 class TmxLayer(object):

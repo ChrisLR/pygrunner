@@ -74,11 +74,15 @@ class ClientGame(object):
     def _start_level(self):
         # TODO This is only in the meantime so we can develop further.
         self.factory.restock_all()
-        self.level = TmxLoader(self.factory).load_map('simple.json')
+        self.level = TmxLoader(self.factory).load_map('simple')
 
         # TODO This is wrong, its the camera's job
         for static_object in self.level.statics:
-            static_object.display.assign(self.batch, self.groups[Layer.foreground])
+            static_object.display.assign(self.batch, self.groups[static_object.display.layer])
+
+        # TODO This is wrong, its the camera's job
+        for game_object in self.level.game_objects:
+            game_object.display.assign(self.batch, self.groups[game_object.display.layer])
 
         # TODO This is just for development
         actor = self.factory.get_or_create(characters.HumanMale1)

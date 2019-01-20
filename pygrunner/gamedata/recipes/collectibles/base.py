@@ -1,13 +1,14 @@
 from pygrunner.core import components, Layer
-from pygrunner.core.objecttypes import StaticObject
+from pygrunner.core.objecttypes import GameObject
 from pygrunner.gamedata.recipes.base import Recipe
 
 
-class Tile(Recipe):
+class Collectible(Recipe):
     name = ""
     animations = {}
-    initial_stock = 200
-    layer = Layer.background
+    move_speed = 1
+    jump_height = 1
+    initial_stock = 10
 
     @classmethod
     def create(cls, sprite_loader):
@@ -15,13 +16,13 @@ class Tile(Recipe):
         Creates a game object and assigns proper components
         """
         pyglet_animations = cls._set_animations(sprite_loader)
-        display = components.Display(cls.layer, pyglet_animations)
+        display = components.Display(Layer.middle, pyglet_animations)
         location = components.Location(0, 0)
         physics = components.Physics()
         size = components.Size()
-        tile = StaticObject(cls.name, display, location, physics, size, cls)
+        actor = GameObject(cls.name, display, location, physics, size, cls)
 
-        return tile
+        return actor
 
     @classmethod
     def reset(cls, game_object):
