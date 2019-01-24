@@ -1,0 +1,24 @@
+from pygrunner.core.spriteinfo import SpriteInfo
+from pygrunner.gamedata.factory import Factory
+from pygrunner.gamedata.recipes.enemies.base import Enemy
+
+
+@Factory.register
+class GreenZombie(Enemy):
+    name = "Green Zombie"
+    animations = {
+        'idle': [SpriteInfo('packed', 'green_zombie_idle_0', 28, 0)],
+        'run': [
+            SpriteInfo('packed', 'green_zombie_run_0', 28, 1),
+            SpriteInfo('packed', 'green_zombie_run_1', 28, 2),
+        ],
+        'climb':[
+            SpriteInfo('packed', 'green_zombie_climb_0', 28, 3),
+            SpriteInfo('packed', 'green_zombie_climb_1', 28, 3, True),
+        ],
+        'punch': [
+            SpriteInfo('packed', 'green_zombie_punch_0', 28, 2),
+            SpriteInfo('packed', 'green_zombie_punch_1', 28, 4),
+        ],
+        'dead': [SpriteInfo('packed', 'green_zombie_dead_0', 28, 5)],
+    }
