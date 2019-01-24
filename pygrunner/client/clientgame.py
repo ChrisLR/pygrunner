@@ -18,12 +18,7 @@ class ClientGame(object):
         self.spriteloader = SpriteLoader()
         self.spriteloader.load_spritesheets(("packed.png",))
         self.factory = Factory(self.spriteloader, ObjectPool())
-        self.batch = pyglet.graphics.Batch()
-        self.groups = {
-            Layer.background: pyglet.graphics.OrderedGroup(Layer.background),
-            Layer.middle: pyglet.graphics.OrderedGroup(Layer.middle),
-            Layer.foreground: pyglet.graphics.OrderedGroup(Layer.foreground),
-        }
+
 
     def on_draw(self):
         self.window.clear()
@@ -75,18 +70,9 @@ class ClientGame(object):
         self.factory.restock_all()
         self.level = TmxLoader(self.factory).load_map('simple')
 
-        # TODO This is wrong, its the camera's job
-        for static_object in self.level.statics:
-            static_object.display.assign(self.batch, self.groups[static_object.display.layer])
-
-        # TODO This is wrong, its the camera's job
-        for game_object in self.level.game_objects:
-            game_object.display.assign(self.batch, self.groups[game_object.display.layer])
-
         # TODO This is just for development
         actor = self.factory.get_or_create(characters.HumanMale1)
         actor.location.set(32, 16)
-        actor.display.assign(self.batch, self.groups[Layer.foreground])
         actor.controller = components.PlayerController(1, self.inputs[0])
         # TODO Not the way it should be done
         actor.controller.register(actor)

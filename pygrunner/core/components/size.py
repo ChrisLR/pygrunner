@@ -9,14 +9,14 @@ class Size(Component):
         super().__init__()
         self.height = height
         self.width = width
-        self.center_x = int(round(width / 2))
-        self.center_y = int(round(height / 2))
+        self.half_width = int(round(width / 2))
+        self.half_height = int(round(height / 2))
         self.rectangle = geom.Rectangle(0, 0, width, height)
         self.bottom_rectangle = geom.Rectangle(1, height, width - 2, 1)
         self.top_rectangle = geom.Rectangle(1, 0, width - 2, 1)
         self.right_rectangle = geom.Rectangle(width, 1, 1, height - 1)
         self.left_rectangle = geom.Rectangle(0, 1, 1, height - 1)
-        self.center_rectangle = geom.Rectangle(self.center_x, self.center_y,
+        self.center_rectangle = geom.Rectangle(self.half_width, self.half_height,
                                                int(round(width / 4)), int(round(height / 4)))
 
     def adjust_rectangles(self):
@@ -35,8 +35,8 @@ class Size(Component):
         self.left_rectangle.y = new_y + 1
         self.right_rectangle.x = new_x + self.width
         self.right_rectangle.y = new_y + 1
-        self.center_rectangle.x = new_x + self.center_x
-        self.center_rectangle.y = new_y + self.center_y
+        self.center_rectangle.x = new_x + self.half_width
+        self.center_rectangle.y = new_y + self.half_height
 
     def update(self):
         pass
@@ -45,8 +45,8 @@ class Size(Component):
     def reset(self):
         self.height = 0
         self.width = 0
-        self.center_x = 0
-        self.center_y = 0
+        self.half_width = 0
+        self.half_height = 0
         self.rectangle.x = 0
         self.rectangle.y = 0
         self.bottom_rectangle.x = 0
