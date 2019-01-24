@@ -26,6 +26,9 @@ class Level(object):
         self.statics.remove(static_object)
         self.static_collision_map.remove_collider(rectangle)
 
+    def remove_game_object(self, game_object):
+        self.game_objects.remove(game_object)
+
 
 class CollisionMap(object):
     """

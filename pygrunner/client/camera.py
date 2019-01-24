@@ -64,6 +64,10 @@ class Camera(object):
 
     def update_for_object(self, game_object):
         sprite = self.sprites.get(game_object)
+        if game_object.recycle:
+            sprite.visible = False
+            return
+
         image = game_object.display.current
         if sprite is None:
             group = self.groups.get(game_object.display.layer)

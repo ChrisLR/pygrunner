@@ -23,6 +23,7 @@ class Character(Recipe):
         size = components.Size()
         stance = components.Stance(stances.Idle, (stances.Idle, stances.Running, stances.Jumping, stances.Climbing))
         actor = Actor(cls.name, controller, display, location, physics, size, stance, cls)
+        actor.add_component(components.Collector())
 
         return actor
 

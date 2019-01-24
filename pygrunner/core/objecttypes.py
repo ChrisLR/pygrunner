@@ -13,6 +13,7 @@ class GameObject(ComponentHolder):
         self.add_components((display, location, size, physics))
         self.flipped = False
         self.recipe = recipe
+        self.recycle = False
 
 
 class StaticObject(GameObject):
