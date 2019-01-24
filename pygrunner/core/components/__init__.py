@@ -1,3 +1,4 @@
+from pygrunner.core.components.listing import component_listing, component_names
 from pygrunner.core.components.controllers import PlayerController, AIController
 from pygrunner.core.components.display import Display
 from pygrunner.core.components.location import Location

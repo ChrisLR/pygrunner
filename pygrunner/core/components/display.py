@@ -1,8 +1,8 @@
-import pyglet
-
+from pygrunner.core.components import listing
 from pygrunner.core.components.base import Component
 
 
+@listing.register
 class Display(Component):
     name = "display"
 
