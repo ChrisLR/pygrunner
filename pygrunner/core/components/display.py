@@ -12,17 +12,12 @@ class Display(Component):
         self.animations = animations
         self.current = None
         self.current_name = ""
-        self.batch = None
-        self.group = None
         # TODO Flipped images shouldn't be kept here
         # TODO We should store and access flipped images from the spritesheet
         self._flipped_images = {}
         self.flipped = False
-
-    def assign(self, batch, group):
-        self.batch = batch
-        self.group = group
         self.play('idle')
+
 
     def add(self, name, animation):
         self.animations[name] = animation
@@ -38,15 +33,12 @@ class Display(Component):
         self.current_name = name
         animation = self.animations.get(name)
         if animation is not None:
-            if self.current is not None:
-                self.current.visible = False
-            else:
-                self.current = pyglet.sprite.Sprite(animation, batch=self.batch, group=self.group)
+            self.current = animation
 
             if self.flipped:
-                self.current.image = self._get_or_create_flipped(self.current_name, animation)
+                self.current = self._get_or_create_flipped(self.current_name, animation)
             else:
-                self.current.image = animation
+                self.current = animation
 
             self.current.scale = 1
 
@@ -64,8 +56,8 @@ class Display(Component):
 
     def flip(self):
         if self.flipped:
-            self.current.image = self.animations.get(self.current_name)
+            self.current = self.animations.get(self.current_name)
             self.flipped = False
         else:
-            self.current.image = self._get_or_create_flipped(self.current_name, self.current.image)
+            self.current = self._get_or_create_flipped(self.current_name, self.current)
             self.flipped = True
