@@ -1,6 +1,8 @@
+from pygrunner.core.components import listing
 from pygrunner.core.components.base import Component
 
 
+@listing.register
 class Stance(Component):
     """
     Component keeping track of stances.

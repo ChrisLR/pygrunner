@@ -1,26 +1,18 @@
-class GameObject(object):
+from pygrunner.core.componentholder import ComponentHolder
+
+
+class GameObject(ComponentHolder):
     """
     An Object with a presence in-game
 
     This object has at a minimum a display, location, physics and size
     """
     def __init__(self, name, display, location, physics, size, recipe=None):
+        super().__init__()
         self.name = name
-        self.display = display
-        self.location = location
-        self.physics = physics
-        self.size = size
-        self.display.register(self)
-        self.location.register(self)
-        self.physics.register(self)
-        self.size.register(self)
+        self.add_components((display, location, size, physics))
         self.flipped = False
         self.recipe = recipe
-
-    def update(self, dt):
-        self.display.update()
-        self.location.update()
-        self.size.update()
 
 
 class StaticObject(GameObject):
@@ -43,12 +35,4 @@ class Actor(GameObject):
     """
     def __init__(self, name, controller, display, location, physics, size, stance, recipe):
         super().__init__(name, display, location, physics, size, recipe)
-        self.controller = controller
-        self.stance = stance
-        self.controller.register(self)
-        self.stance.register(self)
-
-    def update(self, dt):
-        self.stance.update()
-        self.controller.update()
-        super().update(dt)
+        self.add_components((controller, stance))

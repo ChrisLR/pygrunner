@@ -70,10 +70,18 @@ class ClientGame(object):
         self.factory.restock_all()
         self.level = TmxLoader(self.factory).load_map('simple')
 
-        # TODO This is just for development
+        # TODO A better way to add actors to a game
         actor = self.factory.get_or_create(characters.HumanMale1)
         actor.location.set(32, 16)
-        actor.controller = components.PlayerController(1, self.inputs[0])
-        # TODO Not the way it should be done
-        actor.controller.register(actor)
+        actor.replace_component(components.PlayerController(1, self.inputs[0]))
+        self.level.add_game_object(actor)
+
+        actor = self.factory.get_or_create(characters.HumanFemale1)
+        actor.location.set(32, 16)
+        actor.replace_component(components.PlayerController(2, self.inputs[1]))
+        self.level.add_game_object(actor)
+
+        actor = self.factory.get_or_create(characters.HumanFemale1)
+        actor.location.set(32, 16)
+        actor.replace_component(components.PlayerController(3, self.inputs[2]))
         self.level.add_game_object(actor)

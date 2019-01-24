@@ -61,5 +61,5 @@ class KeyboardMapping(object):
             left=pyglet.window.key.LEFT,
             right=pyglet.window.key.RIGHT,
             a=pyglet.window.key.NUM_0,
-            b=pyglet.window.key.NUM_DELETE
+            b=pyglet.window.key.NUM_DECIMAL
         )
