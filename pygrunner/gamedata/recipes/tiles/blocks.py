@@ -8,7 +8,7 @@ class Block(Tile):
     name = ""
     animations = {}
     initial_stock = 200
-    layer = Layer.foreground
+    layer = Layer.middle
 
 
 @Factory.register

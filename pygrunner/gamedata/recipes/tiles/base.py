@@ -7,7 +7,7 @@ class Tile(Recipe):
     name = ""
     animations = {}
     initial_stock = 200
-    layer = Layer.background
+    layer = Layer.middle
 
     @classmethod
     def create(cls, sprite_loader):
