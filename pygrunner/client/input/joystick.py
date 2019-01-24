@@ -29,29 +29,28 @@ class Joystick(object):
 class JoystickMapping(object):
     def __init__(self, a, b):
         self._mapping = {
-            a: Keymap.Up,
-            b: Keymap.Down
+            a: Keymap.A,
+            b: Keymap.B
         }
 
     def get(self, motions, buttons_pressed):
         joy_x, joy_y, joy_rx, joy_ry = motions
         maps = {self._mapping.get(button) for button in buttons_pressed}
-        if joy_x > 0:
+        if joy_x >= 0.5:
             maps.add(Keymap.Right)
-        elif joy_x < 0:
+        elif joy_x < -0.5:
             maps.add(Keymap.Left)
 
-        if joy_y > 0:
+        if joy_y >= 0.5:
             maps.add(Keymap.Down)
-        elif joy_y < 0:
+        elif joy_y <= -0.5:
             maps.add(Keymap.Up)
 
         return maps
 
     @classmethod
     def default(cls):
-        # TODO Determine suitable Default
         return cls(
-            a=0,
-            b=1
+            a=2,
+            b=0
         )
