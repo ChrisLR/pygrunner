@@ -38,13 +38,14 @@ class ObjectPool(object):
 
         return game_object
 
-    def refund(self, recipe, game_object):
+    def refund(self, game_object):
         """
         Returns a game object to the pool and reinitialize it
         :param recipe:
         :param game_object:
         :return:
         """
+        recipe = game_object.recipe
         recipe.reset(game_object)
         used_count = self.used_count.get(recipe, 1)
         if recipe in self._pool:

@@ -34,6 +34,7 @@ class GameScene(Scene):
         if self.recycle_bin:
             for game_object in self.recycle_bin:
                 level.remove_game_object(game_object)
+                self.game.factory.destroy(game_object)
             self.recycle_bin.clear()
 
 
