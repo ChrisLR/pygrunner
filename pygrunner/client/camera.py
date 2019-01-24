@@ -49,11 +49,18 @@ class Camera(object):
             fx, fy = self._follow.location.x, self._follow.location.y
             x_dist = fx - cx
             y_dist = fy - cy
-            if abs(x_dist) > 32:
-                self.location.add(x=util.sign(x_dist))
 
-            if abs(y_dist) > 32:
-                self.location.add(y=util.sign(y_dist))
+            if abs(x_dist) > 20:
+                speed_multiplier = round(x_dist / 16)
+                sign = util.sign(x_dist)
+                speed = sign if speed_multiplier < 1 else speed_multiplier
+                self.location.add(x=speed)
+
+            if abs(y_dist) > 20:
+                speed_multiplier = round(y_dist / 16)
+                sign = util.sign(y_dist)
+                speed = sign if speed_multiplier < 1 else speed_multiplier
+                self.location.add(y=speed)
 
 
     def adjust_game_object_sprite(self, game_object, sprite):
