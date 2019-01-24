@@ -25,23 +25,23 @@ class Camera(object):
         self.sprites = {}
         self._follow = None
 
-    def follow(self, game_object):
-        self._follow = game_object
+    def adjust_game_object_sprite(self, game_object, sprite):
+        """
+        Will adjust a game object's sprite based on
+        :param game_object: The game object to adjust
+        """
+        if self.is_visible(game_object):
+            sprite.visible = True
+            pixel_coordinate = self.coord_to_pixel(game_object.location.x, game_object.location.y)
+            sprite.set_position(*pixel_coordinate)
+        else:
+            sprite.visible = False
 
     def draw(self):
         self.batch.draw()
 
-    def update_for_object(self, game_object):
-        sprite = self.sprites.get(game_object)
-        image = game_object.display.current
-        if sprite is None:
-            group = self.groups.get(game_object.display.layer)
-            sprite = pyglet.sprite.Sprite(image, batch=self.batch, group=group)
-            self.sprites[game_object] = sprite
-        else:
-            if image != sprite.image:
-                sprite.image = image
-        self.adjust_game_object_sprite(game_object, sprite)
+    def follow(self, game_object):
+        self._follow = game_object
 
     def update(self):
         if self._follow:
@@ -62,24 +62,23 @@ class Camera(object):
                 speed = sign if speed_multiplier < 1 else speed_multiplier
                 self.location.add(y=speed)
 
-
-    def adjust_game_object_sprite(self, game_object, sprite):
-        """
-        Will adjust a game object's sprite based on
-        :param game_object: The game object to adjust
-        """
-        if self.is_visible(game_object):
-            sprite.visible = True
-            pixel_coordinate = self.coord_to_pixel(game_object.location.x, game_object.location.y)
-            sprite.set_position(*pixel_coordinate)
+    def update_for_object(self, game_object):
+        sprite = self.sprites.get(game_object)
+        image = game_object.display.current
+        if sprite is None:
+            group = self.groups.get(game_object.display.layer)
+            sprite = pyglet.sprite.Sprite(image, batch=self.batch, group=group)
+            self.sprites[game_object] = sprite
         else:
-            sprite.visible = False
-
-    def pixel_to_coord(self, pixel_x, pixel_y):
-        return self.location.x + pixel_x, self.location.y + pixel_y
+            if image != sprite.image:
+                sprite.image = image
+        self.adjust_game_object_sprite(game_object, sprite)
 
     def coord_to_pixel(self, coord_x, coord_y):
         return coord_x - self.location.x, self.size.height - (coord_y - self.location.y)
+
+    def pixel_to_coord(self, pixel_x, pixel_y):
+        return self.location.x + pixel_x, self.location.y + pixel_y
 
     def is_visible(self, game_object):
         if self.size.rectangle.intersects(game_object.size.rectangle):
