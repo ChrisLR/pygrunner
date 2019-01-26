@@ -31,28 +31,8 @@ class Rectangle(object):
         :type rectangle: Rectangle
         :rtype bool
         """
-        delta_x = abs(self.x - rectangle.x)
-        delta_y = abs(self.y - rectangle.y)
-        if delta_x > self.width + rectangle.width:
-            return False
-        if delta_y > self.height + rectangle.height:
-            return False
 
-        horizontal = self.right >= rectangle.left and self.left <= rectangle.right
-        if horizontal is False:
-            horizontal = rectangle.right >= self.left and rectangle.left <= self.right
-
-        if horizontal is False:
-            return False
-
-        vertical = self.bottom >= rectangle.top and self.top <= rectangle.bottom
-        if vertical is False:
-            vertical = rectangle.bottom >= self.top and rectangle.top <= self.bottom
-
-        if vertical is False:
-            return False
-
-        return True
+        return self.right >= rectangle.left and self.left <= rectangle.right and self.bottom >= rectangle.top and self.top <= rectangle.bottom
 
 
 @dataclass(eq=True)
