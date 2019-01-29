@@ -37,14 +37,11 @@ class AIController(Component):
         self.ai = ai
 
     def get_keymaps(self):
-        # TODO Ais
-        #return self.ai.get_keymaps()
         pass
 
     def update(self):
-        keymaps = self.get_keymaps()
-        if keymaps:
-            self.host.stance.do_keymaps(keymaps)
+        if self.ai:
+            self.ai.update()
 
     def reset(self):
         # TODO AIs will have state to reset

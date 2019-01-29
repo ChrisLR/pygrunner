@@ -19,7 +19,6 @@ class ClientGame(object):
         self.spriteloader.load_spritesheets(("packed.png",))
         self.factory = Factory(self.spriteloader, ObjectPool())
 
-
     def on_draw(self):
         self.window.clear()
         self.scene_manager.on_draw()
@@ -71,9 +70,14 @@ class ClientGame(object):
         self.level = TmxLoader(self.factory).load_map('simple')
 
         # TODO A better way to add actors to a game
-        actor = self.factory.get_or_create("Green Zombie")
+        actor = self.factory.get_or_create(characters.HumanMale1)
         actor.location.set(32, 16)
         actor.replace_component(components.PlayerController(1, self.inputs[0]))
+        self.level.add_game_object(actor)
+
+        # TODO A better way to add actors to a game
+        actor = self.factory.get_or_create("Green Zombie")
+        actor.location.set(180, 16)
         self.level.add_game_object(actor)
 
         actor = self.factory.get_or_create(characters.HumanFemale1)
@@ -81,7 +85,3 @@ class ClientGame(object):
         actor.replace_component(components.PlayerController(2, self.inputs[1]))
         self.level.add_game_object(actor)
 
-        actor = self.factory.get_or_create(characters.HumanFemale1)
-        actor.location.set(32, 16)
-        actor.replace_component(components.PlayerController(3, self.inputs[2]))
-        self.level.add_game_object(actor)

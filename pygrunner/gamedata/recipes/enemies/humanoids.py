@@ -1,3 +1,4 @@
+from pygrunner.core.ai.basic import ZombieAI
 from pygrunner.core.spriteinfo import SpriteInfo
 from pygrunner.gamedata.factory import Factory
 from pygrunner.gamedata.recipes.enemies.base import Enemy
@@ -22,3 +23,13 @@ class GreenZombie(Enemy):
         ],
         'dead': [SpriteInfo('packed', 'green_zombie_dead_0', 28, 5)],
     }
+
+    @classmethod
+    def create(cls, sprite_loader):
+        """
+        Creates a game object and assigns proper components
+        """
+        actor = super().create(sprite_loader)
+        actor.controller.ai = ZombieAI(actor)
+
+        return actor
