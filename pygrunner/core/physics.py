@@ -81,7 +81,7 @@ class PhysicsEngine(object):
                 all_object_collisions.add(collision_tuple)
                 intersect_collisions.append(other_game_object)
 
-            game_object.physics.collisions["intersects"] = intersect_collisions
+        game_object.physics.collisions["intersects"] = intersect_collisions
 
     def _set_static_collisions(self, current_level, game_object):
         static_map = current_level.static_collision_map

@@ -10,8 +10,8 @@ class GreenZombie(Enemy):
     animations = {
         'idle': [SpriteInfo('packed', 'green_zombie_idle_0', 28, 0)],
         'run': [
-            SpriteInfo('packed', 'green_zombie_run_0', 28, 1),
-            SpriteInfo('packed', 'green_zombie_run_1', 28, 2),
+            SpriteInfo('packed', 'green_zombie_run_0', 28, 0),
+            SpriteInfo('packed', 'green_zombie_run_1', 28, 1),
         ],
         'climb':[
             SpriteInfo('packed', 'green_zombie_climb_0', 28, 3),
@@ -19,6 +19,7 @@ class GreenZombie(Enemy):
         ],
         'punch': [
             SpriteInfo('packed', 'green_zombie_punch_0', 28, 2),
+            SpriteInfo('packed', 'green_zombie_punch_1', 28, 4),
             SpriteInfo('packed', 'green_zombie_punch_1', 28, 4),
         ],
         'dead': [SpriteInfo('packed', 'green_zombie_dead_0', 28, 5)],

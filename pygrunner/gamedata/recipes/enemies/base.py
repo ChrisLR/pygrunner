@@ -21,7 +21,7 @@ class Enemy(Recipe):
         location = components.Location(0, 0)
         physics = components.Physics()
         size = components.Size()
-        stance = components.Stance(stances.Idle, (stances.Idle, stances.Running, stances.Jumping, stances.Climbing))
+        stance = components.Stance(stances.Idle, [stances.Idle, stances.Running, stances.Jumping, stances.Climbing, stances.Punching])
         actor = Actor(cls.name, controller, display, location, physics, size, stance, cls)
 
         return actor

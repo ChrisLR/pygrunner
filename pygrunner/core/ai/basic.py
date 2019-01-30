@@ -19,11 +19,12 @@ class ZombieAI(object):
         if static_collisions:
             self.direction *= -1
             return
+        # TODO We need to get a bottom corner to detect and change directions instead of falling
 
         intersects = host_physics.intersects
         if intersects:
             # TODO This must check alliance status, not recipe inheritance
-            has_target = any(char for char in intersects if isinstance(char.recipe, Character))
+            has_target = any(char for char in intersects if issubclass(char.recipe, Character))
             if has_target:
                 return self._attack()
         return self._move()
