@@ -75,11 +75,6 @@ class ClientGame(object):
         actor.replace_component(components.PlayerController(1, self.inputs[0]))
         self.level.add_game_object(actor)
 
-        # TODO A better way to add actors to a game
-        actor = self.factory.get_or_create("Green Zombie")
-        actor.location.set(180, 16)
-        self.level.add_game_object(actor)
-
         actor = self.factory.get_or_create(characters.HumanFemale1)
         actor.location.set(32, 16)
         actor.replace_component(components.PlayerController(2, self.inputs[1]))
