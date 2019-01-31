@@ -5,6 +5,7 @@ from pygrunner.core.actions.base import Action
 class Punch(Action):
     cancelable = False
     continuous = False
+
     def __init__(self, actor):
         super().__init__(actor)
         self.updates = 0
