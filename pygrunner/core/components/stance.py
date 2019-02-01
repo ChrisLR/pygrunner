@@ -16,6 +16,9 @@ class Stance(Component):
         self.current = None
         self.next_stance_name = None
 
+    def add_stance(self, stance):
+        self.stances[stance.name] = stance
+
     def update(self):
         pass
 
@@ -23,7 +26,8 @@ class Stance(Component):
         if next_stance_name and (self.current and next_stance_name != self.current.name):
             new_stance = self.stances.get(next_stance_name)
             # TODO This indicates that actions should be shared
-            new_stance.executing_action = self.current.executing_action
+            if new_stance and self.current:
+                new_stance.executing_action = self.current.executing_action
             if new_stance:
                 self.current = new_stance
             else:

@@ -17,7 +17,7 @@ class Display(Component):
         self._flipped_images = {}
         self.flipped = False
         self.play('idle')
-
+        self._sprite = None
 
     def add(self, name, animation):
         self.animations[name] = animation
@@ -45,7 +45,6 @@ class Display(Component):
     def reset(self):
         self.current = self.animations.get('idle')
 
-
     def _get_or_create_flipped(self, name, animation):
         flipped_image = self._flipped_images.get(name)
         if flipped_image is None:
@@ -61,3 +60,19 @@ class Display(Component):
         else:
             self.current = self._get_or_create_flipped(self.current_name, self.current)
             self.flipped = True
+
+    @property
+    def sprite(self):
+        return self._sprite
+
+    @sprite.setter
+    def sprite(self, value):
+        self._sprite = value
+        if value:
+            self._sprite.push_handlers(on_animation_end=self.on_animation_end)
+
+    def on_animation_end(self):
+        # TODO This will be called whenever any animation ends or loops
+        # TODO It must be possible for an action to register to this
+        # TODO And be notified when it has finished
+        pass

@@ -11,7 +11,7 @@ class GameScene(Scene):
         self.recycle_bin = set()
         self.game._start_level()
         self.camera = Camera(components.Location(0, 0), components.Size(self.window.height, self.window.width), game)
-        self.camera.follow(self.game.level.game_objects[1])
+        self.camera.follow(self.game.level.game_objects[-1])
         self.physics_engine = physics.PhysicsEngine(0.01, 0.5, 0.9)
 
     def on_draw(self):

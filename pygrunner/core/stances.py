@@ -64,6 +64,10 @@ class Idle(Stance):
         elif Keymap.Right in keymaps:
             self.start_or_continue(actions.WalkRight)
 
+        if Keymap.A in keymaps:
+            # TODO Stances will have to vary from actor to actor
+            self.start_or_continue(actions.Punch)
+
         if Keymap.B in keymaps:
             self.start_or_continue(actions.Jump)
 
@@ -116,3 +120,13 @@ class Climbing(Stance):
                 self.executing_action = None
             self.actor.stance.change_stance('idle')
             self.actor.physics.affected_by_gravity = True
+
+
+class Punching(Stance):
+    name = "punching"
+
+    def do_keymaps(self, keymaps):
+        self.continue_current_action()
+        if self.executing_action is None:
+            self.actor.stance.change_stance('idle')
+

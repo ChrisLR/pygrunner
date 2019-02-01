@@ -28,7 +28,6 @@ class ComponentHolder(object):
         for component in components:
             self.add_component(component)
 
-
     def update(self, dt):
         for component in self.components:
             component.update()

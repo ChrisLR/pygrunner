@@ -19,7 +19,6 @@ class ClientGame(object):
         self.spriteloader.load_spritesheets(("packed.png",))
         self.factory = Factory(self.spriteloader, ObjectPool())
 
-
     def on_draw(self):
         self.window.clear()
         self.scene_manager.on_draw()
@@ -81,7 +80,3 @@ class ClientGame(object):
         actor.replace_component(components.PlayerController(2, self.inputs[1]))
         self.level.add_game_object(actor)
 
-        actor = self.factory.get_or_create(characters.HumanFemale1)
-        actor.location.set(32, 16)
-        actor.replace_component(components.PlayerController(3, self.inputs[2]))
-        self.level.add_game_object(actor)

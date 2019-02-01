@@ -17,10 +17,10 @@ class HumanMale1(Character):
             SpriteInfo('packed', 'human_male_1_climb_1', 30, 15, True),
         ],
         'punch': [
-            SpriteInfo('packed', 'human_male_1_punch_0', 30, 15),
-            SpriteInfo('packed', 'human_male_1_punch_1', 30, 17),
+            SpriteInfo('packed', 'human_male_1_punch_0', 30, 14),
+            SpriteInfo('packed', 'human_male_1_punch_1', 30, 16),
         ],
-        'dead': [SpriteInfo('packed', 'human_male_1_dead_0', 30, 18)],
+        'dead': [SpriteInfo('packed', 'human_male_1_dead_0', 30, 17)],
     }
 
 
@@ -38,8 +38,8 @@ class HumanFemale1(Character):
             SpriteInfo('packed', 'human_female_1_climb_1', 29, 15, True),
         ],
         'punch': [
-            SpriteInfo('packed', 'human_female_1_punch_0', 29, 15),
-            SpriteInfo('packed', 'human_female_1_punch_1', 29, 17),
+            SpriteInfo('packed', 'human_female_1_punch_0', 29, 14),
+            SpriteInfo('packed', 'human_female_1_punch_1', 29, 16),
         ],
-        'dead': [SpriteInfo('packed', 'human_female_1_dead_0', 29, 18)],
+        'dead': [SpriteInfo('packed', 'human_female_1_dead_0', 29, 17)],
     }

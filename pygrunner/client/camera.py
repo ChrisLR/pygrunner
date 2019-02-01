@@ -22,7 +22,6 @@ class Camera(object):
             Layer.middle: pyglet.graphics.OrderedGroup(Layer.middle),
             Layer.foreground: pyglet.graphics.OrderedGroup(Layer.foreground),
         }
-        self.sprites = {}
         self._follow = None
 
     def adjust_game_object_sprite(self, game_object, sprite):
@@ -63,16 +62,18 @@ class Camera(object):
                 self.location.add(y=speed)
 
     def update_for_object(self, game_object):
-        sprite = self.sprites.get(game_object)
-        if game_object.recycle:
+        object_display = game_object.display
+        sprite = object_display.sprite
+        if sprite and game_object.recycle:
             sprite.visible = False
+            game_object.display.sprite = None
             return
 
         image = game_object.display.current
         if sprite is None:
             group = self.groups.get(game_object.display.layer)
             sprite = pyglet.sprite.Sprite(image, batch=self.batch, group=group)
-            self.sprites[game_object] = sprite
+            object_display.sprite = sprite
         else:
             if image != sprite.image:
                 sprite.image = image
