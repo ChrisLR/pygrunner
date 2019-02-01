@@ -1,3 +1,4 @@
+from pygrunner.core.components.bouncer import Bouncer
 from pygrunner.core.components.collectible import Collectible
 from pygrunner.core.components.collector import Collector
 from pygrunner.core.components.controllers import PlayerController, AIController
