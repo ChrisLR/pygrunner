@@ -15,6 +15,7 @@ class Physics(Component):
         self.velocity_x = velocity_x
         self.velocity_y = velocity_y
         self.collisions = {}
+        self.intersects = {}
         self.triggers = {}
         self.solid = solid
         self._initial_solid = solid
@@ -23,6 +24,7 @@ class Physics(Component):
         self.climbables = {}
         self.climbing_down = False
         self.affected_by_gravity = True
+        self.affected_by_velocity = True
 
     def reset(self):
         self.velocity_x = 0
@@ -51,10 +53,6 @@ class Physics(Component):
     @property
     def center_collisions(self):
         return self.collisions["center"]
-
-    @property
-    def intersects(self):
-        return self.collisions["intersects"]
 
     @property
     def bottom_triggers(self):

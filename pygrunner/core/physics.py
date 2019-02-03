@@ -22,6 +22,9 @@ class PhysicsEngine(object):
         self._set_object_collisions(all_object_collisions, current_level, game_object)
 
     def _move_object(self, game_object, object_physics):
+        if object_physics.affected_by_velocity is False:
+            return
+
         direction_x = util.sign(object_physics.velocity_x)
         direction_y = util.sign(object_physics.velocity_y)
 
@@ -64,7 +67,7 @@ class PhysicsEngine(object):
                 object_physics.velocity_y += self.gravity
 
     def _set_object_collisions(self, all_object_collisions, current_level, game_object):
-        intersect_collisions = []
+        intersect_collisions = set()
         for other_game_object in current_level.game_objects:
             if game_object is other_game_object:
                 continue
@@ -72,16 +75,16 @@ class PhysicsEngine(object):
             collision_tuple = other_game_object, game_object
             if collision_tuple in all_object_collisions:
                 # This is useful when the other object already calculated collision
-                intersect_collisions.append(other_game_object)
+                intersect_collisions.add(other_game_object)
                 continue
 
             first_rect = game_object.size.rectangle
             second_rect = other_game_object.size.rectangle
             if first_rect.intersects(second_rect):
                 all_object_collisions.add(collision_tuple)
-                intersect_collisions.append(other_game_object)
+                intersect_collisions.add(other_game_object)
 
-        game_object.physics.collisions["intersects"] = intersect_collisions
+        game_object.physics.intersects = intersect_collisions
 
     def _set_static_collisions(self, current_level, game_object):
         static_map = current_level.static_collision_map
