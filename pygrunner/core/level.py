@@ -11,7 +11,7 @@ class Level(object):
         self.height = height
         self.game_objects = []
         self.statics = []
-        self.static_collision_map = CollisionMap()
+        self.static_collision_map = CollisionMap(width, height)
 
     def add_game_object(self, game_object):
         self.game_objects.append(game_object)
@@ -34,22 +34,28 @@ class CollisionMap(object):
     """
     An object containing rectangles of static game objects for collisions
     """
-    def __init__(self):
-        self._collision_map = {}
+    def __init__(self, width, height):
+        self._collision_map = [[None for _ in range(height)] for _ in range(width)]
+        self.width = width
+        self.height = height
 
     def add_collider(self, collider, rectangle):
         for x in range(rectangle.left, rectangle.right):
             for y in range(rectangle.top, rectangle.bottom):
-                self._collision_map[(x, y)] = collider
+                self._collision_map[x][y] = collider
 
     def check_collision_point(self, point):
-        return self._collision_map.get((point.x, point.y))
+        return self._collision_map[point.x][point.y]
 
     def check_collision_rect(self, rectangle):
         collisions = set()
         for x in range(int(rectangle.left), int(math.ceil(rectangle.right))):
             for y in range(int(rectangle.top), int(math.ceil(rectangle.bottom))):
-                collision = self._collision_map.get((x, y))
+                if x < 0 or x > self.width:
+                    continue
+                if y < 0 or y > self.height:
+                    continue
+                collision = self._collision_map[x][y]
                 if collision is not None:
                     collisions.add(collision)
 
@@ -58,4 +64,4 @@ class CollisionMap(object):
     def remove_collider(self, rectangle):
         for x in range(rectangle.left, rectangle.right):
             for y in range(rectangle.top, rectangle.bottom):
-                del self._collision_map[(x, y)]
+                self._collision_map[x][y] = None
