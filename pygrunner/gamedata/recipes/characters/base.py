@@ -7,7 +7,7 @@ class Character(Recipe):
     name = ""
     animations = {}
     move_speed = 1
-    jump_height = 1
+    jump_height = 16
     initial_stock = 10
 
     @classmethod

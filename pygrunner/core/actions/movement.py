@@ -25,10 +25,11 @@ class WalkRight(Action):
 
     def execute(self):
         actor = self.actor
+        move_speed = actor.recipe.move_speed
         if actor.physics.velocity_x <= 0:
-            actor.physics.velocity_x += 1
-        elif 0 < actor.physics.velocity_x < 1:
-            actor.physics.velocity_x = 1
+            actor.physics.velocity_x += move_speed
+        elif 0 < actor.physics.velocity_x < move_speed:
+            actor.physics.velocity_x = move_speed
         actor.flipped = False
 
     def on_start(self):
@@ -42,10 +43,11 @@ class WalkLeft(Action):
 
     def execute(self):
         actor = self.actor
+        move_speed = actor.recipe.move_speed
         if actor.physics.velocity_x >= 0:
-            actor.physics.velocity_x -= 1
-        elif 0 > actor.physics.velocity_x > -1:
-            actor.physics.velocity_x = -1
+            actor.physics.velocity_x -= move_speed
+        elif 0 > actor.physics.velocity_x > -move_speed:
+            actor.physics.velocity_x = -move_speed
         actor.flipped = True
 
     def can_execute(self):
@@ -62,10 +64,11 @@ class GlideLeft(Action):
 
     def execute(self):
         actor = self.actor
+        half_speed = actor.recipe.move_speed / 2
         if actor.physics.velocity_x >= 0:
-            actor.physics.velocity_x -= 0.5
-        elif actor.physics.velocity_x > -0.5:
-            actor.physics.velocity_x = -0.5
+            actor.physics.velocity_x -= half_speed
+        elif actor.physics.velocity_x > -half_speed:
+            actor.physics.velocity_x = -half_speed
         actor.flipped = True
 
     def can_execute(self):
@@ -80,10 +83,11 @@ class GlideRight(Action):
 
     def execute(self):
         actor = self.actor
+        half_speed = actor.recipe.move_speed / 2
         if actor.physics.velocity_x <= 0:
-            actor.physics.velocity_x += 0.5
-        elif 0 < actor.physics.velocity_x < 0.5:
-            actor.physics.velocity_x = 0.5
+            actor.physics.velocity_x += half_speed
+        elif 0 < actor.physics.velocity_x < half_speed:
+            actor.physics.velocity_x = half_speed
         actor.flipped = False
 
 
@@ -96,7 +100,7 @@ class Jump(Action):
 
     def on_start(self):
         actor = self.actor
-        actor.physics.velocity_y -= 16
+        actor.physics.velocity_y -= actor.recipe.jump_height
         actor.physics.velocity_x += actor.physics.velocity_x
         actor.stance.change_stance('jumping')
 
@@ -109,7 +113,8 @@ class ClimbUp(Action):
     continuous = True
 
     def execute(self):
-        self.actor.physics.velocity_y = -1
+        actor = self.actor
+        actor.physics.velocity_y = -actor.recipe.move_speed
 
     def can_execute(self):
         if any(self.actor.physics.climbables.values()):
@@ -138,7 +143,8 @@ class ClimbDown(Action):
     continuous = True
 
     def execute(self):
-        self.actor.physics.velocity_y = 1
+        actor = self.actor
+        self.actor.physics.velocity_y = actor.recipe.move_speed
 
     def can_execute(self):
         if any(self.actor.physics.climbables.values()):
@@ -169,7 +175,8 @@ class ClimbLeft(Action):
     continuous = True
 
     def execute(self):
-        self.actor.physics.velocity_x = -1
+        actor = self.actor
+        actor.physics.velocity_x = -actor.recipe.move_speed
 
     def can_execute(self):
         if any(self.actor.physics.climbables.values()):
@@ -197,7 +204,8 @@ class ClimbRight(Action):
     continuous = True
 
     def execute(self):
-        self.actor.physics.velocity_x = 1
+        actor = self.actor
+        self.actor.physics.velocity_x = actor.recipe.move_speed
 
     def can_execute(self):
         if any(self.actor.physics.climbables.values()):
