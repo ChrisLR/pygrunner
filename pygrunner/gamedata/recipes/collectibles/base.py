@@ -22,6 +22,7 @@ class Collectible(Recipe):
         location = components.Location(0, 0)
         physics = components.Physics()
         physics.affected_by_gravity = False
+        physics.affected_by_velocity = False
         size = components.Size()
         game_object = GameObject(cls.name, display, location, physics, size, cls)
         collectible = components.Collectible(cls.collectible_type, cls.collectible_value)
