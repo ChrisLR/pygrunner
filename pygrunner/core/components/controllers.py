@@ -40,8 +40,9 @@ class AIController(Component):
         pass
 
     def update(self):
-        if self.ai:
-            self.ai.update()
+        pass
+        # if self.ai:
+        #     self.ai.update()
 
     def reset(self):
         # TODO AIs will have state to reset

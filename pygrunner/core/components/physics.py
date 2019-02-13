@@ -14,9 +14,9 @@ class Physics(Component):
         super().__init__()
         self.velocity_x = velocity_x
         self.velocity_y = velocity_y
-        self.collisions = {}
+        self.collisions = {"bottom": set(), "top": set(), "left": set(), "right": set(), "center": set()}
         self.intersects = {}
-        self.triggers = {}
+        self.triggers = {"bottom": set(), "top": set(), "left": set(), "right": set(), "center": set()}
         self.solid = solid
         self._initial_solid = solid
         self.platform = platform

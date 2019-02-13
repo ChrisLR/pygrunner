@@ -11,9 +11,12 @@ class PhysicsEngine(object):
     def update(self, current_level):
         for game_object in current_level.game_objects:
             object_physics = game_object.physics
-            self.check_collisions(current_level, game_object)
-            self._stop_static_colliding_objects(object_physics)
-            self._move_object(game_object, object_physics)
+            speed_left_x = 1
+            speed_left_y = 1
+            while speed_left_x or speed_left_y:
+                self.check_collisions(current_level, game_object)
+                self._stop_static_colliding_objects(object_physics)
+                speed_left_x, speed_left_y = self._move_object(game_object, object_physics, speed_left_x, speed_left_y)
             self._apply_friction_and_gravity(object_physics)
 
     def check_collisions(self, current_level, game_object):
@@ -21,19 +24,35 @@ class PhysicsEngine(object):
         self._set_static_collisions(current_level, game_object)
         self._set_object_collisions(all_object_collisions, current_level, game_object)
 
-    def _move_object(self, game_object, object_physics):
+    def _move_object(self, game_object, object_physics, speed_left_x=None, speed_left_y=None):
         if object_physics.affected_by_velocity is False:
-            return
+            return 0, 0
+
+        velocity_x = object_physics.velocity_x if speed_left_x is not None else speed_left_x
+        velocity_y = object_physics.velocity_y if speed_left_y is not None else speed_left_y
 
         direction_x = util.sign(object_physics.velocity_x)
         direction_y = util.sign(object_physics.velocity_y)
+        if velocity_x >= 10:
+            required_speed_x = velocity_x / 10
+        else:
+            required_speed_x = min(abs(direction_x), abs(object_physics.velocity_x))
 
         speed_x = min(abs(direction_x), abs(object_physics.velocity_x))
+
+        if velocity_y >= 10:
+            required_speed_y = velocity_y / 10
+        else:
+            required_speed_y = min(abs(direction_y), abs(object_physics.velocity_y))
+
         speed_y = min(abs(direction_y), abs(object_physics.velocity_y))
+
         # TODO We will want speed to vary in many situations
         # TODO To handle this, we will need to check collisions by projecting further
         # TODO To avoid sprites getting stuck
         game_object.location.add(speed_x * direction_x, speed_y * direction_y)
+
+        return required_speed_x - speed_x, required_speed_y - speed_y
 
     def _stop_static_colliding_objects(self, object_physics):
         if object_physics.velocity_x > 0:
