@@ -46,4 +46,4 @@ class YellowJumpPad(JumpPad):
         'idle': [SpriteInfo('packed', 'yellow_jump_pad', 26, 31)],
         'bounce': [SpriteInfo('packed', 'yellow_jump_pad_bounce', 27, 31)]
     }
-    vertical_force = -48
+    vertical_force = -24
