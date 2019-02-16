@@ -49,13 +49,13 @@ class Camera(object):
             x_dist = fx - cx
             y_dist = fy - cy
 
-            if abs(x_dist) > 20:
+            if abs(x_dist) > 30:
                 speed_multiplier = round(x_dist / 16)
                 sign = util.sign(x_dist)
                 speed = sign if speed_multiplier < 1 else speed_multiplier
                 self.location.add(x=speed)
 
-            if abs(y_dist) > 20:
+            if abs(y_dist) > 30:
                 speed_multiplier = round(y_dist / 16)
                 sign = util.sign(y_dist)
                 speed = sign if speed_multiplier < 1 else speed_multiplier
