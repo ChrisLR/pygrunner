@@ -11,9 +11,16 @@ class PhysicsEngine(object):
     def update(self, current_level):
         for game_object in current_level.game_objects:
             object_physics = game_object.physics
-            self.check_collisions(current_level, game_object)
-            self._stop_static_colliding_objects(object_physics)
-            self._move_object(game_object, object_physics)
+            object_physics.clear_collisions()
+            speed_left_x = None
+            speed_left_y = None
+            finished = False
+            while not finished:
+                self.check_collisions(current_level, game_object)
+                self._stop_static_colliding_objects(object_physics)
+                speed_left_x, speed_left_y = self._move_object(game_object, object_physics, speed_left_x, speed_left_y)
+                if abs(speed_left_x) <= 0.01 and abs(speed_left_y) <= 0.01:
+                    finished = True
             self._apply_friction_and_gravity(object_physics)
 
     def check_collisions(self, current_level, game_object):
@@ -21,19 +28,35 @@ class PhysicsEngine(object):
         self._set_static_collisions(current_level, game_object)
         self._set_object_collisions(all_object_collisions, current_level, game_object)
 
-    def _move_object(self, game_object, object_physics):
+    def _move_object(self, game_object, object_physics, speed_left_x=None, speed_left_y=None):
         if object_physics.affected_by_velocity is False:
-            return
+            return 0, 0
+
+        velocity_x = object_physics.velocity_x if speed_left_x is None else speed_left_x
+        velocity_y = object_physics.velocity_y if speed_left_y is None else speed_left_y
 
         direction_x = util.sign(object_physics.velocity_x)
         direction_y = util.sign(object_physics.velocity_y)
+        if abs(velocity_x) >= 2:
+            required_speed_x = abs(velocity_x / 2)
+        else:
+            required_speed_x = min(abs(direction_x), abs(velocity_x))
 
-        speed_x = min(abs(direction_x), abs(object_physics.velocity_x))
-        speed_y = min(abs(direction_y), abs(object_physics.velocity_y))
+        speed_x = min(abs(direction_x), abs(velocity_x))
+
+        if abs(velocity_y) >= 2:
+            required_speed_y = abs(velocity_y / 2)
+        else:
+            required_speed_y = min(abs(direction_y), abs(velocity_y))
+
+        speed_y = min(abs(direction_y), abs(velocity_y))
+
         # TODO We will want speed to vary in many situations
         # TODO To handle this, we will need to check collisions by projecting further
         # TODO To avoid sprites getting stuck
         game_object.location.add(speed_x * direction_x, speed_y * direction_y)
+
+        return required_speed_x - speed_x, required_speed_y - speed_y
 
     def _stop_static_colliding_objects(self, object_physics):
         if object_physics.velocity_x > 0:
@@ -84,7 +107,7 @@ class PhysicsEngine(object):
                 all_object_collisions.add(collision_tuple)
                 intersect_collisions.add(other_game_object)
 
-        game_object.physics.intersects = intersect_collisions
+        game_object.physics.intersects.update(intersect_collisions)
 
     def _set_static_collisions(self, current_level, game_object):
         static_map = current_level.static_collision_map
@@ -95,17 +118,15 @@ class PhysicsEngine(object):
             ("top", game_object.size.top_rectangle),
             ("center", game_object.size.center_rectangle)
         ]
-        game_object.physics.collisions.clear()
-        game_object.physics.climbables.clear()
-        game_object.physics.triggers.clear()
+
         for name, rectangle in rectangles:
             collisions = static_map.check_collision_rect(rectangle)
             solids = {collision for collision in collisions if collision.physics.solid}
             non_solids = collisions.difference(solids)
-            game_object.physics.collisions[name] = solids
-            game_object.physics.triggers[name] = non_solids
+            game_object.physics.collisions[name].update(solids)
+            game_object.physics.triggers[name].update(non_solids)
             climbables = {trigger for trigger in non_solids if trigger.physics.climbable}
-            game_object.physics.climbables[name] = climbables
+            game_object.physics.climbables[name].update(climbables)
             if name == "bottom":
                 if not game_object.physics.climbing_down:
                     platforms = {collision for collision in non_solids if collision.physics.platform}

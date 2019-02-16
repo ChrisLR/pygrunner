@@ -14,17 +14,24 @@ class Physics(Component):
         super().__init__()
         self.velocity_x = velocity_x
         self.velocity_y = velocity_y
-        self.collisions = {}
-        self.intersects = {}
-        self.triggers = {}
+        self.collisions = None
+        self.intersects = None
+        self.triggers = None
         self.solid = solid
         self._initial_solid = solid
         self.platform = platform
         self.climbable = climbable
-        self.climbables = {}
+        self.climbables = None
         self.climbing_down = False
         self.affected_by_gravity = True
         self.affected_by_velocity = True
+        self.clear_collisions()
+
+    def clear_collisions(self):
+        self.collisions = {"bottom": set(), "top": set(), "left": set(), "right": set(), "center": set()}
+        self.climbables = {"bottom": set(), "top": set(), "left": set(), "right": set(), "center": set()}
+        self.intersects = set()
+        self.triggers = {"bottom": set(), "top": set(), "left": set(), "right": set(), "center": set()}
 
     def reset(self):
         self.velocity_x = 0
