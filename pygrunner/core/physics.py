@@ -11,6 +11,7 @@ class PhysicsEngine(object):
     def update(self, current_level):
         for game_object in current_level.game_objects:
             object_physics = game_object.physics
+            object_physics.clear_collisions()
             speed_left_x = None
             speed_left_y = None
             finished = False
@@ -106,7 +107,7 @@ class PhysicsEngine(object):
                 all_object_collisions.add(collision_tuple)
                 intersect_collisions.add(other_game_object)
 
-        game_object.physics.intersects = intersect_collisions
+        game_object.physics.intersects.update(intersect_collisions)
 
     def _set_static_collisions(self, current_level, game_object):
         static_map = current_level.static_collision_map
@@ -117,17 +118,15 @@ class PhysicsEngine(object):
             ("top", game_object.size.top_rectangle),
             ("center", game_object.size.center_rectangle)
         ]
-        game_object.physics.collisions.clear()
-        game_object.physics.climbables.clear()
-        game_object.physics.triggers.clear()
+
         for name, rectangle in rectangles:
             collisions = static_map.check_collision_rect(rectangle)
             solids = {collision for collision in collisions if collision.physics.solid}
             non_solids = collisions.difference(solids)
-            game_object.physics.collisions[name] = solids
-            game_object.physics.triggers[name] = non_solids
+            game_object.physics.collisions[name].update(solids)
+            game_object.physics.triggers[name].update(non_solids)
             climbables = {trigger for trigger in non_solids if trigger.physics.climbable}
-            game_object.physics.climbables[name] = climbables
+            game_object.physics.climbables[name].update(climbables)
             if name == "bottom":
                 if not game_object.physics.climbing_down:
                     platforms = {collision for collision in non_solids if collision.physics.platform}

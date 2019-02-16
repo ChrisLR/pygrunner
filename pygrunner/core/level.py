@@ -51,9 +51,9 @@ class CollisionMap(object):
         collisions = set()
         for x in range(int(rectangle.left), int(math.ceil(rectangle.right))):
             for y in range(int(rectangle.top), int(math.ceil(rectangle.bottom))):
-                if x < 0 or x > self.width:
+                if x < 0 or x >= self.width:
                     continue
-                if y < 0 or y > self.height:
+                if y < 0 or y >= self.height:
                     continue
                 collision = self._collision_map[x][y]
                 if collision is not None:
