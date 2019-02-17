@@ -79,11 +79,11 @@ class TmxMap(object):
             tile_id = tile_data.get('gid')
             if tile_id:
                 tile_id = int(tile_id)
+                properties = cls._extract_properties(tile_data)
                 current_tileset = cls.get_tileset_used_by_gid(tilesets, tile_id)
                 tileset_tile = current_tileset.id_mapping.get(tile_id - current_tileset.first_gid)
                 if not tileset_tile:
-                    flipped_tile_id = tile_id & cls.FLIPPED_HORIZONTALLY_FLAG
-                    tileset_tile = current_tileset.id_mapping.get(flipped_tile_id - current_tileset.first_gid)
+                    _, tileset_tile = cls._handle_flipped(tile_id, properties, current_tileset)
 
                 layer_tile_data.append(tileset_tile.tile_type)
             else:
@@ -102,22 +102,34 @@ class TmxMap(object):
             object_type = tileset.id_mapping.get(object_gid - tileset.first_gid)
             properties = cls._extract_properties(tmx_object)
             if not object_type:
-                is_flipped_horizontal = bool(object_gid & cls.FLIPPED_HORIZONTALLY_FLAG)
-                is_flipped_vertical = bool(object_gid & cls.FLIPPED_VERTICALLY_FLAG)
-                object_gid = object_gid & ~(cls.FLIPPED_HORIZONTALLY_FLAG | cls.FLIPPED_VERTICALLY_FLAG | cls.FLIPPED_DIAGONALLY_FLAG)
-                object_type = tileset.id_mapping.get(object_gid - tileset.first_gid)
-                if is_flipped_horizontal:
-                    properties['flipped_horizontal'] = True
-                if is_flipped_vertical:
-                    properties['flipped_vertical'] = is_flipped_vertical
+                object_gid, object_type = cls._handle_flipped(object_gid, properties, tileset)
+
             tmx_objects.append(
                 TmxObject(
                     attribs['id'], object_gid,
                     float(attribs['x']), float(attribs['y']) - 16,
                     int(attribs['width']), int(attribs['height']),
-                    object_type.tile_type, properties=properties))
-
+                    object_type.tile_type, properties=properties)
+            )
         object_layers.append(TmxObjectLayer(layer_id, layer_name, tmx_objects))
+
+    @classmethod
+    def _handle_flipped(cls, gid, properties, tileset):
+        is_flipped_horizontal = bool(gid & cls.FLIPPED_HORIZONTALLY_FLAG)
+        is_flipped_vertical = bool(gid & cls.FLIPPED_VERTICALLY_FLAG)
+        object_gid = gid & ~(
+                cls.FLIPPED_HORIZONTALLY_FLAG
+                | cls.FLIPPED_VERTICALLY_FLAG
+                | cls.FLIPPED_DIAGONALLY_FLAG
+        )
+        object_type = tileset.id_mapping.get(object_gid - tileset.first_gid)
+        if is_flipped_horizontal:
+            properties['flipped_horizontal'] = True
+
+        if is_flipped_vertical:
+            properties['flipped_vertical'] = is_flipped_vertical
+
+        return object_gid, object_type
 
     @classmethod
     def _extract_properties(cls, tmx_object):
