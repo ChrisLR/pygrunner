@@ -3,7 +3,9 @@
  <image source="../client/graphics/sidescroller/packed.png" width="656" height="496"/>
  <tile id="82" type="Green Zombie"/>
  <tile id="154" type="Yellow Jump Pad"/>
+ <tile id="155" type="Horizontal Yellow Jump Pad"/>
  <tile id="195" type="Yellow Jump Pad"/>
+ <tile id="196" type="Horizontal Yellow Jump Pad"/>
  <tile id="388" type="Red Ladder"/>
  <tile id="492" type="Red Block Top"/>
  <tile id="533" type="Red Block Middle"/>
