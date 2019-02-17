@@ -11,7 +11,7 @@ class BlockShadow(Tile):
     layer = Layer.background
 
     @classmethod
-    def create(cls, sprite_loader):
+    def create(cls, sprite_loader, custom_properties=None):
         """
         Creates a game object and assigns proper components
         """

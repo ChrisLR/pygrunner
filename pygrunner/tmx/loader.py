@@ -30,6 +30,7 @@ class TmxLoader(object):
 
     def _handle_object_layer(self, layer, level):
         for tmx_object in layer.objects:
-            game_object = self.factory.get_or_create(tmx_object.object_type)
+            game_object = self.factory.get_or_create(
+                tmx_object.object_type, tmx_object.properties)
             game_object.location.set(tmx_object.x, tmx_object.y)
             level.add_game_object(game_object)

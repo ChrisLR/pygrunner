@@ -13,11 +13,18 @@ class Recipe(metaclass=abc.ABCMeta):
 
     @classmethod
     @abc.abstractmethod
-    def create(cls, sprite_loader):
+    def create(cls, sprite_loader, custom_properties=None):
         """
         Creates a game object and assigns proper components
         """
         pass
+
+    @classmethod
+    def modify(cls, game_object, custom_properties):
+        flipped_horizontal = custom_properties.get('flipped_horizontal')
+        if flipped_horizontal is not None:
+            game_object.flipped = flipped_horizontal
+        # TODO Support vertical flip
 
     @classmethod
     @abc.abstractmethod

@@ -2,6 +2,17 @@ from lxml import etree
 
 
 class TmxMap(object):
+    FLIPPED_HORIZONTALLY_FLAG = 1 << 31
+    FLIPPED_VERTICALLY_FLAG = 1 << 30
+    FLIPPED_DIAGONALLY_FLAG = 1 << 29
+
+    _property_type_map = {
+        "string": str,
+        "int": int,
+        "float": float,
+        "bool": bool,
+    }
+
     def __init__(self, width, height, tilesets, layers, object_layers, render_order, tile_height, tile_width):
         self.width = width
         self.height = height
@@ -70,6 +81,10 @@ class TmxMap(object):
                 tile_id = int(tile_id)
                 current_tileset = cls.get_tileset_used_by_gid(tilesets, tile_id)
                 tileset_tile = current_tileset.id_mapping.get(tile_id - current_tileset.first_gid)
+                if not tileset_tile:
+                    flipped_tile_id = tile_id & cls.FLIPPED_HORIZONTALLY_FLAG
+                    tileset_tile = current_tileset.id_mapping.get(flipped_tile_id - current_tileset.first_gid)
+
                 layer_tile_data.append(tileset_tile.tile_type)
             else:
                 layer_tile_data.append(None)
@@ -85,14 +100,38 @@ class TmxMap(object):
             object_gid = int(attribs['gid'])
             tileset = cls.get_tileset_used_by_gid(tilesets, object_gid)
             object_type = tileset.id_mapping.get(object_gid - tileset.first_gid)
-
+            properties = cls._extract_properties(tmx_object)
+            if not object_type:
+                is_flipped_horizontal = bool(object_gid & cls.FLIPPED_HORIZONTALLY_FLAG)
+                is_flipped_vertical = bool(object_gid & cls.FLIPPED_VERTICALLY_FLAG)
+                object_gid = object_gid & ~(cls.FLIPPED_HORIZONTALLY_FLAG | cls.FLIPPED_VERTICALLY_FLAG | cls.FLIPPED_DIAGONALLY_FLAG)
+                object_type = tileset.id_mapping.get(object_gid - tileset.first_gid)
+                if is_flipped_horizontal:
+                    properties['flipped_horizontal'] = True
+                if is_flipped_vertical:
+                    properties['flipped_vertical'] = is_flipped_vertical
             tmx_objects.append(
                 TmxObject(
                     attribs['id'], object_gid,
                     float(attribs['x']), float(attribs['y']) - 16,
-                    int(attribs['width']), int(attribs['height']), object_type.tile_type))
+                    int(attribs['width']), int(attribs['height']),
+                    object_type.tile_type, properties=properties))
 
         object_layers.append(TmxObjectLayer(layer_id, layer_name, tmx_objects))
+
+    @classmethod
+    def _extract_properties(cls, tmx_object):
+        properties = {}
+        for child in tmx_object:
+            if child.tag == "properties":
+                for property_ in child:
+                    attribs = property_.attrib
+                    name = attribs['name']
+                    type_ = cls._property_type_map[attribs['type']]
+                    value = attribs['value']
+                    properties[name] = type_(value)
+
+        return properties
 
 
 class TmxTileset(object):
@@ -120,6 +159,7 @@ class TmxTileset(object):
 
         return TmxTileset(tiles, id_mapping)
 
+
 class TmxLayer(object):
     def __init__(self, layer_id, name, width, height, tiles):
         self.layer_id = layer_id
@@ -130,11 +170,12 @@ class TmxLayer(object):
 
 
 class TmxTile(object):
-    __slots__ = ('tile_id', 'tile_type')
+    __slots__ = ('tile_id', 'tile_type', 'properties')
 
-    def __init__(self, tile_id, tile_type):
+    def __init__(self, tile_id, tile_type, properties=None):
         self.tile_id = tile_id
         self.tile_type = tile_type
+        self.properties = properties or {}
 
 
 class TmxObjectLayer(object):
@@ -145,9 +186,9 @@ class TmxObjectLayer(object):
 
 
 class TmxObject(object):
-    __slots__ = ('object_id', 'object_gid', 'x', 'y', 'width', 'height', 'object_type')
+    __slots__ = ('object_id', 'object_gid', 'x', 'y', 'width', 'height', 'object_type', 'properties')
 
-    def __init__(self, object_id, object_gid, x, y, width, height, object_type):
+    def __init__(self, object_id, object_gid, x, y, width, height, object_type, properties=None):
         self.object_id = object_id
         self.object_gid = object_gid
         self.x = x
@@ -155,3 +196,4 @@ class TmxObject(object):
         self.width = width
         self.height = height
         self.object_type = object_type
+        self.properties = properties or {}
