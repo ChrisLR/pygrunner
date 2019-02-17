@@ -15,13 +15,13 @@ class Factory(object):
     def get_or_create(self, recipe, custom_properties=None):
         recipe = self._get_recipe(recipe)
         game_object = self.object_pool.get(recipe)
-        if game_object:
-            if custom_properties:
-                recipe.modify(game_object, custom_properties)
-            return game_object
-        else:
-            game_object = recipe.create(self.sprite_loader, custom_properties)
-            return game_object
+        if not game_object:
+            game_object = recipe.create(self.sprite_loader)
+
+        if custom_properties is not None:
+            recipe.modify(game_object, custom_properties)
+
+        return game_object
 
     def _get_recipe(self, recipe_or_name):
         if isinstance(recipe_or_name, str):

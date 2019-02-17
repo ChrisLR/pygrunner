@@ -15,7 +15,7 @@ class JumpPad(Recipe):
     horizontal_force = 0
 
     @classmethod
-    def create(cls, sprite_loader, custom_properties=None):
+    def create(cls, sprite_loader):
         """
         Creates a game object and assigns proper components
         """
@@ -31,8 +31,6 @@ class JumpPad(Recipe):
         game_object = objecttypes.GameObject(cls.name, display, location, physics, size, cls)
         bouncer = components.Bouncer(cls.vertical_force, cls.horizontal_force)
         game_object.add_component(bouncer)
-        if custom_properties:
-            cls.modify(game_object, custom_properties)
 
         return game_object
 

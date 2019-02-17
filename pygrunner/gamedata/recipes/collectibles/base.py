@@ -13,7 +13,7 @@ class Collectible(Recipe):
     collectible_value = 0
 
     @classmethod
-    def create(cls, sprite_loader, custom_properties=None):
+    def create(cls, sprite_loader):
         """
         Creates a game object and assigns proper components
         """

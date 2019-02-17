@@ -13,7 +13,7 @@ class Recipe(metaclass=abc.ABCMeta):
 
     @classmethod
     @abc.abstractmethod
-    def create(cls, sprite_loader, custom_properties=None):
+    def create(cls, sprite_loader):
         """
         Creates a game object and assigns proper components
         """
