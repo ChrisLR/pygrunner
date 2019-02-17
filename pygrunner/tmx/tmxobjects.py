@@ -6,13 +6,6 @@ class TmxMap(object):
     FLIPPED_VERTICALLY_FLAG = 1 << 30
     FLIPPED_DIAGONALLY_FLAG = 1 << 29
 
-    _property_type_map = {
-        "string": str,
-        "int": int,
-        "float": float,
-        "bool": bool,
-    }
-
     def __init__(self, width, height, tilesets, layers, object_layers, render_order, tile_height, tile_width):
         self.width = width
         self.height = height
@@ -79,15 +72,17 @@ class TmxMap(object):
             tile_id = tile_data.get('gid')
             if tile_id:
                 tile_id = int(tile_id)
-                properties = cls._extract_properties(tile_data)
+                # Tile Instances do not have properties
+                properties = {}
                 current_tileset = cls.get_tileset_used_by_gid(tilesets, tile_id)
                 tileset_tile = current_tileset.id_mapping.get(tile_id - current_tileset.first_gid)
                 if not tileset_tile:
                     _, tileset_tile = cls._handle_flipped(tile_id, properties, current_tileset)
-
-                layer_tile_data.append(tileset_tile.tile_type)
+                properties.update(tileset_tile.properties)
+                layer_tile_data.append((tileset_tile.tile_type, properties))
             else:
                 layer_tile_data.append(None)
+
         layers.append(TmxLayer(layer_id, layer_name, layer_width, layer_height, layer_tile_data))
 
     @classmethod
@@ -100,7 +95,7 @@ class TmxMap(object):
             object_gid = int(attribs['gid'])
             tileset = cls.get_tileset_used_by_gid(tilesets, object_gid)
             object_type = tileset.id_mapping.get(object_gid - tileset.first_gid)
-            properties = cls._extract_properties(tmx_object)
+            properties = _extract_properties(tmx_object)
             if not object_type:
                 object_gid, object_type = cls._handle_flipped(object_gid, properties, tileset)
 
@@ -131,19 +126,28 @@ class TmxMap(object):
 
         return object_gid, object_type
 
-    @classmethod
-    def _extract_properties(cls, tmx_object):
-        properties = {}
-        for child in tmx_object:
-            if child.tag == "properties":
-                for property_ in child:
-                    attribs = property_.attrib
-                    name = attribs['name']
-                    type_ = cls._property_type_map[attribs['type']]
-                    value = attribs['value']
-                    properties[name] = type_(value)
 
-        return properties
+_property_type_map = {
+        "string": str,
+        "int": int,
+        "float": float,
+        "bool": bool,
+    }
+
+def _extract_properties(tmx_object):
+    properties = {}
+    for child in tmx_object:
+        if child.tag == "properties":
+            for property_ in child:
+                attribs = property_.attrib
+                name = attribs['name']
+                type_ = _property_type_map.get(attribs.get('type'))
+                value = attribs['value']
+                if type_ is not None:
+                    value = type_(value)
+                properties[name] = value
+
+    return properties
 
 
 class TmxTileset(object):
@@ -165,7 +169,8 @@ class TmxTileset(object):
 
             tile_id = int(child.attrib.get('id'))
             tile_type = child.attrib.get('type')
-            tile = TmxTile(tile_id, tile_type)
+            properties = _extract_properties(child)
+            tile = TmxTile(tile_id, tile_type, properties)
             id_mapping[tile_id] = tile
             tiles.append(tile)
 
