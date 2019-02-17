@@ -2,6 +2,10 @@ from lxml import etree
 
 
 class TmxMap(object):
+    FLIPPED_HORIZONTALLY_FLAG = 1 << 31
+    FLIPPED_VERTICALLY_FLAG = 1 << 30
+    FLIPPED_DIAGONALLY_FLAG = 1 << 29
+
     def __init__(self, width, height, tilesets, layers, object_layers, render_order, tile_height, tile_width):
         self.width = width
         self.height = height
@@ -68,11 +72,17 @@ class TmxMap(object):
             tile_id = tile_data.get('gid')
             if tile_id:
                 tile_id = int(tile_id)
+                # Tile Instances do not have properties
+                properties = {}
                 current_tileset = cls.get_tileset_used_by_gid(tilesets, tile_id)
                 tileset_tile = current_tileset.id_mapping.get(tile_id - current_tileset.first_gid)
-                layer_tile_data.append(tileset_tile.tile_type)
+                if not tileset_tile:
+                    _, tileset_tile = cls._handle_flipped(tile_id, properties, current_tileset)
+                properties.update(tileset_tile.properties)
+                layer_tile_data.append((tileset_tile.tile_type, properties))
             else:
                 layer_tile_data.append(None)
+
         layers.append(TmxLayer(layer_id, layer_name, layer_width, layer_height, layer_tile_data))
 
     @classmethod
@@ -85,14 +95,59 @@ class TmxMap(object):
             object_gid = int(attribs['gid'])
             tileset = cls.get_tileset_used_by_gid(tilesets, object_gid)
             object_type = tileset.id_mapping.get(object_gid - tileset.first_gid)
+            properties = _extract_properties(tmx_object)
+            if not object_type:
+                object_gid, object_type = cls._handle_flipped(object_gid, properties, tileset)
 
             tmx_objects.append(
                 TmxObject(
                     attribs['id'], object_gid,
                     float(attribs['x']), float(attribs['y']) - 16,
-                    int(attribs['width']), int(attribs['height']), object_type.tile_type))
-
+                    int(attribs['width']), int(attribs['height']),
+                    object_type.tile_type, properties=properties)
+            )
         object_layers.append(TmxObjectLayer(layer_id, layer_name, tmx_objects))
+
+    @classmethod
+    def _handle_flipped(cls, gid, properties, tileset):
+        is_flipped_horizontal = bool(gid & cls.FLIPPED_HORIZONTALLY_FLAG)
+        is_flipped_vertical = bool(gid & cls.FLIPPED_VERTICALLY_FLAG)
+        object_gid = gid & ~(
+                cls.FLIPPED_HORIZONTALLY_FLAG
+                | cls.FLIPPED_VERTICALLY_FLAG
+                | cls.FLIPPED_DIAGONALLY_FLAG
+        )
+        object_type = tileset.id_mapping.get(object_gid - tileset.first_gid)
+        if is_flipped_horizontal:
+            properties['flipped_horizontal'] = True
+
+        if is_flipped_vertical:
+            properties['flipped_vertical'] = is_flipped_vertical
+
+        return object_gid, object_type
+
+
+_property_type_map = {
+        "string": str,
+        "int": int,
+        "float": float,
+        "bool": bool,
+    }
+
+def _extract_properties(tmx_object):
+    properties = {}
+    for child in tmx_object:
+        if child.tag == "properties":
+            for property_ in child:
+                attribs = property_.attrib
+                name = attribs['name']
+                type_ = _property_type_map.get(attribs.get('type'))
+                value = attribs['value']
+                if type_ is not None:
+                    value = type_(value)
+                properties[name] = value
+
+    return properties
 
 
 class TmxTileset(object):
@@ -114,11 +169,13 @@ class TmxTileset(object):
 
             tile_id = int(child.attrib.get('id'))
             tile_type = child.attrib.get('type')
-            tile = TmxTile(tile_id, tile_type)
+            properties = _extract_properties(child)
+            tile = TmxTile(tile_id, tile_type, properties)
             id_mapping[tile_id] = tile
             tiles.append(tile)
 
         return TmxTileset(tiles, id_mapping)
+
 
 class TmxLayer(object):
     def __init__(self, layer_id, name, width, height, tiles):
@@ -130,11 +187,12 @@ class TmxLayer(object):
 
 
 class TmxTile(object):
-    __slots__ = ('tile_id', 'tile_type')
+    __slots__ = ('tile_id', 'tile_type', 'properties')
 
-    def __init__(self, tile_id, tile_type):
+    def __init__(self, tile_id, tile_type, properties=None):
         self.tile_id = tile_id
         self.tile_type = tile_type
+        self.properties = properties or {}
 
 
 class TmxObjectLayer(object):
@@ -145,9 +203,9 @@ class TmxObjectLayer(object):
 
 
 class TmxObject(object):
-    __slots__ = ('object_id', 'object_gid', 'x', 'y', 'width', 'height', 'object_type')
+    __slots__ = ('object_id', 'object_gid', 'x', 'y', 'width', 'height', 'object_type', 'properties')
 
-    def __init__(self, object_id, object_gid, x, y, width, height, object_type):
+    def __init__(self, object_id, object_gid, x, y, width, height, object_type, properties=None):
         self.object_id = object_id
         self.object_gid = object_gid
         self.x = x
@@ -155,3 +213,4 @@ class TmxObject(object):
         self.width = width
         self.height = height
         self.object_type = object_type
+        self.properties = properties or {}

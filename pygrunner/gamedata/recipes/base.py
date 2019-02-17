@@ -20,6 +20,13 @@ class Recipe(metaclass=abc.ABCMeta):
         pass
 
     @classmethod
+    def modify(cls, game_object, custom_properties):
+        flipped_horizontal = custom_properties.get('flipped_horizontal')
+        if flipped_horizontal is not None:
+            game_object.flipped = flipped_horizontal
+        # TODO Support vertical flip
+
+    @classmethod
     @abc.abstractmethod
     def reset(cls, game_object):
         """

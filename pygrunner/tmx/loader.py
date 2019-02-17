@@ -22,14 +22,16 @@ class TmxLoader(object):
         layer_data = (tile for tile in layer.tiles)
         for y in range(layer.height):
             for x in range(layer.width):
-                tile_type = next(layer_data)
-                if tile_type:
-                    tile = self.factory.get_or_create(tile_type)
+                tile_tuple = next(layer_data)
+                if tile_tuple:
+                    tile_type, properties = tile_tuple
+                    tile = self.factory.get_or_create(tile_type, properties)
                     tile.location.set(x * 16, y * 16)
                     level.add_static(tile)
 
     def _handle_object_layer(self, layer, level):
         for tmx_object in layer.objects:
-            game_object = self.factory.get_or_create(tmx_object.object_type)
+            game_object = self.factory.get_or_create(
+                tmx_object.object_type, tmx_object.properties)
             game_object.location.set(tmx_object.x, tmx_object.y)
             level.add_game_object(game_object)

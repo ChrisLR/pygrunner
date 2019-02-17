@@ -29,10 +29,21 @@ class JumpPad(Recipe):
         physics.solid = False
         size = components.Size()
         game_object = objecttypes.GameObject(cls.name, display, location, physics, size, cls)
-        game_object.add_component(components.Bouncer(cls.vertical_force, cls.horizontal_force))
+        bouncer = components.Bouncer(cls.vertical_force, cls.horizontal_force)
+        game_object.add_component(bouncer)
 
         return game_object
 
+    @classmethod
+    def modify(cls, game_object, custom_properties):
+        super().modify(game_object, custom_properties)
+        vertical_force = custom_properties.get('vertical_force')
+        if vertical_force is not None:
+            game_object.bouncer.vertical_force = vertical_force
+
+        horizontal_force = custom_properties.get('horizontal_force')
+        if horizontal_force is not None:
+            game_object.bouncer.horizontal_force = horizontal_force
 
     @classmethod
     def reset(cls, game_object):
@@ -47,3 +58,13 @@ class YellowJumpPad(JumpPad):
         'bounce': [SpriteInfo('packed', 'yellow_jump_pad_bounce', 27, 31)]
     }
     vertical_force = -24
+
+
+@Factory.register
+class HorizontalYellowJumpPad(JumpPad):
+    name = "Horizontal Yellow Jump Pad"
+    animations = {
+        'idle': [SpriteInfo('packed', 'yellow_jump_pad', 26, 32)],
+        'bounce': [SpriteInfo('packed', 'yellow_jump_pad_bounce', 27, 32)]
+    }
+    horizontal_force = 24

@@ -38,13 +38,13 @@ class Bouncer(Component):
     def _trigger(self, intersects):
         has_triggered = False
         for game_object in intersects:
-            if self.vertical_force and game_object.physics.velocity_y > 1:
+            if self.vertical_force:
                 has_triggered = True
                 game_object.physics.velocity_y = self.vertical_force
 
-            if self.horizontal_force and game_object.physics.velocity_x != 0:
+            if self.horizontal_force:
                 has_triggered = True
-                game_object.physics.velocity_y = self.vertical_force
+                game_object.physics.velocity_x = self.horizontal_force
 
         if has_triggered is True:
             self.triggered = True
