@@ -16,6 +16,9 @@ class TmxLoader(object):
         for layer in tmx_map.object_layers:
             self._handle_object_layer(layer, level)
 
+        for layer in tmx_map.image_layers:
+            self._handle_image_layer(layer, level)
+
         return level
 
     def _handle_tile_layer(self, layer, level):
