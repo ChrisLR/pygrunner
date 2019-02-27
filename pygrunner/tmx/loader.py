@@ -38,3 +38,9 @@ class TmxLoader(object):
                 tmx_object.object_type, tmx_object.properties)
             game_object.location.set(tmx_object.x, tmx_object.y)
             level.add_game_object(game_object)
+
+    def _handle_image_layer(self, layer, level):
+        # TODO This means the Loader needs access to the sprite_loader
+        pyglet_image = self.factory.sprite_loader.get_background(layer.image_name)
+        image_offset = (layer.offset_x, layer.offset_y)
+        level.set_background_image(pyglet_image, image_offset)
