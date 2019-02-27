@@ -18,11 +18,16 @@ class Camera(object):
         self.game = game
         self.batch = pyglet.graphics.Batch()
         self.groups = {
+            Layer.image_background: pyglet.graphics.OrderedGroup(Layer.image_background),
             Layer.background: pyglet.graphics.OrderedGroup(Layer.background),
             Layer.middle: pyglet.graphics.OrderedGroup(Layer.middle),
             Layer.foreground: pyglet.graphics.OrderedGroup(Layer.foreground),
         }
         self._follow = None
+        self._background_image = None
+        self._background_image_offset = None
+        self._background_sprite = None
+        self.adjust_background_image()
 
     def adjust_game_object_sprite(self, game_object, sprite):
         """
@@ -36,11 +41,30 @@ class Camera(object):
         else:
             sprite.visible = False
 
+    def adjust_background_image(self):
+        if self.location and self.location.level:
+            current_level = self.location.level
+            if current_level.background_image != self._background_image:
+                ox, oy = current_level.background_image_offset
+                group = self.groups[Layer.image_background]
+                sprite = pyglet.sprite.Sprite(
+                    current_level.background_image,
+                    x=ox, y=oy, batch=self.batch, group=group)
+                # TODO Not sure DEL is appropriate here
+                del self._background_sprite
+                self._background_sprite = sprite
+            elif current_level.background_image_offset != self._background_image_offset:
+                ox, oy = current_level.background_image_offset
+                self._background_sprite.x = ox
+                self._background_sprite.y = oy
+
     def draw(self):
         self.batch.draw()
 
     def follow(self, game_object):
         self._follow = game_object
+        # TODO Additional work required for level transitions here
+        self.adjust_background_image()
 
     def update(self):
         if self._follow:
