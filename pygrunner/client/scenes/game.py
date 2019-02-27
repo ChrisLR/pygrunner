@@ -10,7 +10,8 @@ class GameScene(Scene):
         super().__init__(inputs, manager, game)
         self.recycle_bin = set()
         self.game._start_level()
-        self.camera = Camera(components.Location(0, 0), components.Size(self.window.height, self.window.width), game)
+        camera_location = components.Location(0, 0, self.game.level)
+        self.camera = Camera(camera_location, components.Size(self.window.height, self.window.width), game)
         self.camera.follow(self.game.level.game_objects[-1])
         self.physics_engine = physics.PhysicsEngine(0.01, 0.5, 0.9)
 
@@ -36,7 +37,6 @@ class GameScene(Scene):
                 level.remove_game_object(game_object)
                 self.game.factory.destroy(game_object)
             self.recycle_bin.clear()
-
 
     def handle_keymap_input(self, keymap_input):
         pass
