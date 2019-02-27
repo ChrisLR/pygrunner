@@ -143,8 +143,8 @@ class TmxMap(object):
         new_image_layer = TmxImageLayer(
             attrib['id'],
             attrib['name'],
-            attrib['offsetx'],
-            attrib['offsety'],
+            int(attrib['offsetx']),
+            int(attrib['offsety']),
             image_name,
             transparent_color
         )
@@ -157,6 +157,7 @@ _property_type_map = {
         "float": float,
         "bool": bool,
     }
+
 
 def _extract_properties(tmx_object):
     properties = {}
