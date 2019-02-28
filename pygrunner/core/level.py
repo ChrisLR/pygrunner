@@ -12,14 +12,22 @@ class Level(object):
         self.game_objects = []
         self.statics = []
         self.static_collision_map = CollisionMap(width, height)
+        self.background_image = None
+        self.background_image_offset = None
 
     def add_game_object(self, game_object):
         self.game_objects.append(game_object)
+        game_object.location.level = self
 
     def add_static(self, static_object):
         rectangle = static_object.size.rectangle
         self.statics.append(static_object)
         self.static_collision_map.add_collider(static_object, rectangle)
+        static_object.location.level = self
+
+    def set_background_image(self, image, offset):
+        self.background_image = image
+        self.background_image_offset = offset
 
     def remove_static(self, static_object):
         rectangle = static_object.size.rectangle

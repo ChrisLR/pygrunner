@@ -5,10 +5,18 @@ import pyglet
 
 class SpriteLoader(object):
     def __init__(self):
-        res_dir = str(os.path.dirname(__file__).split('pygrunner')[0]) + "pygrunner/pygrunner/client/graphics/sidescroller"
-        pyglet.resource.path = [res_dir]
+        base_dir = str(os.path.dirname(__file__).split('pygrunner')[0]) + "pygrunner/pygrunner/client/graphics/"
+        res_dir = base_dir + "sidescroller"
+        self.background_dir = base_dir + "backgrounds"
+        pyglet.resource.path = [res_dir, self.background_dir]
         pyglet.resource.reindex()
         self.spritesheets = None
+
+    def get_background(self, name):
+        image_path = "{}.png".format(name)
+        background_image = pyglet.resource.image(image_path)
+
+        return background_image
 
     def get_by_name(self, name):
         return self.spritesheets.get(name)

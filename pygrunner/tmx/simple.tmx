@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.2" orientation="orthogonal" renderorder="left-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="11">
+<map version="1.2" tiledversion="1.2.2" orientation="orthogonal" renderorder="left-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="11">
  <tileset firstgid="1" source="platformer.tsx"/>
+ <imagelayer id="4" name="background" offsetx="-216" offsety="-260">
+  <image source="../client/graphics/backgrounds/sky_fyros_night_clouds.png" trans="00007f" width="1024" height="1024"/>
+ </imagelayer>
  <layer id="1" name="foreground" width="100" height="100">
   <data>
    <tile/>
