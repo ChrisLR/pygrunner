@@ -9,6 +9,7 @@ class Enemy(Recipe):
     move_speed = 1
     jump_height = 1
     initial_stock = 10
+    max_health = 1
 
     @classmethod
     def create(cls, sprite_loader):
@@ -21,8 +22,9 @@ class Enemy(Recipe):
         location = components.Location(0, 0)
         physics = components.Physics()
         size = components.Size()
-        stance = components.Stance(stances.Idle, [stances.Idle, stances.Running, stances.Jumping, stances.Climbing, stances.Punching])
+        stance = components.Stance(stances.Idle, [stances.Idle, stances.Running, stances.Jumping, stances.Climbing, stances.Punching, stances.Dead])
         actor = Actor(cls.name, controller, display, location, physics, size, stance, cls)
+        actor.add_component(components.Health(cls.max_health))
 
         return actor
 
