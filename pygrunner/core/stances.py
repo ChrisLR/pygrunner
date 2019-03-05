@@ -16,6 +16,11 @@ class Stance(object):
         pass
 
     def start_or_continue(self, action_type):
+        health = self.actor.health
+        if health and health.is_dead:
+            self.actor.stance.change_stance('dead')
+            return
+
         current_action_type = type(self.executing_action)
         if current_action_type is action_type:
             return self.continue_current_action()
@@ -33,8 +38,12 @@ class Stance(object):
             new_action.on_start()
             new_action.execute()
 
-
     def continue_current_action(self, stop_continuous=False):
+        health = self.actor.health
+        if health and health.is_dead:
+            self.actor.stance.change_stance('dead')
+            return
+
         if self.executing_action is None:
             return
 
@@ -46,7 +55,6 @@ class Stance(object):
         else:
             self.executing_action.on_stop()
             self.executing_action = None
-
 
 
 class Idle(Stance):
@@ -130,3 +138,10 @@ class Punching(Stance):
         if self.executing_action is None:
             self.actor.stance.change_stance('idle')
 
+
+class Dead(Stance):
+    name = "dead"
+
+    def do_keymaps(self, keymaps):
+        # TODO Some enemies might want to rise from their graves
+        pass
