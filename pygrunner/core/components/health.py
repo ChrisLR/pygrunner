@@ -6,19 +6,19 @@ from pygrunner.core.components.base import Component
 class Health(Component):
     name = "health"
 
-    def reset(self):
-        self.max = 0
-        self.current = 0
-        self.is_dead = False
-
     def __init__(self, max_health):
         super().__init__()
         self.max = max_health
         self.current = max_health
         self.is_dead = False
+        self.invincible_timer = 0
 
     def damage(self, amount):
+        if self.invincible_timer:
+            return
+
         self.current -= amount
+        self.invincible_timer = 50
         if self.current <= 0:
             self.is_dead = True
             self.on_death()
@@ -28,6 +28,14 @@ class Health(Component):
             self.current += amount
             if self.current > self.max:
                 self.current = self.max
+
+    @property
+    def is_invincible(self):
+        return self.invincible_timer > 0
+
+    def update(self):
+        if self.invincible_timer > 0:
+            self.invincible_timer -= 1
 
     def revive(self, health=None):
         self.is_dead = False
@@ -45,3 +53,8 @@ class Health(Component):
 
     def on_revive(self):
         pass
+
+    def reset(self):
+        self.max = 0
+        self.current = 0
+        self.is_dead = False

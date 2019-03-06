@@ -16,14 +16,24 @@ class Punch(Action):
     def execute(self):
         self.updates += 1
         # TODO This must take factions into account
+        facing_left = self.actor.flipped
+        actor_rectangle = self.actor.size.center_rectangle
         targets = [character for character in self.actor.physics.intersects]
         for target in targets:
+            if facing_left:
+                if target.size.center_rectangle.left >= actor_rectangle.right:
+                    continue
+            else:
+                if target.size.center_rectangle.right <= actor_rectangle.left:
+                    continue
             target_health = target.health
-            if target_health and not target_health.is_dead:
+            target_invincible = target_health.is_invincible if target_health else False
+            target_is_dead = target_health.is_dead if target_health else False
+            if target_health and not target_is_dead:
                 # TODO Damage will vary
                 target_health.damage(1)
 
-            if not target_health.is_dead:
+            if not target_is_dead and not target_invincible:
                 # TODO Knockback force must vary
                 target.physics.velocity_y = -4
                 target.physics.velocity_x = util.sign(target.location.x - self.actor.location.x) * 4
