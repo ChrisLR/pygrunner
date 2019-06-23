@@ -1,7 +1,7 @@
 import pyglet
 
-from pygrunner.core.layers import Layer
 from pygrunner.core import util
+from pygrunner.core.layers import Layer
 
 
 class Camera(object):
@@ -28,6 +28,8 @@ class Camera(object):
         self._background_image_offset = None
         self._background_sprite = None
         self.adjust_background_image()
+        self.hud = game.hud
+        self.hud.assign(self.batch, self.groups[Layer.foreground])
 
     def adjust_game_object_sprite(self, game_object, sprite):
         """
@@ -67,6 +69,7 @@ class Camera(object):
         self.adjust_background_image()
 
     def update(self):
+        self.hud.update()
         if self._follow:
             cx, cy = self.size.center_rectangle.x, self.size.center_rectangle.y
             fx, fy = self._follow.location.x, self._follow.location.y
