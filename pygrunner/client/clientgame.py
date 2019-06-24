@@ -8,6 +8,7 @@ from pygrunner.gamedata.factory import Factory
 from pygrunner.gamedata.objectpool import ObjectPool
 from pygrunner.gamedata.recipes import characters
 from pygrunner.tmx import TmxLoader
+from pygrunner.client.hud import HUD
 
 
 class ClientGame(object):
@@ -18,6 +19,7 @@ class ClientGame(object):
         self.spriteloader = SpriteLoader()
         self.spriteloader.load_spritesheets(("packed.png",))
         self.factory = Factory(self.spriteloader, ObjectPool())
+        self.hud = None
 
     def on_draw(self):
         self.window.clear()
@@ -70,13 +72,18 @@ class ClientGame(object):
         self.level = TmxLoader(self.factory).load_map('simple')
 
         # TODO A better way to add actors to a game
+        players = []
         actor = self.factory.get_or_create(characters.HumanMale1)
+        players.append(actor)
         actor.location.set(32, 16)
         actor.replace_component(components.PlayerController(1, self.inputs[0]))
         self.level.add_game_object(actor)
 
         actor = self.factory.get_or_create(characters.HumanFemale1)
+        players.append(actor)
         actor.location.set(32, 16)
         actor.replace_component(components.PlayerController(2, self.inputs[1]))
         self.level.add_game_object(actor)
+        self.hud = HUD(self, players, self.spriteloader)
+
 
