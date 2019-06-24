@@ -9,7 +9,7 @@ class Character(Recipe):
     move_speed = 1
     jump_height = 10
     initial_stock = 10
-    max_health = 2
+    max_health = 4
 
     @classmethod
     def create(cls, sprite_loader):
