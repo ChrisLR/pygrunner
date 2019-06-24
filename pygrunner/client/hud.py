@@ -18,10 +18,10 @@ class HUD(object):
         self.players = players
         width, height = game.window.get_size()
         self._hud_positions = {
-            0: (16, 0),
-            1: (width - 48, 0),
-            2: (16, height - 32),
-            3: (width - 48, height - 32)
+            0: (16, height - 16),
+            1: (width - 48, height - 16),
+            2: (16, 16),
+            3: (width - 48, 16)
         }
         self._setup()
 
@@ -61,9 +61,9 @@ class HUDElement(object):
 
 class HUDLifeBar(HUDElement):
     _sprite_infos = {
-            'empty_heart': [SpriteInfo('packed', 'empty_half_heart', 26, 15)],
-            'half_heart': [SpriteInfo('packed', 'half_heart', 29, 15)],
-            'full_heart': [SpriteInfo('packed', 'full_heart', 27, 15)],
+            'empty_heart': [SpriteInfo('packed', 'empty_half_heart', 23, 24)],
+            'half_heart': [SpriteInfo('packed', 'half_heart', 23, 27)],
+            'full_heart': [SpriteInfo('packed', 'full_heart', 23, 25)],
     }
 
     def __init__(self, root, rel_x, rel_y, actor):
@@ -97,12 +97,12 @@ class HUDLifeBar(HUDElement):
 
     def update(self):
         for i in range(self.actor.health.max):
-            if i < len(self._sprites):
+            if i >= len(self._sprites):
                 # TODO Support adding them
                 break
 
             sprite = self._sprites[i]
-            if i - 1 <= self.actor.health.current:
+            if i <= self.actor.health.current - 1:
                 sprite.image = self.animations['full_heart']
             else:
                 sprite.image = self.animations['empty_heart']
