@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.2" orientation="orthogonal" renderorder="left-down" width="100" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="11">
+<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="left-down" width="100" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="11">
  <tileset firstgid="1" source="platformer.tsx"/>
  <layer id="1" name="foreground" width="100" height="100">
   <data>
@@ -10016,11 +10016,6 @@
   <object id="9" gid="197" x="32" y="288" width="32" height="32">
    <properties>
     <property name="horizontal_force" type="int" value="48"/>
-   </properties>
-  </object>
-  <object id="10" gid="2147483845" x="896" y="288" width="32" height="32">
-   <properties>
-    <property name="horizontal_force" type="int" value="-48"/>
    </properties>
   </object>
  </objectgroup>
