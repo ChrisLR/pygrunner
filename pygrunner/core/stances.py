@@ -66,15 +66,15 @@ class Idle(Stance):
                 self.continue_current_action(stop_continuous=True)
             else:
                 self.start_or_continue(actions.Idle)
+                
+        if Keymap.A in keymaps:
+            # TODO Stances will have to vary from actor to actor
+            self.start_or_continue(actions.Punch)
 
         if Keymap.Left in keymaps:
             self.start_or_continue(actions.WalkLeft)
         elif Keymap.Right in keymaps:
             self.start_or_continue(actions.WalkRight)
-
-        if Keymap.A in keymaps:
-            # TODO Stances will have to vary from actor to actor
-            self.start_or_continue(actions.Punch)
 
         if Keymap.B in keymaps:
             self.start_or_continue(actions.Jump)
@@ -134,7 +134,7 @@ class Punching(Stance):
     name = "punching"
 
     def do_keymaps(self, keymaps):
-        self.continue_current_action()
+        self.continue_current_action(stop_continuous=True)
         if self.executing_action is None:
             self.actor.stance.change_stance('idle')
 
