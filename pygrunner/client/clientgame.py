@@ -82,7 +82,7 @@ class ClientGame(object):
         actor = self.factory.get_or_create(characters.HumanFemale1)
         players.append(actor)
         actor.location.set(96, 24)
-        actor.replace_component(components.PlayerController(2, self.inputs[2]))
+        actor.replace_component(components.PlayerController(2, self.inputs[1]))
         self.level.add_game_object(actor)
         self.hud = HUD(self, players, self.spriteloader)
 

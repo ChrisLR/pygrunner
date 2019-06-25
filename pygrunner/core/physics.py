@@ -87,7 +87,8 @@ class PhysicsEngine(object):
             if -0.5 <= object_physics.velocity_y < 0.1:
                 object_physics.velocity_y += 0.05
             else:
-                object_physics.velocity_y += self.gravity
+                accel = min(max(0.0, object_physics.velocity_y / 10), 10)
+                object_physics.velocity_y += self.gravity + accel
 
     def _set_object_collisions(self, all_object_collisions, current_level, game_object):
         intersect_collisions = set()
