@@ -12,6 +12,7 @@ class Health(Component):
         self.current = max_health
         self.is_dead = False
         self.invincible_timer = 0
+        self.revive_timer = -1  # 100
 
     def damage(self, amount):
         if self.invincible_timer:
@@ -36,6 +37,11 @@ class Health(Component):
     def update(self):
         if self.invincible_timer > 0:
             self.invincible_timer -= 1
+        if self.revive_timer > 0:
+            self.revive_timer -= 1
+        elif self.revive_timer == 0:
+            self.revive(4)
+            self.revive_timer = -1
 
     def revive(self, health=None):
         self.is_dead = False
@@ -49,10 +55,10 @@ class Health(Component):
     def on_death(self):
         # TODO Handle being killed
         self.host.display.play("dead")
-        pass
+        self.revive_timer = 100
 
     def on_revive(self):
-        pass
+        self.host.display.play("idle")
 
     def reset(self):
         self.max = 0

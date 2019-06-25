@@ -6,8 +6,8 @@ from pygrunner.gamedata.recipes.base import Recipe
 class Enemy(Recipe):
     name = ""
     animations = {}
-    move_speed = 1
-    jump_height = 1
+    move_speed = 2
+    jump_height = 2
     initial_stock = 10
     max_health = 1
 

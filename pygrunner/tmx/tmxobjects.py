@@ -106,7 +106,7 @@ class TmxMap(object):
             tmx_objects.append(
                 TmxObject(
                     attribs['id'], object_gid,
-                    float(attribs['x']), float(attribs['y']) - 16,
+                    float(attribs['x']), float(attribs['y']) - 32,
                     int(attribs['width']), int(attribs['height']),
                     object_type.tile_type, properties=properties)
             )

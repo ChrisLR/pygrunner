@@ -6,10 +6,10 @@ from pygrunner.gamedata.recipes.base import Recipe
 class Character(Recipe):
     name = ""
     animations = {}
-    move_speed = 1
-    jump_height = 10
+    move_speed = 4
+    jump_height = 20
     initial_stock = 10
-    max_health = 2
+    max_health = 4
 
     @classmethod
     def create(cls, sprite_loader):

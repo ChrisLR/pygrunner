@@ -144,4 +144,5 @@ class Dead(Stance):
 
     def do_keymaps(self, keymaps):
         # TODO Some enemies might want to rise from their graves
-        pass
+        if not self.actor.health.is_dead:
+            self.actor.stance.change_stance('idle')

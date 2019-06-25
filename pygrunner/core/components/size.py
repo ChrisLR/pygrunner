@@ -7,7 +7,7 @@ from pygrunner.core.components.base import Component
 class Size(Component):
     name = "size"
 
-    def __init__(self, height=16, width=16):
+    def __init__(self, height=32, width=32):
         super().__init__()
         self.height = height
         self.width = width
