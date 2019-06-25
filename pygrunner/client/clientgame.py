@@ -52,7 +52,7 @@ class ClientGame(object):
         self.inputs.append(keyboard_2)
 
     def initialize_ui(self):
-        self.window = pyglet.window.Window(800, 600)
+        self.window = pyglet.window.Window(1024, 800)
         self.window.event(self.on_draw)
         self.window.event(self.on_key_press)
         self.window.event(self.on_key_release)
@@ -75,13 +75,13 @@ class ClientGame(object):
         players = []
         actor = self.factory.get_or_create(characters.HumanMale1)
         players.append(actor)
-        actor.location.set(48, 24)
+        actor.location.set(96, 24)
         actor.replace_component(components.PlayerController(1, self.inputs[0]))
         self.level.add_game_object(actor)
 
         actor = self.factory.get_or_create(characters.HumanFemale1)
         players.append(actor)
-        actor.location.set(48, 24)
+        actor.location.set(96, 24)
         actor.replace_component(components.PlayerController(2, self.inputs[2]))
         self.level.add_game_object(actor)
         self.hud = HUD(self, players, self.spriteloader)

@@ -18,10 +18,10 @@ class HUD(object):
         self.players = players
         width, height = game.window.get_size()
         self._hud_positions = {
-            0: (16, height - 16),
-            1: (width - 48, height - 16),
-            2: (16, 16),
-            3: (width - 48, 16)
+            0: (32, height - 32),
+            1: (width - 96, height - 32),
+            2: (32, 32),
+            3: (width - 96, 32)
         }
         self._setup()
 
@@ -92,7 +92,7 @@ class HUDLifeBar(HUDElement):
         for i, sprite in enumerate(self._sprites):
             sprite.batch = batch
             sprite.group = group
-            sprite.x = self.rel_x + (i * 16)
+            sprite.x = self.rel_x + (i * 32)
             sprite.y = self.rel_y
 
     def update(self):

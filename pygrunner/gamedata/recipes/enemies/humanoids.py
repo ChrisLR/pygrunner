@@ -7,7 +7,7 @@ from pygrunner.gamedata.recipes.enemies.base import Enemy
 @Factory.register
 class GreenZombie(Enemy):
     name = "Green Zombie"
-    move_speed = 0.5
+    move_speed = 1
     jump_height = 8
     animations = {
         'idle': [SpriteInfo('packed', 'green_zombie_idle_0', 28, 0)],

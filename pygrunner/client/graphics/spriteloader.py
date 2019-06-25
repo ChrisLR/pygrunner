@@ -42,10 +42,10 @@ class SpriteSheet(object):
 
     @staticmethod
     def _load_image_grid(image):
-        rows = int(image.height / 16)
-        cols = int(image.width / 16)
+        rows = int(image.height / 32)
+        cols = int(image.width / 32)
 
-        return pyglet.image.ImageGrid(image, rows, cols, 16, 16)
+        return pyglet.image.ImageGrid(image, rows, cols, 32, 32)
 
     def get_region_by_name(self, name):
         region_tuple = self.region_names.get(name)

@@ -29,7 +29,7 @@ class TmxLoader(object):
                 if tile_tuple:
                     tile_type, properties = tile_tuple
                     tile = self.factory.get_or_create(tile_type, properties)
-                    tile.location.set(x * 16, y * 16)
+                    tile.location.set(x * 32, y * 32)
                     level.add_static(tile)
 
     def _handle_object_layer(self, layer, level):
