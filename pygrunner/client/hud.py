@@ -19,9 +19,9 @@ class HUD(object):
         width, height = game.window.get_size()
         self._hud_positions = {
             0: (32, height - 32),
-            1: (width - 96, height - 32),
+            1: (width - 128, height - 32),
             2: (32, 32),
-            3: (width - 96, 32)
+            3: (width - 128, 32)
         }
         self._setup()
 

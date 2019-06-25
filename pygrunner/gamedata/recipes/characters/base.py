@@ -7,7 +7,7 @@ class Character(Recipe):
     name = ""
     animations = {}
     move_speed = 4
-    jump_height = 10
+    jump_height = 20
     initial_stock = 10
     max_health = 4
 

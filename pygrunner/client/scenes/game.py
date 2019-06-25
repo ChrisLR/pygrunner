@@ -13,7 +13,7 @@ class GameScene(Scene):
         camera_location = components.Location(0, 0, self.game.level)
         self.camera = Camera(camera_location, components.Size(self.window.height + 64, self.window.width + 64), game)
         self.camera.follow(self.game.level.game_objects[-1])
-        self.physics_engine = physics.PhysicsEngine(0.01, 0.5, 0.9)
+        self.physics_engine = physics.PhysicsEngine(0.01, 0.75, 0.9)
 
     def on_draw(self):
         self.camera.draw()

@@ -77,15 +77,15 @@ class Camera(object):
             y_dist = fy - cy
 
             if abs(x_dist) > 30:
-                speed_multiplier = round(x_dist / 16)
+                speed_multiplier = round(x_dist / 32)
                 sign = util.sign(x_dist)
-                speed = sign if speed_multiplier < 1 else speed_multiplier
+                speed = sign if -1 < speed_multiplier < 1 else speed_multiplier
                 self.location.add(x=speed)
 
             if abs(y_dist) > 30:
-                speed_multiplier = round(y_dist / 16)
+                speed_multiplier = round(y_dist / 32)
                 sign = util.sign(y_dist)
-                speed = sign if speed_multiplier < 1 else speed_multiplier
+                speed = sign if -1 < speed_multiplier < 1 else speed_multiplier
                 self.location.add(y=speed)
 
     def update_for_object(self, game_object):
