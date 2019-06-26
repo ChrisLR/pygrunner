@@ -27,3 +27,15 @@ class Ladder(Tile):
 class RedLadder(Ladder):
     name = "Red Ladder"
     animations = {'idle': [SpriteInfo('packed', 'red_ladder', 21, 19)]}
+
+
+@Factory.register
+class BrownLadder(Ladder):
+    name = "Brown Ladder"
+    animations = {'idle': [SpriteInfo('packed', 'brown_ladder', 21, 20)]}
+
+
+@Factory.register
+class RopeLadder(Ladder):
+    name = "Rope Ladder"
+    animations = {'idle': [SpriteInfo('packed', 'rope_ladder', 21, 22)]}

@@ -69,20 +69,21 @@ class ClientGame(object):
     def _start_level(self):
         # TODO This is only in the meantime so we can develop further.
         self.factory.restock_all()
-        self.level = TmxLoader(self.factory).load_map('simple')
+        #self.level = TmxLoader(self.factory).load_map('simple')
+        self.level = TmxLoader(self.factory).load_map('quickmountain')
 
         # TODO A better way to add actors to a game
         players = []
-        actor = self.factory.get_or_create(enemies.GreenZombie)
+        actor = self.factory.get_or_create(characters.HumanMale1)
         players.append(actor)
         actor.location.set(96, 24)
         actor.replace_component(components.PlayerController(1, self.inputs[0]))
         self.level.add_game_object(actor)
 
-        actor = self.factory.get_or_create(enemies.GreenZombie)
+        actor = self.factory.get_or_create(characters.HumanFemale1)
         players.append(actor)
         actor.location.set(96, 24)
-        actor.replace_component(components.PlayerController(2, self.inputs[2]))
+        actor.replace_component(components.PlayerController(2, self.inputs[1]))
         self.level.add_game_object(actor)
         self.hud = HUD(self, players, self.spriteloader)
 
