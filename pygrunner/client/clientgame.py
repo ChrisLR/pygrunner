@@ -6,7 +6,7 @@ from pygrunner.core import components
 from pygrunner.core.layers import Layer
 from pygrunner.gamedata.factory import Factory
 from pygrunner.gamedata.objectpool import ObjectPool
-from pygrunner.gamedata.recipes import characters
+from pygrunner.gamedata.recipes import characters, enemies
 from pygrunner.tmx import TmxLoader
 from pygrunner.client.hud import HUD
 
@@ -73,16 +73,16 @@ class ClientGame(object):
 
         # TODO A better way to add actors to a game
         players = []
-        actor = self.factory.get_or_create(characters.HumanMale1)
+        actor = self.factory.get_or_create(enemies.GreenZombie)
         players.append(actor)
         actor.location.set(96, 24)
         actor.replace_component(components.PlayerController(1, self.inputs[0]))
         self.level.add_game_object(actor)
 
-        actor = self.factory.get_or_create(characters.HumanFemale1)
+        actor = self.factory.get_or_create(enemies.GreenZombie)
         players.append(actor)
         actor.location.set(96, 24)
-        actor.replace_component(components.PlayerController(2, self.inputs[1]))
+        actor.replace_component(components.PlayerController(2, self.inputs[2]))
         self.level.add_game_object(actor)
         self.hud = HUD(self, players, self.spriteloader)
 

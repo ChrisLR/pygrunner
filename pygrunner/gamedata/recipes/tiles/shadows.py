@@ -20,6 +20,7 @@ class BlockShadow(Tile):
 
         return tile
 
+
 @Factory.register
 class RedBlockTopShadow(BlockShadow):
     name = "Red Block Top Shadow"
@@ -30,3 +31,15 @@ class RedBlockTopShadow(BlockShadow):
 class RedBlockMiddleShadow(BlockShadow):
     name = "Red Block Middle Shadow"
     animations = {'idle': [SpriteInfo('packed', 'red_block_middle_shadow', 8, 0)]}
+
+
+@Factory.register
+class OldBridgeTopShadow(BlockShadow):
+    name = "Old Bridge Top Shadow"
+    animations = {'idle': [SpriteInfo('packed', 'old_bridge_top_shadow', 9, 12)]}
+
+
+@Factory.register
+class OldBridgeMiddleShadow(BlockShadow):
+    name = "Old Bridge Middle Shadow"
+    animations = {'idle': [SpriteInfo('packed', 'old_bridge_middle_shadow', 8, 12)]}

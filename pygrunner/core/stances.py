@@ -66,7 +66,7 @@ class Idle(Stance):
                 self.continue_current_action(stop_continuous=True)
             else:
                 self.start_or_continue(actions.Idle)
-                
+
         if Keymap.A in keymaps:
             # TODO Stances will have to vary from actor to actor
             self.start_or_continue(actions.Punch)
