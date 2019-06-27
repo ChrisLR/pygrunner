@@ -10,6 +10,7 @@ class TmxLoader(object):
         map_file_name = "tmx\\%s.tmx" % map_name
         tmx_map = TmxMap.from_xml(map_file_name)
         level = Level(map_name, tmx_map.pixel_width, tmx_map.pixel_height)
+        level.background_color = tmx_map.background_color
         for layer in tmx_map.layers:
             self._handle_tile_layer(layer, level)
 

@@ -6,7 +6,7 @@ class TmxMap(object):
     FLIPPED_VERTICALLY_FLAG = 1 << 30
     FLIPPED_DIAGONALLY_FLAG = 1 << 29
 
-    def __init__(self, width, height, tilesets, layers, object_layers, image_layers, render_order, tile_height, tile_width):
+    def __init__(self, width, height, tilesets, layers, object_layers, image_layers, render_order, tile_height, tile_width, background_color=None):
         self.width = width
         self.height = height
         self.tilesets = tilesets
@@ -16,6 +16,7 @@ class TmxMap(object):
         self.render_order = render_order
         self.tile_height = tile_height
         self.tile_width = tile_width
+        self.background_color = background_color
 
     @property
     def pixel_width(self):
@@ -35,6 +36,8 @@ class TmxMap(object):
         tile_height = int(root.attrib.get('tileheight'))
         map_width = int(root.attrib.get('width'))
         map_height = int(root.attrib.get('height'))
+        bg_hex_color = root.attrib.get('backgroundcolor')
+        background_color = None if not bg_hex_color else _hex_to_rgb(bg_hex_color)
         tilesets = []
         layers = []
         object_layers = []
@@ -49,7 +52,7 @@ class TmxMap(object):
             elif child.tag == 'imagelayer':
                 cls._handle_image_layer(child, image_layers)
 
-        return TmxMap(map_width, map_height, tilesets, layers, object_layers, image_layers, render_order, tile_height, tile_width)
+        return TmxMap(map_width, map_height, tilesets, layers, object_layers, image_layers, render_order, tile_height, tile_width, background_color=background_color)
 
     @classmethod
     def get_tileset_used_by_gid(cls, tilesets, gid):
@@ -136,10 +139,7 @@ class TmxMap(object):
         image_element = child[0]
         image_name = image_element.attrib.get('source').rsplit('/', 1)[1].split('.')[0]
         transparent_hex_color = image_element.attrib.get('trans')
-        r = int(transparent_hex_color[2], 16)
-        g = int(transparent_hex_color[2:4], 16)
-        b = int(transparent_hex_color[4::], 16)
-        transparent_color = (r, g, b)
+        transparent_color = _hex_to_rgb(transparent_hex_color)
         new_image_layer = TmxImageLayer(
             attrib['id'],
             attrib['name'],
@@ -149,7 +149,6 @@ class TmxMap(object):
             transparent_color
         )
         image_layers.append(new_image_layer)
-
 
 _property_type_map = {
         "string": str,
@@ -249,3 +248,11 @@ class TmxObject(object):
         self.height = height
         self.object_type = object_type
         self.properties = properties or {}
+
+
+def _hex_to_rgb(hex):
+    r = int(hex[1:3], 16)
+    g = int(hex[3:5], 16)
+    b = int(hex[5::], 16)
+
+    return r, g, b

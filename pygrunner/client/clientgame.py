@@ -36,6 +36,13 @@ class ClientGame(object):
     def update(self, dt):
         self.scene_manager.update(dt)
 
+    def set_clear_color(self, rgb_color):
+        r, g, b = rgb_color
+        r = r / 255.0
+        g = g / 255.0
+        b = b / 255.0
+        pyglet.gl.glClearColor(r, g, b, 1)
+
     def start(self):
         self.initialize_keyboard_players()
         self.initialize_joystick_players()
@@ -71,6 +78,9 @@ class ClientGame(object):
         self.factory.restock_all()
         #self.level = TmxLoader(self.factory).load_map('simple')
         self.level = TmxLoader(self.factory).load_map('quickmountain')
+        bg_color = self.level.background_color
+        if bg_color:
+            self.set_clear_color(bg_color)
 
         # TODO A better way to add actors to a game
         players = []
