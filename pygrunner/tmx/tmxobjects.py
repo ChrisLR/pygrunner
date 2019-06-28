@@ -150,6 +150,7 @@ class TmxMap(object):
         )
         image_layers.append(new_image_layer)
 
+
 _property_type_map = {
         "string": str,
         "int": int,

@@ -9,3 +9,4 @@ from pygrunner.core.components.location import Location
 from pygrunner.core.components.physics import Physics
 from pygrunner.core.components.size import Size
 from pygrunner.core.components.stance import Stance
+from pygrunner.core.components.killtouch import KillTouch

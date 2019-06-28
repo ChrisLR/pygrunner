@@ -29,6 +29,7 @@ class KillBlock(Recipe):
         physics.solid = False
         size = components.Size()
         game_object = objecttypes.GameObject(cls.name, display, location, physics, size, cls)
+        game_object.add_component(components.KillTouch())
 
         return game_object
 
