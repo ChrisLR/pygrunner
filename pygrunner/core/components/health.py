@@ -44,12 +44,13 @@ class Health(Component):
             self.revive_timer = -1
 
     def revive(self, health=None):
+        self.invincible_timer = 25
         self.is_dead = False
+        self.current = 0
         if health is not None:
-            self.current = 0
             self.heal(health)
         else:
-            self.current = 1
+            self.heal(1)
         self.on_revive()
 
     def on_death(self):

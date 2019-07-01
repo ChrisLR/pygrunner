@@ -122,6 +122,10 @@ class PhysicsEngine(object):
 
         for name, rectangle in rectangles:
             collisions = static_map.check_collision_rect(rectangle)
+            for collision in collisions:
+                triggers = getattr(collision, 'triggers', None)
+                if triggers is not None:
+                    triggers.trigger(game_object, name)
             solids = {collision for collision in collisions if collision.physics.solid}
             non_solids = collisions.difference(solids)
             game_object.physics.collisions[name].update(solids)

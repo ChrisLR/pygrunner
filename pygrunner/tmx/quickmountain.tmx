@@ -1421,7 +1421,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="933"/>
    <tile/>
    <tile/>
    <tile/>
@@ -20009,7 +20009,7 @@
    <tile/>
   </data>
  </layer>
- <objectgroup id="3" name="objects">
+ <objectgroup id="3" name="objects" visible="0">
   <object id="1" gid="754" x="188" y="477.333" width="32" height="32"/>
   <object id="2" gid="83" x="32" y="126.667" width="32" height="32"/>
  </objectgroup>

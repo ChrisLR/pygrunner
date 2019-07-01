@@ -48,6 +48,13 @@ class LavaTop(LiquidBlock):
         'idle': [SpriteInfo('packed', 'lava_top', 21, 25)],
     }
 
+    @classmethod
+    def create(cls, sprite_loader):
+        game_object = super().create(sprite_loader)
+        game_object.add_component(components.StaticTriggers())
+        game_object.add_component(components.KillTouch(damage=1, knockback=True))
+        return game_object
+
 
 @Factory.register
 class LavaMiddle(LiquidBlock):
@@ -55,3 +62,11 @@ class LavaMiddle(LiquidBlock):
     animations = {
         'idle': [SpriteInfo('packed', 'lava_middle', 20, 25)]
     }
+
+    @classmethod
+    def create(cls, sprite_loader):
+        game_object = super().create(sprite_loader)
+        game_object.add_component(components.StaticTriggers())
+        game_object.add_component(components.KillTouch(damage=1))
+
+        return game_object
