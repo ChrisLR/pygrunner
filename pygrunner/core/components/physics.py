@@ -25,6 +25,7 @@ class Physics(Component):
         self.climbing_down = False
         self.affected_by_gravity = True
         self.affected_by_velocity = True
+        self.flying = False
         self.clear_collisions()
 
     def clear_collisions(self):

@@ -4,6 +4,7 @@
  <tile id="82" type="Green Zombie"/>
  <tile id="154" type="Yellow Jump Pad"/>
  <tile id="155" type="Horizontal Yellow Jump Pad"/>
+ <tile id="164" type="Black Bat"/>
  <tile id="195" type="Yellow Jump Pad"/>
  <tile id="196" type="Horizontal Yellow Jump Pad"/>
  <tile id="388" type="Red Ladder"/>
