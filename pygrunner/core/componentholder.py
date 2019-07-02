@@ -2,6 +2,7 @@ from pygrunner.core.components import component_names
 
 empty = object()
 
+
 class ComponentHolder(object):
     """
     This allows to register and update components
