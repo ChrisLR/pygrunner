@@ -10,7 +10,8 @@ class GameScene(Scene):
         super().__init__(inputs, manager, game)
         self.recycle_bin = set()
         self.game._start_level()
-        camera_location = components.Location(0, 0, self.game.level)
+        level = self.game.level
+        camera_location = components.Location(0, level.height, self.game.level)
         self.camera = Camera(camera_location, components.Size(self.window.height + 64, self.window.width + 64), game)
         self.camera.follow(self.game.level.game_objects[-1])
         self.physics_engine = physics.PhysicsEngine(0.01, 0.75, 0.9)

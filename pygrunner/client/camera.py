@@ -18,6 +18,7 @@ class Camera(object):
         self.size.register(self)
         self.game = game
         self.batch = pyglet.graphics.Batch()
+        self.ui_batch = pyglet.graphics.Batch()
         self.groups = {
             Layer.image_background: pyglet.graphics.OrderedGroup(Layer.image_background),
             Layer.background: pyglet.graphics.OrderedGroup(Layer.background),
@@ -30,7 +31,7 @@ class Camera(object):
         self._background_sprite = None
         self.adjust_background_image()
         self.hud = game.hud
-        self.hud.assign(self.batch, self.groups[Layer.foreground])
+        self.hud.assign(self.ui_batch, self.groups[Layer.foreground])
         # Initialize Projection matrix
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
@@ -57,8 +58,7 @@ class Camera(object):
                 ox, oy = current_level.background_image_offset
                 group = self.groups[Layer.image_background]
                 sprite = pyglet.sprite.Sprite(
-                    current_level.background_image,
-                    x=ox, y=oy, batch=self.batch, group=group, flipped_y=True)
+                    current_level.background_image, x=ox, y=oy, batch=self.batch, group=group)
                 # TODO Not sure DEL is appropriate here
                 del self._background_sprite
                 self._background_sprite = sprite
@@ -73,13 +73,17 @@ class Camera(object):
 
         # Set orthographic projection matrix
         rectangle = self.size.rectangle
-        glOrtho(rectangle.left, rectangle.right, rectangle.bottom, rectangle.top, 1, -1)
-        glScalef(1, -1, 1)
+        glScalef(1, -1, 0)
+        glOrtho(rectangle.left, rectangle.right, rectangle.bottom, rectangle.top, -1, 1)
 
         # Draw
         self.batch.draw()
 
         # Remove default modelview matrix
+        glPopMatrix()
+        glPushMatrix()
+        glOrtho(0, rectangle.width, 0, rectangle.height, -1, 1)
+        self.ui_batch.draw()
         glPopMatrix()
 
     def follow(self, game_object):
@@ -91,7 +95,7 @@ class Camera(object):
         self.hud.update()
         if self._follow:
             cx, cy = self.size.center_rectangle.x, self.size.center_rectangle.y
-            fx, fy = self._follow.location.x, self._follow.location.y
+            fx, fy = self._follow.location.x, self.location.level.height - self._follow.location.y
             x_dist = fx - cx
             y_dist = fy - cy
 
