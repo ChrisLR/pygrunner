@@ -25,6 +25,9 @@ class Display(Component):
     def update(self):
         if self.flipped != self.host.flipped:
             self.flip()
+        if self._sprite:
+            location = self.host.location
+            self._sprite.position = location.tuple
 
     def play(self, name):
         if self.current and name == self.current_name:
@@ -40,7 +43,7 @@ class Display(Component):
             else:
                 self.current = animation
 
-            self.current.scale = 1
+            #self.current.scale = 1
 
     def reset(self):
         self.current = self.animations.get('idle')

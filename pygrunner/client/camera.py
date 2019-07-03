@@ -1,4 +1,5 @@
 import pyglet
+from pyglet.gl import *
 
 from pygrunner.core import util
 from pygrunner.core.layers import Layer
@@ -30,18 +31,24 @@ class Camera(object):
         self.adjust_background_image()
         self.hud = game.hud
         self.hud.assign(self.batch, self.groups[Layer.foreground])
+        # Initialize Projection matrix
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
 
-    def adjust_game_object_sprite(self, game_object, sprite):
-        """
-        Will adjust a game object's sprite based on
-        :param game_object: The game object to adjust
-        """
-        if self.is_visible(game_object):
-            sprite.visible = True
-            pixel_coordinate = self.coord_to_pixel(game_object.location.x, game_object.location.y)
-            sprite.set_position(*pixel_coordinate)
-        else:
-            sprite.visible = False
+        # Initialize Modelview matrix
+        glMatrixMode(GL_MODELVIEW)
+        glLoadIdentity()
+
+        # Set antialiasing
+        glEnable(GL_LINE_SMOOTH)
+        glEnable(GL_POLYGON_SMOOTH)
+        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
+
+        # Set alpha blending
+        glEnable(GL_BLEND)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
+        glViewport(0, 0, self.size.width, self.size.height)
 
     def adjust_background_image(self):
         if self.location and self.location.level:
@@ -51,7 +58,7 @@ class Camera(object):
                 group = self.groups[Layer.image_background]
                 sprite = pyglet.sprite.Sprite(
                     current_level.background_image,
-                    x=ox, y=oy, batch=self.batch, group=group)
+                    x=ox, y=oy, batch=self.batch, group=group, flipped_y=True)
                 # TODO Not sure DEL is appropriate here
                 del self._background_sprite
                 self._background_sprite = sprite
@@ -61,7 +68,19 @@ class Camera(object):
                 self._background_sprite.y = oy
 
     def draw(self):
+        # Save the default modelview matrix
+        glPushMatrix()
+
+        # Set orthographic projection matrix
+        rectangle = self.size.rectangle
+        glOrtho(rectangle.left, rectangle.right, rectangle.bottom, rectangle.top, 1, -1)
+        glScalef(1, -1, 1)
+
+        # Draw
         self.batch.draw()
+
+        # Remove default modelview matrix
+        glPopMatrix()
 
     def follow(self, game_object):
         self._follow = game_object
@@ -93,26 +112,20 @@ class Camera(object):
         sprite = object_display.sprite
         if sprite and game_object.recycle:
             sprite.visible = False
-            game_object.display.sprite = None
+            object_display.sprite = None
             return
 
-        image = game_object.display.current
+        image = object_display.current
         if sprite is None:
-            group = self.groups.get(game_object.display.layer)
+            group = self.groups.get(object_display.layer)
             sprite = pyglet.sprite.Sprite(image, batch=self.batch, group=group)
             object_display.sprite = sprite
         else:
             if image is not None and image != sprite.image:
                 sprite.image = image
-        self.adjust_game_object_sprite(game_object, sprite)
 
     def coord_to_pixel(self, coord_x, coord_y):
         return coord_x - self.location.x, self.size.height - (coord_y - self.location.y)
 
     def pixel_to_coord(self, pixel_x, pixel_y):
         return self.location.x + pixel_x, self.location.y + pixel_y
-
-    def is_visible(self, game_object):
-        if self.size.rectangle.intersects(game_object.size.rectangle):
-            return True
-        return False
