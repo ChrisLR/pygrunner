@@ -25,9 +25,15 @@ class Location(Component):
         if x != 0 or y != 0:
             self.x += x
             self.y += y
-            self.host.size.adjust_rectangles()
+            host = self.host
+            host.size.adjust_rectangles()
+            if host.display is not None:
+                host.display.location_changed = True
 
     def set(self, x=None, y=None):
+        if x is None and y is None:
+            return
+
         if x is not None:
             self.x = x
 
@@ -35,6 +41,7 @@ class Location(Component):
             self.y = y
 
         self.host.size.adjust_rectangles()
+        self.host.display.location_changed = True
 
     def reset(self):
         self.x = 0

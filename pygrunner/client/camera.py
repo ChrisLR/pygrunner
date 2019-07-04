@@ -32,6 +32,7 @@ class Camera(object):
         self.adjust_background_image()
         self.hud = game.hud
         self.hud.assign(self.ui_batch, self.groups[Layer.foreground])
+        self.display = None
         # Initialize Projection matrix
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
@@ -94,22 +95,28 @@ class Camera(object):
     def update(self):
         self.hud.update()
         if self._follow:
-            cx, cy = self.size.center_rectangle.x, self.size.center_rectangle.y
-            fx, fy = self._follow.location.x, self.location.level.height - self._follow.location.y
+            follow_location = self._follow.location
+            center_rectangle = self.size.center_rectangle
+            cx, cy = center_rectangle.x, center_rectangle.y
+            fx, fy = follow_location.x, follow_location.level.height - follow_location.y
             x_dist = fx - cx
             y_dist = fy - cy
 
+            x_spd = 0
+            y_spd = 0
             if abs(x_dist) > 30:
                 speed_multiplier = round(x_dist / 32)
                 sign = util.sign(x_dist)
                 speed = sign if -1 < speed_multiplier < 1 else speed_multiplier
-                self.location.add(x=speed)
+                x_spd = speed
 
             if abs(y_dist) > 30:
                 speed_multiplier = round(y_dist / 32)
                 sign = util.sign(y_dist)
                 speed = sign if -1 < speed_multiplier < 1 else speed_multiplier
-                self.location.add(y=speed)
+                y_spd = speed
+
+            self.location.add(x=x_spd, y=y_spd)
 
     def update_for_object(self, game_object):
         object_display = game_object.display

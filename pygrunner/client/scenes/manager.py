@@ -29,4 +29,3 @@ class SceneManager(object):
     def change_to(self, scene_name):
         scene = next(scene for scene in self.scenes if scene.name == scene_name)
         self.scene_stack.append(scene(self.inputs, self, self.game))
-        
