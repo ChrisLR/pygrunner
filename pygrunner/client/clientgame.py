@@ -20,6 +20,8 @@ class ClientGame(object):
         self.spriteloader.load_spritesheets(("packed.png",))
         self.factory = Factory(self.spriteloader, ObjectPool())
         self.hud = None
+        # DEBUG
+        # self.iteration = 0
 
     def on_draw(self):
         self.window.clear()
@@ -35,6 +37,10 @@ class ClientGame(object):
 
     def update(self, dt):
         self.scene_manager.update(dt)
+        # For performance testing purposes
+        # self.iteration += 1
+        # if self.iteration == 100:
+        #     pyglet.app.exit()
 
     def set_clear_color(self, rgb_color):
         r, g, b = rgb_color

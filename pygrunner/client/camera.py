@@ -1,4 +1,5 @@
 import pyglet
+from pyglet import gl
 
 from pygrunner.core import util
 from pygrunner.core.layers import Layer
@@ -17,6 +18,7 @@ class Camera(object):
         self.size.register(self)
         self.game = game
         self.batch = pyglet.graphics.Batch()
+        self.ui_batch = pyglet.graphics.Batch()
         self.groups = {
             Layer.image_background: pyglet.graphics.OrderedGroup(Layer.image_background),
             Layer.background: pyglet.graphics.OrderedGroup(Layer.background),
@@ -29,19 +31,29 @@ class Camera(object):
         self._background_sprite = None
         self.adjust_background_image()
         self.hud = game.hud
-        self.hud.assign(self.batch, self.groups[Layer.foreground])
+        self.hud.assign(self.ui_batch, self.groups[Layer.foreground])
+        self.display = None
+        self._initialize_opengl()
 
-    def adjust_game_object_sprite(self, game_object, sprite):
-        """
-        Will adjust a game object's sprite based on
-        :param game_object: The game object to adjust
-        """
-        if self.is_visible(game_object):
-            sprite.visible = True
-            pixel_coordinate = self.coord_to_pixel(game_object.location.x, game_object.location.y)
-            sprite.set_position(*pixel_coordinate)
-        else:
-            sprite.visible = False
+    def _initialize_opengl(self):
+        # Initialize Projection matrix
+        gl.glMatrixMode(gl.GL_PROJECTION)
+        gl.glLoadIdentity()
+
+        # Initialize Modelview matrix
+        gl.glMatrixMode(gl.GL_MODELVIEW)
+        gl.glLoadIdentity()
+
+        # Set antialiasing
+        gl.glEnable(gl.GL_LINE_SMOOTH)
+        gl.glEnable(gl.GL_POLYGON_SMOOTH)
+        gl.glHint(gl.GL_LINE_SMOOTH_HINT, gl.GL_NICEST)
+
+        # Set alpha blending
+        gl.glEnable(gl.GL_BLEND)
+        gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA)
+
+        gl.glViewport(0, 0, self.size.width, self.size.height)
 
     def adjust_background_image(self):
         if self.location and self.location.level:
@@ -50,8 +62,7 @@ class Camera(object):
                 ox, oy = current_level.background_image_offset
                 group = self.groups[Layer.image_background]
                 sprite = pyglet.sprite.Sprite(
-                    current_level.background_image,
-                    x=ox, y=oy, batch=self.batch, group=group)
+                    current_level.background_image, x=ox, y=oy, batch=self.batch, group=group)
                 # TODO Not sure DEL is appropriate here
                 del self._background_sprite
                 self._background_sprite = sprite
@@ -61,7 +72,16 @@ class Camera(object):
                 self._background_sprite.y = oy
 
     def draw(self):
+        rectangle = self.size.rectangle
+        gl.glPushMatrix()
+        gl.glScalef(1, -1, 0)
+        gl.glOrtho(rectangle.left, rectangle.right, rectangle.bottom, rectangle.top, -1, 1)
         self.batch.draw()
+        gl.glPopMatrix()
+        gl.glPushMatrix()
+        gl.glOrtho(0, rectangle.width, 0, rectangle.height, -1, 1)
+        self.ui_batch.draw()
+        gl.glPopMatrix()
 
     def follow(self, game_object):
         self._follow = game_object
@@ -71,48 +91,48 @@ class Camera(object):
     def update(self):
         self.hud.update()
         if self._follow:
-            cx, cy = self.size.center_rectangle.x, self.size.center_rectangle.y
-            fx, fy = self._follow.location.x, self._follow.location.y
+            follow_location = self._follow.location
+            center_rectangle = self.size.center_rectangle
+            cx, cy = center_rectangle.x, center_rectangle.y
+            fx, fy = follow_location.x, follow_location.level.height - follow_location.y
             x_dist = fx - cx
             y_dist = fy - cy
 
+            x_spd = 0
+            y_spd = 0
             if abs(x_dist) > 30:
                 speed_multiplier = round(x_dist / 32)
                 sign = util.sign(x_dist)
                 speed = sign if -1 < speed_multiplier < 1 else speed_multiplier
-                self.location.add(x=speed)
+                x_spd = speed
 
             if abs(y_dist) > 30:
                 speed_multiplier = round(y_dist / 32)
                 sign = util.sign(y_dist)
                 speed = sign if -1 < speed_multiplier < 1 else speed_multiplier
-                self.location.add(y=speed)
+                y_spd = speed
+
+            self.location.add(x=x_spd, y=y_spd)
 
     def update_for_object(self, game_object):
         object_display = game_object.display
         sprite = object_display.sprite
         if sprite and game_object.recycle:
             sprite.visible = False
-            game_object.display.sprite = None
+            object_display.sprite = None
             return
 
-        image = game_object.display.current
+        image = object_display.current
         if sprite is None:
-            group = self.groups.get(game_object.display.layer)
+            group = self.groups.get(object_display.layer)
             sprite = pyglet.sprite.Sprite(image, batch=self.batch, group=group)
             object_display.sprite = sprite
         else:
             if image is not None and image != sprite.image:
                 sprite.image = image
-        self.adjust_game_object_sprite(game_object, sprite)
 
     def coord_to_pixel(self, coord_x, coord_y):
         return coord_x - self.location.x, self.size.height - (coord_y - self.location.y)
 
     def pixel_to_coord(self, pixel_x, pixel_y):
         return self.location.x + pixel_x, self.location.y + pixel_y
-
-    def is_visible(self, game_object):
-        if self.size.rectangle.intersects(game_object.size.rectangle):
-            return True
-        return False

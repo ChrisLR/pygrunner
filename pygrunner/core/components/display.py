@@ -18,6 +18,7 @@ class Display(Component):
         self.flipped = False
         self.play('idle')
         self._sprite = None
+        self.location_changed = True
 
     def add(self, name, animation):
         self.animations[name] = animation
@@ -25,6 +26,12 @@ class Display(Component):
     def update(self):
         if self.flipped != self.host.flipped:
             self.flip()
+
+        if self._sprite is not None and self.location_changed is True:
+            location = self.host.location
+            height = location.level.height
+            self._sprite.position = (location.x, height - location.y)
+            self.location_changed = False
 
     def play(self, name):
         if self.current and name == self.current_name:
@@ -39,8 +46,6 @@ class Display(Component):
                 self.current = self._get_or_create_flipped(self.current_name, animation)
             else:
                 self.current = animation
-
-            self.current.scale = 1
 
     def reset(self):
         self.current = self.animations.get('idle')
