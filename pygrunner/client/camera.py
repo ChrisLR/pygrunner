@@ -102,7 +102,7 @@ class Camera(object):
             sprite = pyglet.sprite.Sprite(image, batch=self.batch, group=group)
             object_display.sprite = sprite
         else:
-            if image != sprite.image:
+            if image is not None and image != sprite.image:
                 sprite.image = image
         self.adjust_game_object_sprite(game_object, sprite)
 

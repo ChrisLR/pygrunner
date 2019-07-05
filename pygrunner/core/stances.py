@@ -67,14 +67,14 @@ class Idle(Stance):
             else:
                 self.start_or_continue(actions.Idle)
 
+        if Keymap.A in keymaps:
+            # TODO Stances will have to vary from actor to actor
+            self.start_or_continue(actions.Punch)
+
         if Keymap.Left in keymaps:
             self.start_or_continue(actions.WalkLeft)
         elif Keymap.Right in keymaps:
             self.start_or_continue(actions.WalkRight)
-
-        if Keymap.A in keymaps:
-            # TODO Stances will have to vary from actor to actor
-            self.start_or_continue(actions.Punch)
 
         if Keymap.B in keymaps:
             self.start_or_continue(actions.Jump)
@@ -134,7 +134,7 @@ class Punching(Stance):
     name = "punching"
 
     def do_keymaps(self, keymaps):
-        self.continue_current_action()
+        self.continue_current_action(stop_continuous=True)
         if self.executing_action is None:
             self.actor.stance.change_stance('idle')
 
@@ -143,6 +143,33 @@ class Dead(Stance):
     name = "dead"
 
     def do_keymaps(self, keymaps):
+        if self.actor.physics.flying is True:
+            self.actor.physics.flying = False
         # TODO Some enemies might want to rise from their graves
         if not self.actor.health.is_dead:
             self.actor.stance.change_stance('idle')
+
+
+class Flying(Idle):
+    name = "flying"
+
+    def do_keymaps(self, keymaps):
+        self.actor.physics.flying = True
+        self.actor.physics.velocity_y /= 2
+        if not keymaps:
+            self.actor.physics.velocity_x /= 1.2
+            self.continue_current_action(stop_continuous=True)
+            return
+
+        if Keymap.A in keymaps:
+            self.start_or_continue(actions.Swoop)
+
+        if Keymap.Up in keymaps:
+            self.start_or_continue(actions.FlyUp)
+        elif Keymap.Down in keymaps:
+            self.start_or_continue(actions.FlyDown)
+
+        if Keymap.Left in keymaps:
+            self.start_or_continue(actions.FlyLeft)
+        elif Keymap.Right in keymaps:
+            self.start_or_continue(actions.FlyRight)

@@ -21,3 +21,27 @@ class RedBlockTop(Block):
 class RedBlockMiddle(Block):
     name = "Red Block Middle"
     animations = {'idle': [SpriteInfo('packed', 'red_block_middle', 17, 0)]}
+
+
+@Factory.register
+class RockyDirtTop(Block):
+    name = "Rocky Dirt Top"
+    animations = {'idle': [SpriteInfo('packed', 'rocky_dirt_top', 18, 11)]}
+
+
+@Factory.register
+class RockyDirtMiddle(Block):
+    name = "Rocky Dirt Middle"
+    animations = {'idle': [SpriteInfo('packed', 'rocky_dirt_middle', 17, 11)]}
+
+
+@Factory.register
+class OldBridgeTop(Block):
+    name = "Old Bridge Top"
+    animations = {'idle': [SpriteInfo('packed', 'old_bridge_top', 18, 13)]}
+
+
+@Factory.register
+class OldBridgeMiddle(Block):
+    name = "Old Bridge Middle"
+    animations = {'idle': [SpriteInfo('packed', 'old_bridge_middle', 17, 13)]}

@@ -227,3 +227,83 @@ class ClimbRight(Action):
     @property
     def finished(self):
         return not any(self.actor.physics.climbables.values())
+
+
+class FlyRight(Action):
+    continuous = True
+
+    def can_execute(self):
+        return True
+
+    def execute(self):
+        actor = self.actor
+        move_speed = actor.recipe.move_speed
+        if actor.physics.velocity_x <= 0:
+            actor.physics.velocity_x += move_speed
+        elif 0 < actor.physics.velocity_x < move_speed:
+            actor.physics.velocity_x = move_speed
+        actor.flipped = False
+
+    def on_start(self):
+        actor = self.actor
+        actor.display.play('fly')
+        actor.stance.change_stance('flying')
+
+
+class FlyLeft(Action):
+    continuous = True
+
+    def execute(self):
+        actor = self.actor
+        move_speed = actor.recipe.move_speed
+        if actor.physics.velocity_x >= 0:
+            actor.physics.velocity_x -= move_speed
+        elif 0 > actor.physics.velocity_x > -move_speed:
+            actor.physics.velocity_x = -move_speed
+        actor.flipped = True
+
+    def can_execute(self):
+        return True
+
+    def on_start(self):
+        actor = self.actor
+        actor.display.play('fly')
+        actor.stance.change_stance('flying')
+
+
+class FlyUp(Action):
+    continuous = True
+
+    def execute(self):
+        actor = self.actor
+        move_speed = actor.recipe.move_speed
+        if actor.physics.velocity_y >= 0:
+            actor.physics.velocity_y -= move_speed
+        elif 0 > actor.physics.velocity_y > -move_speed:
+            actor.physics.velocity_y = -move_speed
+
+    def can_execute(self):
+        return True
+
+    def on_start(self):
+        actor = self.actor
+        actor.display.play('fly')
+        actor.stance.change_stance('flying')
+
+
+class FlyDown(Action):
+    continuous = True
+
+    def execute(self):
+        actor = self.actor
+        move_speed = actor.recipe.move_speed
+        actor.physics.velocity_y += move_speed
+        actor.flipped = True
+
+    def can_execute(self):
+        return True
+
+    def on_start(self):
+        actor = self.actor
+        actor.display.play('fly')
+        actor.stance.change_stance('flying')

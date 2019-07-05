@@ -14,6 +14,7 @@ class Level(object):
         self.static_collision_map = CollisionMap(width, height)
         self.background_image = None
         self.background_image_offset = None
+        self.background_color = None
 
     def add_game_object(self, game_object):
         self.game_objects.append(game_object)

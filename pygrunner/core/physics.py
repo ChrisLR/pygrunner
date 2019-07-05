@@ -75,7 +75,7 @@ class PhysicsEngine(object):
 
     def _apply_friction_and_gravity(self, object_physics):
         if object_physics.velocity_x != 0:
-            if object_physics.bottom_collisions or any(object_physics.climbables.values()):
+            if not object_physics.flying and (object_physics.bottom_collisions or any(object_physics.climbables.values())):
                 object_physics.velocity_x /= (1 + self.ground_friction)
             else:
                 object_physics.velocity_x /= (1 + self.air_friction)
@@ -122,6 +122,10 @@ class PhysicsEngine(object):
 
         for name, rectangle in rectangles:
             collisions = static_map.check_collision_rect(rectangle)
+            for collision in collisions:
+                triggers = getattr(collision, 'triggers', None)
+                if triggers is not None:
+                    triggers.trigger(game_object, name)
             solids = {collision for collision in collisions if collision.physics.solid}
             non_solids = collisions.difference(solids)
             game_object.physics.collisions[name].update(solids)
