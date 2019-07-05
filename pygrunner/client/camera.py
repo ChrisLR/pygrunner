@@ -1,5 +1,5 @@
 import pyglet
-from pyglet.gl import *
+from pyglet import gl
 
 from pygrunner.core import util
 from pygrunner.core.layers import Layer
@@ -33,24 +33,27 @@ class Camera(object):
         self.hud = game.hud
         self.hud.assign(self.ui_batch, self.groups[Layer.foreground])
         self.display = None
+        self._initialize_opengl()
+
+    def _initialize_opengl(self):
         # Initialize Projection matrix
-        glMatrixMode(GL_PROJECTION)
-        glLoadIdentity()
+        gl.glMatrixMode(gl.GL_PROJECTION)
+        gl.glLoadIdentity()
 
         # Initialize Modelview matrix
-        glMatrixMode(GL_MODELVIEW)
-        glLoadIdentity()
+        gl.glMatrixMode(gl.GL_MODELVIEW)
+        gl.glLoadIdentity()
 
         # Set antialiasing
-        glEnable(GL_LINE_SMOOTH)
-        glEnable(GL_POLYGON_SMOOTH)
-        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
+        gl.glEnable(gl.GL_LINE_SMOOTH)
+        gl.glEnable(gl.GL_POLYGON_SMOOTH)
+        gl.glHint(gl.GL_LINE_SMOOTH_HINT, gl.GL_NICEST)
 
         # Set alpha blending
-        glEnable(GL_BLEND)
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+        gl.glEnable(gl.GL_BLEND)
+        gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA)
 
-        glViewport(0, 0, self.size.width, self.size.height)
+        gl.glViewport(0, 0, self.size.width, self.size.height)
 
     def adjust_background_image(self):
         if self.location and self.location.level:
@@ -69,23 +72,16 @@ class Camera(object):
                 self._background_sprite.y = oy
 
     def draw(self):
-        # Save the default modelview matrix
-        glPushMatrix()
-
-        # Set orthographic projection matrix
         rectangle = self.size.rectangle
-        glScalef(1, -1, 0)
-        glOrtho(rectangle.left, rectangle.right, rectangle.bottom, rectangle.top, -1, 1)
-
-        # Draw
+        gl.glPushMatrix()
+        gl.glScalef(1, -1, 0)
+        gl.glOrtho(rectangle.left, rectangle.right, rectangle.bottom, rectangle.top, -1, 1)
         self.batch.draw()
-
-        # Remove default modelview matrix
-        glPopMatrix()
-        glPushMatrix()
-        glOrtho(0, rectangle.width, 0, rectangle.height, -1, 1)
+        gl.glPopMatrix()
+        gl.glPushMatrix()
+        gl.glOrtho(0, rectangle.width, 0, rectangle.height, -1, 1)
         self.ui_batch.draw()
-        glPopMatrix()
+        gl.glPopMatrix()
 
     def follow(self, game_object):
         self._follow = game_object
