@@ -86,7 +86,7 @@ class HUDLifeBar(HUDElement):
             self.animations[animation_name] = pyglet.image.Animation(frames)
         self._sprites = [
             pyglet.sprite.Sprite(self.animations["empty_heart"])
-            for _ in range(self.actor.health.max)]
+            for _ in range(self.actor.health.max)] if self.actor.health else []
 
     def assign(self, batch, group):
         for i, sprite in enumerate(self._sprites):
@@ -96,6 +96,9 @@ class HUDLifeBar(HUDElement):
             sprite.y = self.rel_y
 
     def update(self):
+        if self.actor.health is None:
+            return
+
         for i in range(self.actor.health.max):
             if i >= len(self._sprites):
                 # TODO Support adding them

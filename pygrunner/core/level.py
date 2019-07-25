@@ -74,3 +74,6 @@ class CollisionMap(object):
         for x in range(rectangle.left, rectangle.right):
             for y in range(rectangle.top, rectangle.bottom):
                 self._collision_map[x][y] = None
+
+    def get_array(self):
+        return self._collision_map
