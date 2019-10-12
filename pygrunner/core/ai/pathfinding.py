@@ -5,10 +5,10 @@ from pygrunner.core.keymap import Keymap
 
 def get_dumb_keymaps_to(actor, target_point, can_climb=False, can_fly=False, can_jump=False, stop_at_edge=True):
     static_map_array = actor.location.level.static_collision_map.get_array()
-    # TODO We should instead use a Delta to derive our directions!
+
     distance = actor.location.point.point_distance_to(target_point)
-    tile_dist_y = snap_grid(distance.y)
-    tile_dist_x = snap_grid(distance.x)
+    tile_dist_y = snap_grid(target_point.y - actor.location.y)
+    tile_dist_x = snap_grid(target_point.x - actor.location.x)
 
     keymaps = []
     if can_climb or can_fly:
