@@ -159,6 +159,8 @@ class Flying(Idle):
         if not keymaps:
             self.actor.physics.velocity_x /= 1.2
             self.continue_current_action(stop_continuous=True)
+            self.actor.physics.velocity_y = 0
+
             return
 
         if Keymap.A in keymaps:

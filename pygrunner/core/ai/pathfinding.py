@@ -1,25 +1,60 @@
-def complex_pathfinding(actor, target_coordinate, can_climb=False, can_fly=False):
-    static_map_array = actor.level.static_collision_map.get_array()
-    closed_nodes = []
-    open_nodes = []
-    ghost_x, ghost_y = actor.location.tuple
-    target_x, target_y = target_coordinate
-    tries = 10
-    while tries:
-        columns = static_map_array[ghost_x - 1: ghost_x + 1:]
-        top_row = columns[ghost_y - 1]
-        middle_row = columns[ghost_y]
-        bottom_row = columns[ghost_y + 1]
+import math
+from pygrunner.core.keymap import Keymap
 
-        for x in range(3):
-            # TODO While we detect all 9 squares, we need to only move left, right, up, down
-            # TODO The squares will help us determine if we have to jump or not to get there.
-            top = top_row[x]
-            mid = middle_row[x]
-            low = bottom_row[x]
-            if mid is None:
-                pass
-        tries -= 1
+
+def get_keymaps_to(actor, target_point, can_climb=False, can_fly=False, can_jump=False):
+    """
+    This function returns keymaps to direct a character in the general direction
+    of a point. This function gives no guarantee but will be easier on performance
+    """
+    static_map_array = actor.level.static_collision_map.get_array()
+
+    ghost_point = actor.location.point
+    jump_blocks_vertical_max = int(actor.recipe.jump_height / 3)
+    jump_blocks_horizontal_max = actor.recipe.move_speed + int(math.ceil(actor.recipe.jump_height / 4))
+
+    closed_nodes = []
+    # Horizontal direction
+    dir_point = ghost_point.direction_to(target_point)
+    step_x = dir_point.x * actor.recipe.move_speed
+    step_y = dir_point.y
+    temp_target_x = None
+    temp_target_y = None
+
+    found = False
+    current_path = []
+    while found:
+        if step_y <= -1:
+            # We need to go higher
+            if can_fly:
+                current_path.append(Keymap.Up)
+            elif can_climb:
+                # Can we climb straight up?
+                if actor.physics.center_climbables:
+                    current_path.append(Keymap.Up)
+                else:
+                    # Is there a point where we CAN climb up?
+        if step_y == 0:
+            # We do not need to go higher.
+
+
+def find_horizontal_climbable_point(start_x, start_y, static_map, direction):
+    """
+    This scans a line, starting at a point and keeping close to the ground
+    Trying to get a climbable tile
+    """
+    left_x = None
+    lx = start_x
+    floor_y = int(start_y / 32) + 32
+    while not left_x:
+        if not static_map[lx][floor_y]:
+            left_x = lx
+        else:
+            lx -= 1
+
+
+def snap_grid(x=0, y=0):
+    return int(num / 32), int(y / 32)
 
 
 class Node(object):

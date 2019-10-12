@@ -83,24 +83,28 @@ class ClientGame(object):
         # TODO This is only in the meantime so we can develop further.
         self.factory.restock_all()
         #self.level = TmxLoader(self.factory).load_map('simple')
-        self.level = TmxLoader(self.factory).load_map('quickmountain')
+        #self.level = TmxLoader(self.factory).load_map('quickmountain')
+        self.level = TmxLoader(self.factory).load_map('ladderous')
         bg_color = self.level.background_color
         if bg_color:
             self.set_clear_color(bg_color)
 
         # TODO A better way to add actors to a game
         players = []
-        actor = self.factory.get_or_create(characters.HumanMale1)
+        actor = self.factory.get_or_create(enemies.BlackBat)
         players.append(actor)
         actor.location.set(96, 24)
         actor.replace_component(components.PlayerController(1, self.inputs[0]))
         self.level.add_game_object(actor)
 
-        actor = self.factory.get_or_create(characters.HumanFemale1)
-        players.append(actor)
-        actor.location.set(96, 24)
-        actor.replace_component(components.PlayerController(2, self.inputs[1]))
-        self.level.add_game_object(actor)
+        # actor = self.factory.get_or_create(characters.Turtle)
+        # players.append(actor)
+        # actor.location.set(96, 24)
+        # actor.replace_component(components.PlayerController(2, self.inputs[2]))
+        # self.level.add_game_object(actor)
+
         self.hud = HUD(self, players, self.spriteloader)
+
+
 
 

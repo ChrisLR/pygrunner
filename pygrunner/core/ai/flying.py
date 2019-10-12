@@ -16,7 +16,7 @@ class FlyingAI(object):
         self.keymaps.clear()
         host_physics = self.host.physics
         characters = self.host.location.level.game_objects
-        enemies = [char for char in characters if issubclass(char.recipe, Character)]
+        enemies = {char for char in characters if issubclass(char.recipe, Character)}
         host_point = self.host.location.point
 
         if enemies:
@@ -45,9 +45,11 @@ class FlyingAI(object):
         intersects = host_physics.intersects
         if intersects:
             # TODO This must check alliance status, not recipe inheritance
-            has_target = any(intersects)
-            if has_target:
+            if enemies and enemies.intersection(intersects):
                 return self._attack()
+
+        if not enemies:
+            self.host.physics.velocity_y = 0
 
     def _attack(self):
         self.keymaps.add(Keymap.A)
