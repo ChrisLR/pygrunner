@@ -1,3 +1,4 @@
+from pygrunner.core.ai.follower import DumbFollowerAI
 from pygrunner.core.spriteinfo import SpriteInfo
 from pygrunner.gamedata.factory import Factory
 from pygrunner.gamedata.recipes.characters.base import Character
@@ -23,5 +24,6 @@ class Turtle(Character):
         """
         actor = super().create(sprite_loader)
         actor.remove_component(actor.health)
+        actor.controller.ai = DumbFollowerAI(actor)
 
         return actor

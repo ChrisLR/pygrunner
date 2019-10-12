@@ -27,4 +27,5 @@
  <tile id="913" type="Rocky Dirt Middle Shadow"/>
  <tile id="915" type="Old Bridge Middle Shadow"/>
  <tile id="932" type="Brown Spikes Bottom"/>
+ <tile id="1246" type="Turtle"/>
 </tileset>

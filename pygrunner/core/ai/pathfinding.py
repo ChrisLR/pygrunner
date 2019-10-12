@@ -1,5 +1,48 @@
 import math
+
 from pygrunner.core.keymap import Keymap
+
+
+def get_dumb_keymaps_to(actor, target_point, can_climb=False, can_fly=False, can_jump=False, stop_at_edge=True):
+    static_map_array = actor.location.level.static_collision_map.get_array()
+    # TODO We should instead use a Delta to derive our directions!
+    distance = actor.location.point.point_distance_to(target_point)
+    tile_dist_y = snap_grid(distance.y)
+    tile_dist_x = snap_grid(distance.x)
+
+    keymaps = []
+    if can_climb or can_fly:
+        if tile_dist_y <= -1:
+            keymaps.append(Keymap.Up)
+        elif tile_dist_y >= 1:
+            keymaps.append(Keymap.Down)
+
+    if tile_dist_x > 0:
+        rect = actor.size.bottom_rectangle
+        by = snap_grid(rect.bottom) + 1
+        bx = snap_grid(rect.right) + 1
+        edge = static_map_array[by][bx]
+        if edge:
+            if can_jump:
+                keymaps.append(Keymap.Jump)
+            elif stop_at_edge:
+                keymaps.append(Keymap.Right)
+        else:
+            keymaps.append(Keymap.Right)
+    elif tile_dist_x < 0:
+        rect = actor.size.bottom_rectangle
+        by = snap_grid(rect.bottom) + 1
+        bx = snap_grid(rect.right) - 1
+        edge = static_map_array[by][bx]
+        if edge:
+            if can_jump:
+                keymaps.append(Keymap.Jump)
+            elif stop_at_edge:
+                keymaps.append(Keymap.Left)
+        else:
+            keymaps.append(Keymap.Left)
+
+    return keymaps
 
 
 def get_keymaps_to(actor, target_point, can_climb=False, can_fly=False, can_jump=False):
@@ -34,8 +77,10 @@ def get_keymaps_to(actor, target_point, can_climb=False, can_fly=False, can_jump
                     current_path.append(Keymap.Up)
                 else:
                     # Is there a point where we CAN climb up?
+                    pass
         if step_y == 0:
             # We do not need to go higher.
+            pass
 
 
 def find_horizontal_climbable_point(start_x, start_y, static_map, direction):
@@ -53,8 +98,8 @@ def find_horizontal_climbable_point(start_x, start_y, static_map, direction):
             lx -= 1
 
 
-def snap_grid(x=0, y=0):
-    return int(num / 32), int(y / 32)
+def snap_grid(num):
+    return int(num / 32)
 
 
 class Node(object):

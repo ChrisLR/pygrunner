@@ -18,8 +18,9 @@ class ClientGame(object):
         self.window = None
         self.spriteloader = SpriteLoader()
         self.spriteloader.load_spritesheets(("packed.png",))
-        self.factory = Factory(self.spriteloader, ObjectPool())
+        self.factory = Factory(self.spriteloader, ObjectPool(), self)
         self.hud = None
+        self.players = []
         # DEBUG
         # self.iteration = 0
 
@@ -91,7 +92,7 @@ class ClientGame(object):
 
         # TODO A better way to add actors to a game
         players = []
-        actor = self.factory.get_or_create(enemies.BlackBat)
+        actor = self.factory.get_or_create(characters.HumanMale1)
         players.append(actor)
         actor.location.set(96, 24)
         actor.replace_component(components.PlayerController(1, self.inputs[0]))
@@ -104,6 +105,7 @@ class ClientGame(object):
         # self.level.add_game_object(actor)
 
         self.hud = HUD(self, players, self.spriteloader)
+        self.players = players
 
 
 

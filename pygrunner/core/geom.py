@@ -49,3 +49,6 @@ class Point:
         dy = util.sign(point.y - self.y)
 
         return Point(dx, dy)
+
+    def point_distance_to(self, point):
+        return Point(round(math.sqrt((self.x - point.x) ** 2)), round(math.sqrt((self.y - point.y) ** 2)))
