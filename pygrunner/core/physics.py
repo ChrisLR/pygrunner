@@ -75,7 +75,7 @@ class PhysicsEngine(object):
 
     def _apply_friction_and_gravity(self, object_physics):
         if object_physics.velocity_x != 0:
-            if not object_physics.flying and (object_physics.bottom_collisions or any(object_physics.climbables.values())):
+            if not object_physics.flying and (object_physics.bottom_collisions or object_physics.climbables):
                 object_physics.velocity_x /= (1 + self.ground_friction)
             else:
                 object_physics.velocity_x /= (1 + self.air_friction)

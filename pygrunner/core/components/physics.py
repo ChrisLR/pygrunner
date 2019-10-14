@@ -21,7 +21,8 @@ class Physics(Component):
         self._initial_solid = solid
         self.platform = platform
         self.climbable = climbable
-        self.climbables = None
+        self.climbables = set()
+        self.climbing = False
         self.climbing_down = False
         self.affected_by_gravity = True
         self.affected_by_velocity = True
@@ -30,7 +31,7 @@ class Physics(Component):
 
     def clear_collisions(self):
         self.collisions = {"bottom": set(), "top": set(), "left": set(), "right": set(), "center": set()}
-        self.climbables = {"bottom": set(), "top": set(), "left": set(), "right": set(), "center": set()}
+        self.climbables = set()
         self.intersects = set()
         self.triggers = {"bottom": set(), "top": set(), "left": set(), "right": set(), "center": set()}
 
@@ -82,22 +83,8 @@ class Physics(Component):
     def center_triggers(self):
         return self.triggers["center"]
 
-    @property
-    def bottom_climbables(self):
-        return self.climbables["bottom"]
-
-    @property
-    def top_climbables(self):
-        return self.climbables["top"]
-
-    @property
-    def right_climbables(self):
-        return self.climbables["right"]
-
-    @property
-    def left_climbables(self):
-        return self.climbables["left"]
-
-    @property
-    def center_climbables(self):
-        return self.climbables["center"]
+    def knockback(self, x=0, y=0):
+        if self.climbing or self.climbing_down:
+            return
+        self.velocity_x += x
+        self.velocity_y += y

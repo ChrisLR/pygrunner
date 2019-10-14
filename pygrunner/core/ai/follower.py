@@ -15,6 +15,6 @@ class DumbFollowerAI(object):
             return
 
         closest_player = common.find_closest_player(host.game, host.location.point)
-        keymaps = pathfinding.get_dumb_keymaps_to(host, closest_player.location.point, True, False, True, True)
+        can_climb = bool(self.host.physics.climbables)
+        keymaps = pathfinding.get_dumb_keymaps_to(host, closest_player.location.point, can_climb, False, True, True)
         self.host.stance.do_keymaps(keymaps)
-

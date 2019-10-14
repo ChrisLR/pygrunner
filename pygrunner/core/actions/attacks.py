@@ -38,8 +38,9 @@ class Punch(Action):
 
             if not target_is_dead and not target_invincible:
                 # TODO Knockback force must vary
-                target.physics.velocity_y = -4
-                target.physics.velocity_x = util.sign(target.location.x - self.actor.location.x) * 4
+                ky = -4
+                kx = util.sign(target.location.x - self.actor.location.x) * 4
+                target.physics.knockback(kx, ky)
 
     def on_start(self):
         actor = self.actor
@@ -92,8 +93,9 @@ class Swoop(Action):
 
             if not target_is_dead and not target_invincible:
                 # TODO Knockback force must vary
-                target.physics.velocity_y = -4
-                target.physics.velocity_x = util.sign(target.location.x - self.actor.location.x) * 4
+                ky = -4
+                kx = util.sign(target.location.x - self.actor.location.x) * 4
+                target.physics.knockback(kx, ky)
 
     def on_start(self):
         actor = self.actor

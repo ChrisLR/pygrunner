@@ -20,6 +20,7 @@ class Size(Component):
         self.left_rectangle = geom.Rectangle(0, 1, 1, height - 1)
         self.center_rectangle = geom.Rectangle(self.half_width, self.half_height,
                                                int(round(width / 4)), int(round(height / 4)))
+        self.climb_rect = geom.Rectangle(int(round(width / 4)), 0, int(round(width / 4)), height)
 
     def adjust_rectangles(self):
         if self.host:
@@ -39,10 +40,11 @@ class Size(Component):
         self.right_rectangle.y = new_y + 1
         self.center_rectangle.x = new_x + self.half_width
         self.center_rectangle.y = new_y + self.half_height
+        self.climb_rect.x = new_x + int(round(self.width / 4))
+        self.climb_rect.y = new_y
 
     def update(self):
         pass
-
 
     def reset(self):
         self.height = 0

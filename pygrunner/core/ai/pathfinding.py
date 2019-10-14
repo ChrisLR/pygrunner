@@ -6,21 +6,22 @@ from pygrunner.core.keymap import Keymap
 def get_dumb_keymaps_to(actor, target_point, can_climb=False, can_fly=False, can_jump=False, stop_at_edge=True):
     static_map_array = actor.location.level.static_collision_map.get_array()
 
-    distance = actor.location.point.point_distance_to(target_point)
-    tile_dist_y = snap_grid(target_point.y - actor.location.y)
+    tile_dist_y = target_point.y - actor.location.y
     tile_dist_x = snap_grid(target_point.x - actor.location.x)
 
     keymaps = []
     if can_climb or can_fly:
         if tile_dist_y <= -1:
             keymaps.append(Keymap.Up)
+            return keymaps
         elif tile_dist_y >= 1:
             keymaps.append(Keymap.Down)
+            return keymaps
 
     if tile_dist_x > 0:
         rect = actor.size.bottom_rectangle
         by = snap_grid(rect.bottom) + 1
-        bx = snap_grid(rect.right) + 1
+        bx = snap_grid(rect.right)
         edge = static_map_array[by][bx]
         if edge:
             if can_jump:
@@ -32,7 +33,7 @@ def get_dumb_keymaps_to(actor, target_point, can_climb=False, can_fly=False, can
     elif tile_dist_x < 0:
         rect = actor.size.bottom_rectangle
         by = snap_grid(rect.bottom) + 1
-        bx = snap_grid(rect.right) - 1
+        bx = snap_grid(rect.left)
         edge = static_map_array[by][bx]
         if edge:
             if can_jump:
