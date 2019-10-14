@@ -25,7 +25,6 @@ class PhysicsEngine(object):
 
     def check_collisions(self, current_level, game_object):
         all_object_collisions = set()
-        self._set_static_collisions(current_level, game_object)
         self._set_object_collisions(all_object_collisions, current_level, game_object)
 
     def _move_object(self, game_object, object_physics, speed_left_x=None, speed_left_y=None):
@@ -60,28 +59,30 @@ class PhysicsEngine(object):
 
     def _stop_static_colliding_objects(self, object_physics):
         if object_physics.velocity_x > 0:
-            if object_physics.right_collisions:
+            right_collisions = object_physics.right_collisions
+            if right_collisions and right_collisions.physics.solid:
                 object_physics.velocity_x = 0
         elif object_physics.velocity_x < 0:
-            if object_physics.left_collisions:
+            left_collisions = object_physics.left_collisions
+            if object_physics.left_collisions and left_collisions.physics.solid:
                 object_physics.velocity_x = 0
 
         if object_physics.velocity_y > 0:
-            if object_physics.bottom_collisions:
+            if object_physics.standing_on_solid:
                 object_physics.velocity_y = 0
         elif object_physics.velocity_y < 0:
-            if object_physics.top_collisions:
+            if object_physics.underneath_solid:
                 object_physics.velocity_y = 0
 
     def _apply_friction_and_gravity(self, object_physics):
         if object_physics.velocity_x != 0:
-            if not object_physics.flying and (object_physics.bottom_collisions or any(object_physics.climbables.values())):
+            if not object_physics.flying and object_physics.standing_on_solid:
                 object_physics.velocity_x /= (1 + self.ground_friction)
             else:
                 object_physics.velocity_x /= (1 + self.air_friction)
             object_physics.velocity_x = object_physics.velocity_x if abs(object_physics.velocity_x) > 0.01 else 0
 
-        if object_physics.velocity_y > 0 and object_physics.bottom_collisions:
+        if object_physics.velocity_y > 0 and object_physics.standing_on_solid:
             object_physics.velocity_y = 0
         elif object_physics.affected_by_gravity:
             if -0.5 <= object_physics.velocity_y < 0.1:
@@ -109,30 +110,3 @@ class PhysicsEngine(object):
                 intersect_collisions.add(other_game_object)
 
         game_object.physics.intersects.update(intersect_collisions)
-
-    def _set_static_collisions(self, current_level, game_object):
-        static_map = current_level.static_collision_map
-        rectangles = [
-            ("bottom", game_object.size.bottom_rectangle),
-            ("right", game_object.size.right_rectangle),
-            ("left", game_object.size.left_rectangle),
-            ("top", game_object.size.top_rectangle),
-            ("center", game_object.size.center_rectangle)
-        ]
-
-        for name, rectangle in rectangles:
-            collisions = static_map.check_collision_rect(rectangle)
-            for collision in collisions:
-                triggers = getattr(collision, 'triggers', None)
-                if triggers is not None:
-                    triggers.trigger(game_object, name)
-            solids = {collision for collision in collisions if collision.physics.solid}
-            non_solids = collisions.difference(solids)
-            game_object.physics.collisions[name].update(solids)
-            game_object.physics.triggers[name].update(non_solids)
-            climbables = {trigger for trigger in non_solids if trigger.physics.climbable}
-            game_object.physics.climbables[name].update(climbables)
-            if name == "bottom":
-                if not game_object.physics.climbing_down:
-                    platforms = {collision for collision in non_solids if collision.physics.platform}
-                    game_object.physics.collisions[name].update(platforms)

@@ -101,7 +101,7 @@ class Jumping(Stance):
         if not keymaps and self.executing_action:
             self.continue_current_action(stop_continuous=True)
 
-        if self.actor.physics.velocity_y >= 0 and self.actor.physics.bottom_collisions:
+        if self.actor.physics.velocity_y >= 0 and self.actor.physics.standing_on:
             self.start_or_continue(actions.Idle)
 
 
@@ -122,7 +122,8 @@ class Climbing(Stance):
         if not keymaps:
             self.continue_current_action(stop_continuous=True)
 
-        if not any(self.actor.physics.climbables.values()):
+        center_collisions = self.actor.physics.center_collisions
+        if not center_collisions or not center_collisions.physics.climbable:
             if self.executing_action:
                 self.executing_action.on_stop()
                 self.executing_action = None

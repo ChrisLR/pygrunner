@@ -29,10 +29,7 @@ class Physics(Component):
         self.clear_collisions()
 
     def clear_collisions(self):
-        self.collisions = {"bottom": set(), "top": set(), "left": set(), "right": set(), "center": set()}
-        self.climbables = {"bottom": set(), "top": set(), "left": set(), "right": set(), "center": set()}
         self.intersects = set()
-        self.triggers = {"bottom": set(), "top": set(), "left": set(), "right": set(), "center": set()}
 
     def reset(self):
         self.velocity_x = 0
@@ -43,61 +40,53 @@ class Physics(Component):
         self.climbing_down = False
 
     @property
-    def bottom_collisions(self):
-        return self.collisions["bottom"]
+    def standing_on(self):
+        host_location = self.host.location
+        collision_map = host_location.level.static_collision_map
+        return collision_map.check_collision(host_location.grid_x, host_location.grid_y + 1)
 
     @property
-    def top_collisions(self):
-        return self.collisions["top"]
+    def standing_on_solid(self):
+        host_location = self.host.location
+        collision_map = host_location.level.static_collision_map
+        collision = collision_map.check_collision(host_location.grid_x, host_location.grid_y + 1)
+        if collision and collision.physics.solid:
+            return collision
+
+    @property
+    def underneath(self):
+        host_location = self.host.location
+        collision_map = host_location.level.static_collision_map
+        return collision_map.check_collision(host_location.grid_x, host_location.grid_y - 1)
+
+    @property
+    def underneath_solid(self):
+        host_location = self.host.location
+        collision_map = host_location.level.static_collision_map
+        collision = collision_map.check_collision(host_location.grid_x, host_location.grid_y - 1)
+        if collision and collision.physics.solid:
+            return collision
 
     @property
     def right_collisions(self):
-        return self.collisions["right"]
+        host_location = self.host.location
+        collision_map = host_location.level.static_collision_map
+        return collision_map.check_collision(host_location.grid_x + 1, host_location.grid_y)
 
     @property
     def left_collisions(self):
-        return self.collisions["left"]
+        host_location = self.host.location
+        collision_map = host_location.level.static_collision_map
+        return collision_map.check_collision(host_location.grid_x - 1, host_location.grid_y)
 
     @property
     def center_collisions(self):
-        return self.collisions["center"]
+        host_location = self.host.location
+        collision_map = host_location.level.static_collision_map
+        return collision_map.check_collision(host_location.grid_x, host_location.grid_y)
 
     @property
-    def bottom_triggers(self):
-        return self.triggers["bottom"]
-
-    @property
-    def top_triggers(self):
-        return self.triggers["top"]
-
-    @property
-    def right_triggers(self):
-        return self.triggers["right"]
-
-    @property
-    def left_triggers(self):
-        return self.triggers["left"]
-
-    @property
-    def center_triggers(self):
-        return self.triggers["center"]
-
-    @property
-    def bottom_climbables(self):
-        return self.climbables["bottom"]
-
-    @property
-    def top_climbables(self):
-        return self.climbables["top"]
-
-    @property
-    def right_climbables(self):
-        return self.climbables["right"]
-
-    @property
-    def left_climbables(self):
-        return self.climbables["left"]
-
-    @property
-    def center_climbables(self):
-        return self.climbables["center"]
+    def can_climb(self):
+        collision = self.center_collisions
+        if collision and collision.physics.climbable:
+            return collision

@@ -74,7 +74,7 @@ class FlyingAI(object):
                 self.keymaps.add(Keymap.Up)
 
         if down and not (left or right):
-            if self.host.physics.bottom_collisions:
+            if self.host.physics.standing_on:
                 self.keymaps.remove(Keymap.Down)
         self.host.stance.do_keymaps(self.keymaps)
 
