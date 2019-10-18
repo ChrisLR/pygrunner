@@ -117,7 +117,7 @@ class ClimbUp(Action):
         actor.physics.velocity_y = -actor.recipe.move_speed
 
     def can_execute(self):
-        if self.actor.physics.can_climb:
+        if self.actor.physics.can_climb_up:
             return True
         return False
 
@@ -130,13 +130,13 @@ class ClimbUp(Action):
     def on_stop(self):
         actor = self.actor
         self.actor.physics.velocity_y = 0
-        if not self.actor.physics.can_climb:
+        if not self.actor.physics.can_climb_up:
             actor.stance.change_stance('idle')
             actor.physics.affected_by_gravity = True
 
     @property
     def finished(self):
-        return not self.actor.physics.can_climb
+        return not self.actor.physics.can_climb_up
 
 
 class ClimbDown(Action):
@@ -147,7 +147,8 @@ class ClimbDown(Action):
         self.actor.physics.velocity_y = actor.recipe.move_speed
 
     def can_execute(self):
-        if self.actor.physics.can_climb:
+        physics = self.actor.physics
+        if physics.can_climb_down:
             return True
         return False
 
@@ -162,13 +163,13 @@ class ClimbDown(Action):
         actor = self.actor
         actor.physics.climbing_down = False
         self.actor.physics.velocity_y = 0
-        if not self.actor.physics.can_climb or self.actor.physics.standing_on:
+        if not self.actor.physics.can_climb_down or self.actor.physics.standing_on:
             actor.stance.change_stance('idle')
             actor.physics.affected_by_gravity = True
 
     @property
     def finished(self):
-        return not self.actor.physics.can_climb or self.actor.physics.standing_on
+        return not self.actor.physics.can_climb_down or self.actor.physics.standing_on
 
 
 class ClimbLeft(Action):
@@ -179,7 +180,7 @@ class ClimbLeft(Action):
         actor.physics.velocity_x = -actor.recipe.move_speed
 
     def can_execute(self):
-        if self.actor.physics.can_climb:
+        if self.actor.physics.can_climb_up:
             return True
         return False
 
@@ -191,13 +192,13 @@ class ClimbLeft(Action):
 
     def on_stop(self):
         actor = self.actor
-        if not self.actor.physics.can_climb:
+        if not self.actor.physics.can_climb_up:
             actor.stance.change_stance('idle')
             actor.physics.affected_by_gravity = True
 
     @property
     def finished(self):
-        return not self.actor.physics.can_climb
+        return not self.actor.physics.can_climb_up
 
 
 class ClimbRight(Action):
@@ -208,7 +209,7 @@ class ClimbRight(Action):
         self.actor.physics.velocity_x = actor.recipe.move_speed
 
     def can_execute(self):
-        if self.actor.physics.can_climb:
+        if self.actor.physics.can_climb_up:
             return True
         return False
 
@@ -220,13 +221,13 @@ class ClimbRight(Action):
 
     def on_stop(self):
         actor = self.actor
-        if not self.actor.physics.can_climb:
+        if not self.actor.physics.can_climb_up:
             actor.stance.change_stance('idle')
             actor.physics.affected_by_gravity = True
 
     @property
     def finished(self):
-        return not self.actor.physics.can_climb
+        return not self.actor.physics.can_climb_up
 
 
 class FlyRight(Action):

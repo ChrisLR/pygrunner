@@ -59,12 +59,10 @@ class PhysicsEngine(object):
 
     def _stop_static_colliding_objects(self, object_physics):
         if object_physics.velocity_x > 0:
-            right_collisions = object_physics.right_collisions
-            if right_collisions and right_collisions.physics.solid:
+            if object_physics.right_collisions_solid:
                 object_physics.velocity_x = 0
         elif object_physics.velocity_x < 0:
-            left_collisions = object_physics.left_collisions
-            if object_physics.left_collisions and left_collisions.physics.solid:
+            if object_physics.left_collisions_solid:
                 object_physics.velocity_x = 0
 
         if object_physics.velocity_y > 0:
@@ -90,6 +88,84 @@ class PhysicsEngine(object):
             else:
                 accel = min(max(0.0, object_physics.velocity_y / 10), 10)
                 object_physics.velocity_y += self.gravity + accel
+
+    def _set_object_collisions(self, all_object_collisions, current_level, game_object):
+        intersect_collisions = set()
+        for other_game_object in current_level.game_objects:
+            if game_object is other_game_object:
+                continue
+
+            collision_tuple = other_game_object, game_object
+            if collision_tuple in all_object_collisions:
+                # This is useful when the other object already calculated collision
+                intersect_collisions.add(other_game_object)
+                continue
+
+            first_rect = game_object.size.rectangle
+            second_rect = other_game_object.size.rectangle
+            if first_rect.intersects(second_rect):
+                all_object_collisions.add(collision_tuple)
+                intersect_collisions.add(other_game_object)
+
+        game_object.physics.intersects.update(intersect_collisions)
+
+
+class SimplePhysics(object):
+    def update(self, current_level):
+        for game_object in current_level.game_objects:
+            object_physics = game_object.physics
+            object_physics.clear_collisions()
+            self.check_collisions(current_level, game_object)
+            self._stop_static_colliding_objects(object_physics)
+            self._move_object(game_object, object_physics)
+            self._apply_friction_and_gravity(object_physics)
+
+    def check_collisions(self, current_level, game_object):
+        all_object_collisions = set()
+        self._set_object_collisions(all_object_collisions, current_level, game_object)
+
+    def _move_object(self, game_object, object_physics):
+        if object_physics.affected_by_velocity is False:
+            return 0, 0
+
+        velocity_x = object_physics.velocity_x
+        velocity_y = object_physics.velocity_y
+
+        direction_x = util.sign(object_physics.velocity_x)
+        direction_y = util.sign(object_physics.velocity_y)
+        speed_x = abs(velocity_x)
+        speed_y = abs(velocity_y)
+        game_object.location.add(speed_x * direction_x, speed_y * direction_y)
+
+    def _stop_static_colliding_objects(self, object_physics):
+        if object_physics.velocity_x > 0:
+            right_collisions = object_physics.right_collisions
+            if right_collisions and right_collisions.physics.solid:
+                object_physics.velocity_x = 0
+        elif object_physics.velocity_x < 0:
+            left_collisions = object_physics.left_collisions
+            if object_physics.left_collisions and left_collisions.physics.solid:
+                object_physics.velocity_x = 0
+
+        if object_physics.velocity_y > 0:
+            if object_physics.standing_on_solid:
+                object_physics.velocity_y = 0
+        elif object_physics.velocity_y < 0:
+            if object_physics.underneath_solid:
+                object_physics.velocity_y = 0
+
+    def _apply_friction_and_gravity(self, object_physics):
+        velocity_x = object_physics.velocity_x
+        if velocity_x != 0:
+            if not object_physics.flying and object_physics.standing_on_solid:
+                object_physics.velocity_x -= util.sign(velocity_x)
+            else:
+                object_physics.velocity_x -= util.sign(velocity_x)
+
+        if object_physics.velocity_y > 0 and object_physics.standing_on_solid:
+            object_physics.velocity_y = 0
+        elif object_physics.affected_by_gravity:
+            object_physics.velocity_y = 1
 
     def _set_object_collisions(self, all_object_collisions, current_level, game_object):
         intersect_collisions = set()

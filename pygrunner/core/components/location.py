@@ -14,14 +14,6 @@ class Location(Component):
         self.level = level
 
     @property
-    def grid_x(self):
-        return int(self.x / 32)
-
-    @property
-    def grid_y(self):
-        return int(self.y / 32)
-
-    @property
     def grid_point(self):
         return geom.Point(self.grid_x, self.grid_y)
 
@@ -51,6 +43,19 @@ class Location(Component):
 
         if y is not None:
             self.y = y
+
+        self.host.size.adjust_rectangles()
+        self.host.display.location_changed = True
+
+    def set_grid(self, x=None, y=None):
+        if x is None and y is None:
+            return
+
+        if x is not None:
+            self.x = x * 32
+
+        if y is not None:
+            self.y = y * 32
 
         self.host.size.adjust_rectangles()
         self.host.display.location_changed = True

@@ -122,8 +122,9 @@ class Climbing(Stance):
         if not keymaps:
             self.continue_current_action(stop_continuous=True)
 
-        center_collisions = self.actor.physics.center_collisions
-        if not center_collisions or not center_collisions.physics.climbable:
+        physics = self.actor.physics
+        center_collisions = physics.center_collisions
+        if not center_collisions or not physics.can_climb_up:
             if self.executing_action:
                 self.executing_action.on_stop()
                 self.executing_action = None
