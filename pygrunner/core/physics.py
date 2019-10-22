@@ -66,7 +66,7 @@ class PhysicsEngine(object):
                 object_physics.velocity_x = 0
 
         if object_physics.velocity_y > 0:
-            if object_physics.standing_on_solid:
+            if object_physics.standing_on_solid and not object_physics.climbing_down:
                 object_physics.velocity_y = 0
         elif object_physics.velocity_y < 0:
             if object_physics.underneath_solid:
@@ -81,7 +81,8 @@ class PhysicsEngine(object):
             object_physics.velocity_x = object_physics.velocity_x if abs(object_physics.velocity_x) > 0.01 else 0
 
         if object_physics.velocity_y > 0 and object_physics.standing_on_solid:
-            object_physics.velocity_y = 0
+            if not object_physics.climbing_down:
+                object_physics.velocity_y = 0
         elif object_physics.affected_by_gravity:
             if -0.5 <= object_physics.velocity_y < 0.1:
                 object_physics.velocity_y += 0.05

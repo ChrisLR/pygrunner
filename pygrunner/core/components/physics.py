@@ -189,13 +189,17 @@ class Physics(Component):
 
     @property
     def can_climb_up(self):
-        collisions = self.center_collisions
+        collisions = []
+        collisions.extend(self.center_collisions)
+        collisions.extend(self.standing_on)
         if collisions:
             return [c for c in collisions if c.physics.climbable]
 
     @property
     def can_climb_down(self):
-        collisions = self.underneath
+        collisions = []
+        collisions.extend(self.center_collisions)
+        collisions.extend(self.standing_on)
         if collisions:
             return [c for c in collisions if c.physics.climbable]
 
