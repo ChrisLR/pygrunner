@@ -163,13 +163,13 @@ class ClimbDown(Action):
         actor = self.actor
         actor.physics.climbing_down = False
         self.actor.physics.velocity_y = 0
-        if not self.actor.physics.can_climb_down or self.actor.physics.standing_on:
+        if not self.actor.physics.can_climb_down:
             actor.stance.change_stance('idle')
             actor.physics.affected_by_gravity = True
 
     @property
     def finished(self):
-        return not self.actor.physics.can_climb_down or self.actor.physics.standing_on
+        return not self.actor.physics.can_climb_down
 
 
 class ClimbLeft(Action):

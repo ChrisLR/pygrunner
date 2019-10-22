@@ -123,8 +123,7 @@ class Climbing(Stance):
             self.continue_current_action(stop_continuous=True)
 
         physics = self.actor.physics
-        center_collisions = physics.center_collisions
-        if not center_collisions or not physics.can_climb_up:
+        if not physics.can_climb_down and not physics.can_climb_up:
             if self.executing_action:
                 self.executing_action.on_stop()
                 self.executing_action = None

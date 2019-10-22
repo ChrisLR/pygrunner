@@ -148,7 +148,14 @@ class Physics(Component):
         collisions.extend(self.center_collisions)
         collisions.extend(self.standing_on)
         if collisions:
-            return [c for c in collisions if c.physics.climbable]
+            climb_collisions = []
+            for col in collisions:
+                if col.physics.solid:
+                    return False
+                if col.physics.climbable:
+                    climb_collisions.append(col)
+
+            return climb_collisions
 
     def _to_grid(self, x, y):
         return x / 32, y / 32
