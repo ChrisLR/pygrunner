@@ -45,26 +45,12 @@ class Physics(Component):
         host_location = self.host.location
         collision_map = host_location.level.static_collision_map
         x, y = self._to_grid(host_location.x, host_location.y)
-        y = int(y)
-        frac, low_x = math.modf(x)
-        low_x = int(low_x)
+        coords = self._coords_from_fract(x, y, fract_x=True, y_round_func=math.ceil)
         collisions = []
-        if frac <= 0.2:
-            col = collision_map.check_collision(low_x, y + 1)
+        for coord in coords:
+            col = collision_map.check_collision(*coord)
             if col:
                 collisions.append(col)
-        elif 0.2 < frac < 0.8:
-            col_1 = collision_map.check_collision(low_x, y + 1)
-            if col_1:
-                collisions.append(col_1)
-            col_2 = collision_map.check_collision(low_x + 1, y + 1)
-            if col_2:
-                collisions.append(col_2)
-        elif frac >= 0.8:
-            col = collision_map.check_collision(low_x + 1, y + 1)
-            if col:
-                collisions.append(col)
-
 
         return collisions
 
@@ -79,23 +65,10 @@ class Physics(Component):
         host_location = self.host.location
         collision_map = host_location.level.static_collision_map
         x, y = self._to_grid(host_location.x, host_location.y)
-        y = math.ceil(y)
-        frac, low_x = math.modf(x)
-        low_x = int(low_x)
+        coords = self._coords_from_fract(x, y, fract_x=True)
         collisions = []
-        if frac <= 0.2:
-            col = collision_map.check_collision(low_x, y - 1)
-            if col:
-                collisions.append(col)
-        elif 0.2 < frac < 0.8:
-            col_1 = collision_map.check_collision(low_x, y - 1)
-            if col_1:
-                collisions.append(col_1)
-            col_2 = collision_map.check_collision(low_x + 1, y - 1)
-            if col_2:
-                collisions.append(col_2)
-        elif frac >= 0.8:
-            col = collision_map.check_collision(low_x + 1, y - 1)
+        for coord in coords:
+            col = collision_map.check_collision(*coord)
             if col:
                 collisions.append(col)
 
@@ -112,23 +85,10 @@ class Physics(Component):
         host_location = self.host.location
         collision_map = host_location.level.static_collision_map
         x, y = self._to_grid(host_location.x, host_location.y)
-        x = int(x)
-        frac, low_y = math.modf(y)
-        low_y = int(low_y)
+        coords = self._coords_from_fract(x + 1, y, fract_y=True)
         collisions = []
-        if frac <= 0.2:
-            col = collision_map.check_collision(x + 1, low_y)
-            if col:
-                collisions.append(col)
-        elif 0.2 < frac < 0.8:
-            col_1 = collision_map.check_collision(x + 1, low_y)
-            if col_1:
-                collisions.append(col_1)
-            col_2 = collision_map.check_collision(x + 1, low_y + 1)
-            if col_2:
-                collisions.append(col_2)
-        elif frac >= 0.8:
-            col = collision_map.check_collision(x + 1, low_y + 1)
+        for coord in coords:
+            col = collision_map.check_collision(*coord)
             if col:
                 collisions.append(col)
 
@@ -145,23 +105,10 @@ class Physics(Component):
         host_location = self.host.location
         collision_map = host_location.level.static_collision_map
         x, y = self._to_grid(host_location.x, host_location.y)
-        x = math.ceil(x)
-        frac, low_y = math.modf(y)
-        low_y = int(low_y)
+        coords = self._coords_from_fract(x - 1, y, fract_y=True, x_round_func=math.ceil)
         collisions = []
-        if frac <= 0.2:
-            col = collision_map.check_collision(x - 1, low_y)
-            if col:
-                collisions.append(col)
-        elif 0.2 < frac < 0.8:
-            col_1 = collision_map.check_collision(x - 1, low_y)
-            if col_1:
-                collisions.append(col_1)
-            col_2 = collision_map.check_collision(x - 1, low_y + 1)
-            if col_2:
-                collisions.append(col_2)
-        elif frac >= 0.8:
-            col = collision_map.check_collision(x - 1, low_y + 1)
+        for coord in coords:
+            col = collision_map.check_collision(*coord)
             if col:
                 collisions.append(col)
 
@@ -225,15 +172,15 @@ class Physics(Component):
 
         cols = []
         # TODO This is ugly
-        if x:
-            if y:
+        if x is not None:
+            if y is not None:
                 cols.append((x, y))
-            if y2:
+            if y2 is not None:
                 cols.append((x, y2))
-        if x2:
-            if y:
+        if x2 is not None:
+            if y is not None:
                 cols.append((x2, y))
-            if y2:
+            if y2 is not None:
                 cols.append((x2, y2))
 
         return cols
