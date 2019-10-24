@@ -15,7 +15,6 @@ class Physics(Component):
         super().__init__()
         self.velocity_x = velocity_x
         self.velocity_y = velocity_y
-        self.collisions = None
         self.intersects = None
         self.triggers = None
         self.solid = solid
@@ -35,7 +34,6 @@ class Physics(Component):
     def reset(self):
         self.velocity_x = 0
         self.velocity_y = 0
-        self.collisions.clear()
         self.triggers = {}
         self.solid = self._initial_solid
         self.climbing_down = False
