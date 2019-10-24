@@ -17,7 +17,7 @@ class PhysicsEngine(object):
             finished = False
             while not finished:
                 self.check_collisions(current_level, game_object)
-                self._stop_static_colliding_objects(object_physics)
+                self._stop_static_colliding_objects(game_object, object_physics)
                 speed_left_x, speed_left_y = self._move_object(game_object, object_physics, speed_left_x, speed_left_y)
                 if abs(speed_left_x) <= 0.01 and abs(speed_left_y) <= 0.01:
                     finished = True
@@ -57,7 +57,7 @@ class PhysicsEngine(object):
 
         return required_speed_x - speed_x, required_speed_y - speed_y
 
-    def _stop_static_colliding_objects(self, object_physics):
+    def _stop_static_colliding_objects(self, game_object, object_physics):
         if object_physics.velocity_x > 0:
             if object_physics.right_collisions_solid:
                 object_physics.velocity_x = 0
@@ -66,11 +66,15 @@ class PhysicsEngine(object):
                 object_physics.velocity_x = 0
 
         if object_physics.velocity_y > 0:
-            if object_physics.standing_on_solid and not object_physics.climbing_down:
+            stand_solid_cols =object_physics.standing_on_solid
+            if stand_solid_cols and not object_physics.climbing_down:
                 object_physics.velocity_y = 0
+                # TODO CHECK IF INSIDE TILE THEN PUSH UP
+                if any(game_object.size.rectangle.bottom > col.location.y for col in stand_solid_cols):
+                    game_object.location.add(0, -1)
         elif object_physics.velocity_y < 0:
-            if object_physics.underneath_solid:
-                object_physics.velocity_y = 0
+                if object_physics.underneath_solid:
+                    object_physics.velocity_y = 0
 
     def _apply_friction_and_gravity(self, object_physics):
         if object_physics.velocity_x != 0:

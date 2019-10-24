@@ -44,7 +44,9 @@ class Physics(Component):
     def standing_on(self):
         host_location = self.host.location
         collision_map = host_location.level.static_collision_map
-        x, y = self._to_grid(host_location.x, host_location.y)
+        # TODO Adding +1 here fixes foot stuck in floor
+        # TODO So this hack is left here while we find out why
+        x, y = self._to_grid(host_location.x, host_location.y + 1)
         coords = self._coords_from_fract(x, y, fract_x=True, y_round_func=math.ceil)
         collisions = []
         for coord in coords:
@@ -160,7 +162,13 @@ class Physics(Component):
     def _to_grid(self, x, y):
         return x / 32, y / 32
 
-    def _coords_from_fract(self, fixed_x, fixed_y, fract_x=False, fract_y=False, x_round_func=int, y_round_func=int):
+    def _coords_from_fract(self, fixed_x, fixed_y, fract_x=False, fract_y=False,
+                           x_round_func=int, y_round_func=int):
+        """
+        A method that returns tile coordinates that should be checked
+        depending on the fractions and the rounding methods of given coordinates
+        """
+
         x = fixed_x
         x2 = None
         if fract_x:
@@ -193,6 +201,7 @@ class Physics(Component):
         return cols
 
     def _frac(self, low, frac):
+        # This corresponds to the threshold in which we fetch more than one tile
         low = int(low)
         if frac <= 0.2:
             return low, None
