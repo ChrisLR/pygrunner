@@ -96,7 +96,9 @@ class Jump(Action):
         pass
 
     def can_execute(self):
-        return self.actor.physics.standing_on_solid
+        on_ground = self.actor.physics.standing_on_solid
+        blocks_above = self.actor.physics.underneath_solid
+        return on_ground and not blocks_above
 
     def on_start(self):
         actor = self.actor
