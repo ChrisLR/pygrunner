@@ -24,8 +24,7 @@ class PhysicsEngine(object):
             self._apply_friction_and_gravity(object_physics)
 
     def check_collisions(self, current_level, game_object):
-        all_object_collisions = set()
-        self._set_object_collisions(all_object_collisions, current_level, game_object)
+        self._set_object_collisions(current_level, game_object)
 
     def _move_object(self, game_object, object_physics, speed_left_x=None, speed_left_y=None):
         if object_physics.affected_by_velocity is False:
@@ -94,20 +93,13 @@ class PhysicsEngine(object):
                 accel = min(max(0.0, object_physics.velocity_y / 10), 10)
                 object_physics.velocity_y += self.gravity + accel
 
-    def _set_object_collisions(self, all_object_collisions, current_level, game_object):
+    def _set_object_collisions(self, current_level, game_object):
         object_intersects = game_object.physics.intersects
         for other_game_object in current_level.game_objects:
             if game_object is other_game_object:
                 continue
 
-            collision_tuple = other_game_object, game_object
-            if collision_tuple in all_object_collisions:
-                # This is useful when the other object already calculated collision
-                object_intersects.add(other_game_object)
-                continue
-
             first_rect = game_object.size.rectangle
             second_rect = other_game_object.size.rectangle
             if first_rect.intersects(second_rect):
-                all_object_collisions.add(collision_tuple)
                 object_intersects.add(other_game_object)
