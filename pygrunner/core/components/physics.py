@@ -1,6 +1,10 @@
+import math
+
 from pygrunner.core.components import listing
 from pygrunner.core.components.base import Component
-import math
+
+
+UNSET = object()
 
 
 @listing.register
@@ -27,9 +31,35 @@ class Physics(Component):
         self.affected_by_velocity = True
         self.flying = False
         self.clear_collisions()
+        self._standing_on = UNSET
+        self._standing_on_solid = UNSET
+        self._underneath = UNSET
+        self._underneath_solid = UNSET
+        self._right_collisions = UNSET
+        self._right_collisions_solid = UNSET
+        self._left_collisions = UNSET
+        self._left_collisions_solid = UNSET
+        self._center_collisions = UNSET
+        self._can_climb_up = UNSET
+        self._can_climb_down = UNSET
 
     def clear_collisions(self):
         self.intersects = set()
+
+    def clear_collision_cache(self):
+        # I know using a cachedproperty would save a lot of manual work
+        # But this way should perform more and not many properties will be added here
+        self._standing_on = UNSET
+        self._standing_on_solid = UNSET
+        self._underneath = UNSET
+        self._underneath_solid = UNSET
+        self._right_collisions = UNSET
+        self._right_collisions_solid = UNSET
+        self._left_collisions = UNSET
+        self._left_collisions_solid = UNSET
+        self._center_collisions = UNSET
+        self._can_climb_up = UNSET
+        self._can_climb_down = UNSET
 
     def reset(self):
         self.velocity_x = 0
@@ -40,6 +70,9 @@ class Physics(Component):
 
     @property
     def standing_on(self):
+        if self._standing_on is not UNSET:
+            return self._standing_on
+
         host_location = self.host.location
         collision_map = host_location.level.static_collision_map
         # TODO Adding +1 here fixes foot stuck in floor
@@ -52,16 +85,28 @@ class Physics(Component):
             if col:
                 collisions.append(col)
 
+        self._standing_on = collisions
+
         return collisions
 
     @property
     def standing_on_solid(self):
+        if self._standing_on_solid is not UNSET:
+            return self._standing_on_solid
+
         collisions = self.standing_on
         if collisions:
-            return [c for c in collisions if c.physics.solid or c.physics.platform]
+            collisions = [c for c in collisions if c.physics.solid or c.physics.platform]
+
+        self._standing_on_solid = collisions
+
+        return collisions
 
     @property
     def underneath(self):
+        if self._underneath is not UNSET:
+            return self._underneath
+
         host_location = self.host.location
         collision_map = host_location.level.static_collision_map
         x, y = self._to_grid(host_location.x, host_location.y)
@@ -72,16 +117,28 @@ class Physics(Component):
             if col:
                 collisions.append(col)
 
+        self._underneath = collisions
+
         return collisions
 
     @property
     def underneath_solid(self):
+        if self._underneath_solid is not UNSET:
+            return self._underneath_solid
+
         collisions = self.underneath
         if collisions:
-            return [c for c in collisions if c.physics.solid]
+            collisions = [c for c in collisions if c.physics.solid]
+
+        self._underneath_solid = collisions
+
+        return collisions
 
     @property
     def right_collisions(self):
+        if self._right_collisions is not UNSET:
+            return self._right_collisions
+
         host_location = self.host.location
         collision_map = host_location.level.static_collision_map
         x, y = self._to_grid(host_location.x, host_location.y)
@@ -92,16 +149,28 @@ class Physics(Component):
             if col:
                 collisions.append(col)
 
+        self._right_collisions = collisions
+
         return collisions
 
     @property
     def right_collisions_solid(self):
+        if self._right_collisions_solid is not UNSET:
+            return self._right_collisions_solid
+
         collisions = self.right_collisions
         if collisions:
-            return [c for c in collisions if c.physics.solid]
+            collisions = [c for c in collisions if c.physics.solid]
+
+        self._right_collisions_solid = collisions
+
+        return collisions
 
     @property
     def left_collisions(self):
+        if self._left_collisions is not UNSET:
+            return self._left_collisions
+
         host_location = self.host.location
         collision_map = host_location.level.static_collision_map
         x, y = self._to_grid(host_location.x, host_location.y)
@@ -112,16 +181,28 @@ class Physics(Component):
             if col:
                 collisions.append(col)
 
+        self._left_collisions = collisions
+
         return collisions
 
     @property
     def left_collisions_solid(self):
+        if self._left_collisions_solid is not UNSET:
+            return self._left_collisions_solid
+
         collisions = self.left_collisions
         if collisions:
-            return [c for c in collisions if c.physics.solid]
+            collisions = [c for c in collisions if c.physics.solid]
+
+        self._left_collisions_solid = collisions
+
+        return collisions
 
     @property
     def center_collisions(self):
+        if self._center_collisions is not UNSET:
+            return self._center_collisions
+
         host_location = self.host.location
         collision_map = host_location.level.static_collision_map
         x, y = self._to_grid(host_location.x, host_location.y)
@@ -132,18 +213,30 @@ class Physics(Component):
             if col:
                 collisions.append(col)
 
+        self._center_collisions = collisions
+
         return collisions
 
     @property
     def can_climb_up(self):
+        if self._can_climb_up is not UNSET:
+            return self._can_climb_up
+
         collisions = []
         collisions.extend(self.center_collisions)
         collisions.extend(self.standing_on)
         if collisions:
-            return [c for c in collisions if c.physics.climbable]
+            collisions = [c for c in collisions if c.physics.climbable]
+
+        self._can_climb_up = collisions
+
+        return collisions
 
     @property
     def can_climb_down(self):
+        if self._can_climb_down is not UNSET:
+            return self._can_climb_down
+
         collisions = []
         collisions.extend(self.center_collisions)
         collisions.extend(self.standing_on)
@@ -155,7 +248,11 @@ class Physics(Component):
                 if col.physics.climbable:
                     climb_collisions.append(col)
 
-            return climb_collisions
+            collisions = climb_collisions
+
+        self._can_climb_down = collisions
+
+        return collisions
 
     def _to_grid(self, x, y):
         return x / 32, y / 32

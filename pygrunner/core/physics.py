@@ -65,7 +65,7 @@ class PhysicsEngine(object):
                 object_physics.velocity_x = 0
 
         if object_physics.velocity_y > 0:
-            stand_solid_cols =object_physics.standing_on_solid
+            stand_solid_cols = object_physics.standing_on_solid
             if stand_solid_cols and not object_physics.climbing_down:
                 object_physics.velocity_y = 0
                 # TODO CHECK IF INSIDE TILE THEN PUSH UP
@@ -99,7 +99,11 @@ class PhysicsEngine(object):
             if game_object is other_game_object:
                 continue
 
+            if other_game_object in object_intersects:
+                continue
+
             first_rect = game_object.size.rectangle
             second_rect = other_game_object.size.rectangle
             if first_rect.intersects(second_rect):
                 object_intersects.add(other_game_object)
+                other_game_object.physics.intersects.add(game_object)

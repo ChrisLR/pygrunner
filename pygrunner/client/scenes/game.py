@@ -28,6 +28,8 @@ class GameScene(Scene):
                 self.recycle_bin.add(game_object)
             self.camera.update_for_object(game_object)
 
+        # TODO Not all static objects need to be updated
+        # TODO It would give some boost in big maps to only update those that do
         for static_object in level.statics:
             static_object.update(dt)
             self.camera.update_for_object(static_object)

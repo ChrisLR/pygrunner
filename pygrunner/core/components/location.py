@@ -34,6 +34,9 @@ class Location(Component):
             if host.display is not None:
                 host.display.location_changed = True
 
+            if host.physics is not None:
+                host.physics.clear_collision_cache()
+
     def set(self, x=None, y=None):
         if x is None and y is None:
             return
@@ -44,8 +47,11 @@ class Location(Component):
         if y is not None:
             self.y = y
 
-        self.host.size.adjust_rectangles()
-        self.host.display.location_changed = True
+        host = self.host
+        host.size.adjust_rectangles()
+        host.display.location_changed = True
+        if host.physics is not None:
+            host.physics.clear_collision_cache()
 
     def set_grid(self, x=None, y=None):
         if x is None and y is None:
@@ -57,8 +63,11 @@ class Location(Component):
         if y is not None:
             self.y = y * 32
 
-        self.host.size.adjust_rectangles()
-        self.host.display.location_changed = True
+        host = self.host
+        host.size.adjust_rectangles()
+        host.display.location_changed = True
+        if host.physics is not None:
+            host.physics.clear_collision_cache()
 
     def reset(self):
         self.x = 0

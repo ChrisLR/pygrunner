@@ -34,6 +34,7 @@ class Camera(object):
         self.hud.assign(self.ui_batch, self.groups[Layer.foreground])
         self.display = None
         self._initialize_opengl()
+        self.physics = None
 
     def _initialize_opengl(self):
         # Initialize Projection matrix
