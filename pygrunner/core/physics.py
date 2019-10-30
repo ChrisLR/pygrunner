@@ -72,8 +72,8 @@ class PhysicsEngine(object):
                 if any(game_object.size.rectangle.bottom > col.location.y for col in stand_solid_cols):
                     game_object.location.add(0, -1)
         elif object_physics.velocity_y < 0:
-                if object_physics.underneath_solid:
-                    object_physics.velocity_y = 0
+            if object_physics.underneath_solid:
+                object_physics.velocity_y = 0
 
     def _apply_friction_and_gravity(self, object_physics):
         if object_physics.velocity_x != 0:
@@ -94,7 +94,11 @@ class PhysicsEngine(object):
                 object_physics.velocity_y += self.gravity + accel
 
     def _set_object_collisions(self, current_level, game_object):
-        object_intersects = game_object.physics.intersects
+        physics = game_object.physics
+        # TODO This triggers center collisions, a bit off, could be better placed
+        physics.trigger_center_collisions()
+
+        object_intersects = physics.intersects
         for other_game_object in current_level.game_objects:
             if game_object is other_game_object:
                 continue

@@ -84,6 +84,8 @@ class Physics(Component):
             col = collision_map.check_collision(*coord)
             if col:
                 collisions.append(col)
+                if col.triggers:
+                    col.triggers.trigger(self.host, "standing_on")
 
         self._standing_on = collisions
 
@@ -116,6 +118,8 @@ class Physics(Component):
             col = collision_map.check_collision(*coord)
             if col:
                 collisions.append(col)
+                if col.triggers:
+                    col.triggers.trigger(self.host, "underneath")
 
         self._underneath = collisions
 
@@ -148,6 +152,8 @@ class Physics(Component):
             col = collision_map.check_collision(*coord)
             if col:
                 collisions.append(col)
+                if col.triggers:
+                    col.triggers.trigger(self.host, "right")
 
         self._right_collisions = collisions
 
@@ -180,6 +186,8 @@ class Physics(Component):
             col = collision_map.check_collision(*coord)
             if col:
                 collisions.append(col)
+                if col.triggers:
+                    col.triggers.trigger(self.host, "left")
 
         self._left_collisions = collisions
 
@@ -212,6 +220,8 @@ class Physics(Component):
             col = collision_map.check_collision(*coord)
             if col:
                 collisions.append(col)
+                if col.triggers:
+                    col.triggers.trigger(self.host, "center")
 
         self._center_collisions = collisions
 
@@ -253,6 +263,19 @@ class Physics(Component):
         self._can_climb_down = collisions
 
         return collisions
+
+    def trigger_center_collisions(self):
+        host_location = self.host.location
+        collision_map = host_location.level.static_collision_map
+        x, y = self._to_grid(host_location.x, host_location.y)
+        coords = self._coords_from_fract(x, y, True, True)
+        collisions = []
+        for coord in coords:
+            col = collision_map.check_collision(*coord)
+            if col:
+                collisions.append(col)
+                if col.triggers:
+                    col.triggers.trigger(self.host, "center")
 
     def _to_grid(self, x, y):
         return x / 32, y / 32
