@@ -14,13 +14,9 @@ class Size(Component):
         self.half_width = int(round(width / 2))
         self.half_height = int(round(height / 2))
         self.rectangle = geom.Rectangle(0, 0, width, height)
-        self.bottom_rectangle = geom.Rectangle(1, height, width - 2, 1)
-        self.top_rectangle = geom.Rectangle(1, 0, width - 2, 1)
-        self.right_rectangle = geom.Rectangle(width, 1, 1, height - 1)
-        self.left_rectangle = geom.Rectangle(0, 1, 1, height - 1)
-        self.center_rectangle = geom.Rectangle(self.half_width, self.half_height,
-                                               int(round(width / 4)), int(round(height / 4)))
-        self.climb_rect = geom.Rectangle(int(round(width / 4)), 0, int(round(width / 4)), height)
+        self.center_rectangle = geom.Rectangle(
+            self.half_width, self.half_height,
+            int(round(width / 4)), int(round(height / 4)))
 
     def adjust_rectangles(self):
         if self.host:
@@ -30,18 +26,8 @@ class Size(Component):
 
         self.rectangle.x = new_x
         self.rectangle.y = new_y
-        self.bottom_rectangle.x = new_x + 1
-        self.bottom_rectangle.y = new_y + self.height
-        self.top_rectangle.x = new_x + 1
-        self.top_rectangle.y = new_y
-        self.left_rectangle.x = new_x
-        self.left_rectangle.y = new_y + 1
-        self.right_rectangle.x = new_x + self.width
-        self.right_rectangle.y = new_y + 1
         self.center_rectangle.x = new_x + self.half_width
         self.center_rectangle.y = new_y + self.half_height
-        self.climb_rect.x = new_x + int(round(self.width / 4))
-        self.climb_rect.y = new_y
 
     def update(self):
         pass
@@ -53,13 +39,5 @@ class Size(Component):
         self.half_height = 0
         self.rectangle.x = 0
         self.rectangle.y = 0
-        self.bottom_rectangle.x = 0
-        self.bottom_rectangle.y = 0
-        self.top_rectangle.x = 0
-        self.top_rectangle.y = 0
-        self.left_rectangle.x = 0
-        self.left_rectangle.y = 0
-        self.right_rectangle.x = 0
-        self.right_rectangle.y = 0
         self.center_rectangle.x = 0
         self.center_rectangle.y = 0

@@ -28,6 +28,7 @@ class GameScene(Scene):
                 self.recycle_bin.add(game_object)
             self.camera.update_for_object(game_object)
 
+        # TODO Should investigate how to stop updating ALL static objects without preventing it from drawing
         for static_object in level.statics:
             static_object.update(dt)
             self.camera.update_for_object(static_object)

@@ -86,6 +86,7 @@ class ClientGame(object):
         #self.level = TmxLoader(self.factory).load_map('simple')
         #self.level = TmxLoader(self.factory).load_map('quickmountain')
         self.level = TmxLoader(self.factory).load_map('ladderous')
+        #self.level = TmxLoader(self.factory).load_map('phystest')
         bg_color = self.level.background_color
         if bg_color:
             self.set_clear_color(bg_color)
@@ -94,14 +95,14 @@ class ClientGame(object):
         players = []
         actor = self.factory.get_or_create(characters.HumanMale1)
         players.append(actor)
-        actor.location.set(96, 24)
+        actor.location.set_grid(2, 1)
         actor.replace_component(components.PlayerController(1, self.inputs[0]))
         self.level.add_game_object(actor)
-
-        # actor = self.factory.get_or_create(characters.Turtle)
+        #
+        # actor = self.factory.get_or_create(characters.HumanFemale1)
         # players.append(actor)
         # actor.location.set(96, 24)
-        # actor.replace_component(components.PlayerController(2, self.inputs[2]))
+        # actor.replace_component(components.PlayerController(2, self.inputs[1]))
         # self.level.add_game_object(actor)
 
         self.hud = HUD(self, players, self.spriteloader)

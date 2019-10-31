@@ -1,4 +1,5 @@
 import math
+from pygrunner.core import util
 
 
 class Level(object):
@@ -44,14 +45,23 @@ class CollisionMap(object):
     An object containing rectangles of static game objects for collisions
     """
     def __init__(self, width, height):
-        self._collision_map = [[None for _ in range(height)] for _ in range(width)]
         self.width = width
         self.height = height
+        self.width_tiles = int(math.ceil(width / 32)) + 1
+        self.height_tiles = int(math.ceil(height / 32)) + 1
+        self._collision_map = [[None for _ in range(self.height_tiles)] for _ in range(self.width_tiles)]
 
     def add_collider(self, collider, rectangle):
-        for x in range(rectangle.left, rectangle.right):
-            for y in range(rectangle.top, rectangle.bottom):
+        width_tiles = int(rectangle.width / 32)
+        height_tiles = int(rectangle.height / 32)
+        ox = int(rectangle.left / 32)
+        oy = int(rectangle.top / 32)
+        for x in range(ox, ox + width_tiles):
+            for y in range(oy, oy + height_tiles):
                 self._collision_map[x][y] = collider
+
+    def check_collision(self, x, y):
+        return self._collision_map[x][y]
 
     def check_collision_point(self, point):
         return self._collision_map[point.x][point.y]
@@ -71,8 +81,12 @@ class CollisionMap(object):
         return collisions
 
     def remove_collider(self, rectangle):
-        for x in range(rectangle.left, rectangle.right):
-            for y in range(rectangle.top, rectangle.bottom):
+        width_tiles = int(rectangle.width / 32)
+        height_tiles = int(rectangle.height / 32)
+        ox = int(rectangle.left / 32)
+        oy = int(rectangle.top / 32)
+        for x in range(ox, ox + width_tiles):
+            for y in range(oy, oy + height_tiles):
                 self._collision_map[x][y] = None
 
     def get_array(self):
