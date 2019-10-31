@@ -3,7 +3,6 @@ import math
 from pygrunner.core.components import listing
 from pygrunner.core.components.base import Component
 
-
 UNSET = object()
 
 
@@ -68,6 +67,12 @@ class Physics(Component):
         self.triggers = {}
         self.solid = self._initial_solid
         self.climbing_down = False
+
+    def knockback(self, x=0, y=0):
+        if self.climbing or self.climbing_down:
+            return
+        self.velocity_x += x
+        self.velocity_y += y
 
     @property
     def standing_on(self):
@@ -329,8 +334,3 @@ class Physics(Component):
         elif frac >= 0.8:
             return None, low + 1
         return low, low + 1
-    def knockback(self, x=0, y=0):
-        if self.climbing or self.climbing_down:
-            return
-        self.velocity_x += x
-        self.velocity_y += y

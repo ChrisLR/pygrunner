@@ -18,26 +18,28 @@ def get_dumb_keymaps_to(actor, target_point, can_climb=False, can_fly=False, can
             keymaps.append(Keymap.Down)
             return keymaps
 
+    # TODO We must add missing collision code and see if we are
+    # TODO Collisioning bottom_right, bottom_left, etc
     if tile_dist_x > 0:
-        rect = actor.size.bottom_rectangle
+        rect = actor.size.rectangle
         by = snap_grid(rect.bottom) + 1
         bx = snap_grid(rect.right)
         edge = static_map_array[by][bx]
-        if edge:
+        if not edge:
             if can_jump:
-                keymaps.append(Keymap.Jump)
+                keymaps.append(Keymap.B)
             elif stop_at_edge:
                 keymaps.append(Keymap.Right)
         else:
             keymaps.append(Keymap.Right)
     elif tile_dist_x < 0:
-        rect = actor.size.bottom_rectangle
+        rect = actor.size.rectangle
         by = snap_grid(rect.bottom) + 1
         bx = snap_grid(rect.left)
         edge = static_map_array[by][bx]
-        if edge:
+        if not edge:
             if can_jump:
-                keymaps.append(Keymap.Jump)
+                keymaps.append(Keymap.B)
             elif stop_at_edge:
                 keymaps.append(Keymap.Left)
         else:
