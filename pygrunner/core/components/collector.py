@@ -13,12 +13,11 @@ class Collector(Component):
 
     def update(self):
         host_physics = self.host.physics
-        if host_physics and host_physics.collisions:
+        if host_physics:
             for collision in host_physics.intersects:
                 collectible = collision.collectible
                 if collectible and self._can_collect(collectible):
                     self._collect(collision, collectible)
-
 
     def _can_collect(self, collectible):
         return self.include_types is None or collectible.collectible_type in self.include_types

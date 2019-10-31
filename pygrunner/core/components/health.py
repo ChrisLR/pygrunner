@@ -15,7 +15,7 @@ class Health(Component):
         self.revive_timer = -1  # 100
 
     def damage(self, amount):
-        if self.invincible_timer:
+        if self.invincible_timer or self.is_dead:
             return
 
         self.current -= amount
@@ -44,7 +44,7 @@ class Health(Component):
             self.revive_timer = -1
 
     def revive(self, health=None):
-        self.invincible_timer = 25
+        self.invincible_timer = 50
         self.is_dead = False
         self.current = 0
         if health is not None:
