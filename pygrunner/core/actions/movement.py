@@ -125,6 +125,9 @@ class ClimbUp(Action):
 
     def on_start(self):
         actor = self.actor
+        if actor.stance.current.name != 'climbing':
+            actor.location.x = actor.physics.can_climb_up[0].location.x
+
         actor.stance.change_stance('climbing')
         actor.display.play('climb')
         actor.physics.affected_by_gravity = False
@@ -158,6 +161,8 @@ class ClimbDown(Action):
 
     def on_start(self):
         actor = self.actor
+        if actor.stance.current.name != 'climbing':
+            actor.location.x = actor.physics.can_climb_up[0].location.x
         actor.stance.change_stance('climbing')
         actor.display.play('climb')
         actor.physics.climbing_down = True

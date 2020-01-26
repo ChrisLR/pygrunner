@@ -6,44 +6,51 @@ from pygrunner.core.keymap import Keymap
 def get_dumb_keymaps_to(actor, target_point, can_climb=False, can_fly=False, can_jump=False, stop_at_edge=True):
     static_map_array = actor.location.level.static_collision_map.get_array()
 
+    x_delta = target_point.x - actor.location.x
+    abs_x_delta = abs(x_delta)
     tile_dist_y = target_point.y - actor.location.y
-    tile_dist_x = snap_grid(target_point.x - actor.location.x)
+    abs_tile_dist_y = abs(tile_dist_y)
+    tile_dist_x = snap_grid(x_delta)
+    ax, ay = snap_grid(actor.location.x), snap_grid(actor.location.y)
+    physics = actor.physics
 
     keymaps = []
-    if can_climb or can_fly:
-        if tile_dist_y <= -1:
+    if abs_x_delta <= 32 and abs_tile_dist_y > 32 and (can_climb or can_fly):
+        if tile_dist_y <= -4 and physics.can_climb_up:
             keymaps.append(Keymap.Up)
-            return keymaps
-        elif tile_dist_y >= 1:
+        elif tile_dist_y >= 4 and physics.can_climb_down:
             keymaps.append(Keymap.Down)
-            return keymaps
 
     # TODO We must add missing collision code and see if we are
     # TODO Collisioning bottom_right, bottom_left, etc
     if tile_dist_x > 0:
-        rect = actor.size.rectangle
-        by = snap_grid(rect.bottom) + 1
-        bx = snap_grid(rect.right)
-        edge = static_map_array[by][bx]
-        if not edge:
+        if not physics.bottom_right and physics.standing_on_solid:
             if can_jump:
                 keymaps.append(Keymap.B)
-            elif stop_at_edge:
+            if not stop_at_edge:
                 keymaps.append(Keymap.Right)
+        elif physics.right_collisions_solid:
+            if tile_dist_y <= -1 and physics.can_climb_up:
+                keymaps.append(Keymap.Up)
+            elif tile_dist_y >= -1 and physics.can_climb_down:
+                keymaps.append(Keymap.Down)
         else:
             keymaps.append(Keymap.Right)
     elif tile_dist_x < 0:
-        rect = actor.size.rectangle
-        by = snap_grid(rect.bottom) + 1
-        bx = snap_grid(rect.left)
-        edge = static_map_array[by][bx]
-        if not edge:
+        if not physics.bottom_left and physics.standing_on_solid:
             if can_jump:
                 keymaps.append(Keymap.B)
-            elif stop_at_edge:
+            if not stop_at_edge:
                 keymaps.append(Keymap.Left)
+        elif physics.left_collisions_solid:
+            if tile_dist_y <= -1 and physics.can_climb_up:
+                keymaps.append(Keymap.Up)
+            elif tile_dist_y >= -1 and physics.can_climb_down:
+                keymaps.append(Keymap.Down)
         else:
             keymaps.append(Keymap.Left)
+
+
 
     return keymaps
 
