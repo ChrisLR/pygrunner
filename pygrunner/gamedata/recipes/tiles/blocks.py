@@ -1,3 +1,5 @@
+import pyglet
+
 from pygrunner.core import Layer
 from pygrunner.core.spriteinfo import SpriteInfo
 from pygrunner.gamedata.factory import Factory
@@ -33,6 +35,18 @@ class RockyDirtTop(Block):
 class RockyDirtMiddle(Block):
     name = "Rocky Dirt Middle"
     animations = {'idle': [SpriteInfo('packed', 'rocky_dirt_middle', 17, 11)]}
+
+
+@Factory.register
+class SnowyDirtTop(Block):
+    name = "Snowy Dirt Top"
+    animations = {'idle': [SpriteInfo('packed', 'snowy_dirt_top', 18, 10)]}
+
+
+@Factory.register
+class SnowyDirtMiddle(Block):
+    name = "Snowy Dirt Middle"
+    animations = {'idle': [SpriteInfo('packed', 'snowy_dirt_middle', 17, 10)]}
 
 
 @Factory.register
