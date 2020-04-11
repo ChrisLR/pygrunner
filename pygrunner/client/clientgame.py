@@ -9,6 +9,7 @@ from pygrunner.gamedata.objectpool import ObjectPool
 from pygrunner.gamedata.recipes import characters, enemies
 from pygrunner.tmx import TmxLoader
 from pygrunner.client.hud import HUD
+from pygrunner.generation import basic
 
 
 class ClientGame(object):
@@ -83,8 +84,9 @@ class ClientGame(object):
         # TODO This is only in the meantime so we can develop further.
         self.factory.restock_all()
         #self.level = TmxLoader(self.factory).load_map('simple')
-        self.level = TmxLoader(self.factory).load_map('quickmountain')
+        #self.level = TmxLoader(self.factory).load_map('quickmountain')
         #self.level = TmxLoader(self.factory).load_map('phystest')
+        self.level = basic.generate_level(self)
         bg_color = self.level.background_color
         if bg_color:
             self.set_clear_color(bg_color)
@@ -93,7 +95,8 @@ class ClientGame(object):
         players = []
         actor = self.factory.get_or_create(characters.HumanMale1)
         players.append(actor)
-        actor.location.set_grid(2, 1)
+        #actor.location.set_grid(2, 1)
+        actor.location.set_grid(2, 249)
         actor.replace_component(components.PlayerController(1, self.inputs[0]))
         self.level.add_game_object(actor)
         #
