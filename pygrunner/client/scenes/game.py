@@ -1,5 +1,7 @@
-from pygrunner.client.scenes.base import Scene
+import pyglet
+
 from pygrunner.client.camera import Camera
+from pygrunner.client.scenes.base import Scene
 from pygrunner.core import components, physics
 
 
@@ -28,8 +30,25 @@ class GameScene(Scene):
                 self.recycle_bin.add(game_object)
             self.camera.update_for_object(game_object)
 
-        # TODO Should investigate how to stop updating ALL static objects without preventing it from drawing
-        for static_object in level.statics:
+        # TODO This is supposed to prevent updating tiles that are not on screen
+        camera_rectangle = self.camera.size.rectangle
+        camera_left = int(camera_rectangle.left / 32)
+        camera_right = int(camera_rectangle.right / 32)
+        camera_top = int(camera_rectangle.top / 32)
+        camera_bottom = int(camera_rectangle.bottom / 32)
+        if camera_left < 0:
+            camera_left = 0
+
+        if camera_top < 0:
+            camera_bottom = 0
+
+        columns = level.static_collision_map._collision_map[camera_left:camera_right]
+        statics = [static for column in columns for static in column[camera_top:camera_bottom]]
+        #print(f"{len(statics)} statics updated")
+        for static_object in statics:
+            if static_object is None:
+                continue
+
             static_object.update(dt)
             self.camera.update_for_object(static_object)
         self.camera.update()
