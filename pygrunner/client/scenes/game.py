@@ -17,6 +17,7 @@ class GameScene(Scene):
         self.camera = Camera(camera_location, components.Size(self.window.height + 64, self.window.width + 64), game)
         self.camera.follow(self.game.level.game_objects[-1])
         self.physics_engine = physics.PhysicsEngine(0.01, 0.75, 0.9)
+        self._previous_statics = set()
 
     def on_draw(self):
         self.camera.draw()
@@ -29,28 +30,7 @@ class GameScene(Scene):
             if game_object.recycle:
                 self.recycle_bin.add(game_object)
             self.camera.update_for_object(game_object)
-
-        # TODO This is supposed to prevent updating tiles that are not on screen
-        camera_rectangle = self.camera.size.rectangle
-        camera_left = int(camera_rectangle.left / 32)
-        camera_right = int(camera_rectangle.right / 32)
-        camera_top = int(camera_rectangle.top / 32)
-        camera_bottom = int(camera_rectangle.bottom / 32)
-        if camera_left < 0:
-            camera_left = 0
-
-        if camera_top < 0:
-            camera_bottom = 0
-
-        columns = level.static_collision_map._collision_map[camera_left:camera_right]
-        statics = [static for column in columns for static in column[camera_top:camera_bottom]]
-        #print(f"{len(statics)} statics updated")
-        for static_object in statics:
-            if static_object is None:
-                continue
-
-            static_object.update(dt)
-            self.camera.update_for_object(static_object)
+        self._update_static(dt, level)
         self.camera.update()
 
         if self.recycle_bin:
@@ -62,4 +42,49 @@ class GameScene(Scene):
     def handle_keymap_input(self, keymap_input):
         pass
 
+    def _update_static(self, dt, level):
+        # TODO Currently statics being drawn from the map no longer allows drawing what is underneath
+        # TODO We could store multiple statics in a single position but it would complicate physics.
+        # TODO Alternatively we could store multiple arrays for each "tile layer"
+        # TODO Finally we could instead divide the map into chunks and use each chunk of statics instead
+        # TODO Means we can store all necessary statics and simply iterate through them no matter the location
+        collision_map = level.static_collision_map._collision_map
+        max_right = len(collision_map)
+        max_bottom = len(collision_map[0])
 
+        camera_rectangle = self.camera.size.rectangle
+        camera_left = int(camera_rectangle.left / 32)
+        camera_right = int(camera_rectangle.right / 32)
+        if camera_left < 0:
+            camera_left = 0
+        if camera_right >= max_right:
+            camera_right = max_right - 1
+
+        # The Top and Bottom of the camera are reversed on purpose
+        camera_top = int((level.height - camera_rectangle.bottom) / 32)
+        camera_bottom = int((level.height - camera_rectangle.top) / 32) + 2
+        if camera_top < 0:
+            camera_top = 0
+        if camera_bottom >= max_bottom:
+            camera_bottom = max_bottom - 1
+
+        # Used to debug
+        # print(f'Showing from {camera_left} to {camera_right} and {camera_top} to {camera_bottom}')
+
+        columns = collision_map[camera_left:camera_right]
+        statics = [static for column in columns for static in column[camera_top:camera_bottom]]
+        new_statics = set(statics)
+        unclean_statics = self._previous_statics.difference(new_statics)
+        for static_object in unclean_statics:
+            if static_object is not None and static_object.display is not None and static_object.display.sprite is not None:
+                static_object.display.sprite.visible = False
+
+        self._previous_statics = new_statics
+        for static_object in statics:
+            if static_object is None:
+                continue
+
+            if static_object is not None and static_object.display is not None and static_object.display.sprite is not None:
+                static_object.display.sprite.visible = True
+            static_object.update(dt)
+            self.camera.update_for_object(static_object)

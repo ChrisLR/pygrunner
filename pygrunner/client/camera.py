@@ -3,6 +3,7 @@ from pyglet import gl
 
 from pygrunner.core import util
 from pygrunner.core.layers import Layer
+from pyglet.window import FPSDisplay
 
 
 class Camera(object):
@@ -35,6 +36,7 @@ class Camera(object):
         self.display = None
         self._initialize_opengl()
         self.physics = None
+        self._fps_display = FPSDisplay(self.game.window)
 
     def _initialize_opengl(self):
         # Initialize Projection matrix
@@ -78,6 +80,7 @@ class Camera(object):
         gl.glOrtho(0, rectangle.width, 0, rectangle.height, -1, 1)
         self.ui_batch.draw()
         gl.glPopMatrix()
+        self._fps_display.draw()
 
     def follow(self, game_object):
         self._follow = game_object
