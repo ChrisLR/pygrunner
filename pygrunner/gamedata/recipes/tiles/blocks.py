@@ -26,6 +26,30 @@ class RedBlockMiddle(Block):
 
 
 @Factory.register
+class BlueBlockTop(Block):
+    name = "Blue Block Top"
+    animations = {'idle': [SpriteInfo('packed', 'blue_block_top', 18, 1)]}
+
+
+@Factory.register
+class BlueBlockMiddle(Block):
+    name = "Blue Block Middle"
+    animations = {'idle': [SpriteInfo('packed', 'blue_block_middle', 17, 1)]}
+
+
+@Factory.register
+class BlackBlockTop(Block):
+    name = "Black Block Top"
+    animations = {'idle': [SpriteInfo('packed', 'black_block_top', 18, 1)]}
+
+
+@Factory.register
+class BlackBlockMiddle(Block):
+    name = "Black Block Middle"
+    animations = {'idle': [SpriteInfo('packed', 'black_block_middle', 17, 1)]}
+
+
+@Factory.register
 class RockyDirtTop(Block):
     name = "Rocky Dirt Top"
     animations = {'idle': [SpriteInfo('packed', 'rocky_dirt_top', 18, 11)]}

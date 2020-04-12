@@ -27,6 +27,22 @@ class Level(object):
         self.static_collision_map.add_collider(static_object, rectangle)
         static_object.location.level = self
 
+    def replace_static(self, new_static_object):
+        new_grid_point = new_static_object.location.grid_point
+
+        def _has_same_grid(old_static_object):
+            old_point = old_static_object.location.grid_point
+            if old_point.x == new_grid_point.x and old_point.y == new_grid_point.y:
+                return True
+            return False
+
+        swap_out = filter(_has_same_grid, (static for static in self.statics))
+        for swap_obj in swap_out:
+            self.statics.remove(swap_obj)
+        self.add_static(new_static_object)
+
+
+
     def set_background_image(self, image, offset):
         self.background_image = image
         self.background_image_offset = offset

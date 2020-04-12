@@ -15,7 +15,7 @@ class Location(Component):
 
     @property
     def grid_point(self):
-        return geom.Point(self.grid_x, self.grid_y)
+        return geom.Point(int(self.x / 32), int(self.y / 32))
 
     @property
     def point(self):

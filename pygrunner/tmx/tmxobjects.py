@@ -62,7 +62,9 @@ class TmxMap(object):
     @classmethod
     def _handle_xml_tileset(cls, child, tilesets):
         first_gid = int(child.attrib.get('firstgid'))
-        tileset_source = "tmx\\" + child.attrib.get('source')
+        import os
+        _, file_name = os.path.split(child.attrib.get('source'))
+        tileset_source = "tmx\\" + file_name
         tmx_tileset = TmxTileset.from_xml(tileset_source)
         tmx_tileset.first_gid = first_gid
         tilesets.append(tmx_tileset)
