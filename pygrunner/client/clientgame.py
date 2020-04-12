@@ -96,7 +96,7 @@ class ClientGame(object):
         actor = self.factory.get_or_create(characters.HumanMale1)
         players.append(actor)
         #actor.location.set_grid(2, 1)
-        actor.location.set_grid(2, 249)
+        actor.location.set_grid(2, 1)
         actor.replace_component(components.PlayerController(1, self.inputs[0]))
         self.level.add_game_object(actor)
         #

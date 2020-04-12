@@ -3,8 +3,8 @@ from pygrunner.gamedata.recipes.tiles.blocks import SnowyDirtTop, SnowyDirtMiddl
 
 
 def generate_level(game):
-    width = 16000
-    height = 16000
+    width = 10240
+    height = 1728
     level = Level("Test1", width, height)
     factory = game.factory
     # Generate Top Snow
@@ -17,3 +17,15 @@ def generate_level(game):
             level.add_static(tile)
 
     return level
+
+
+class ChunkProxy(object):
+    def __init__(self, chunk, rectangle):
+        self.chunk = chunk
+        self.rectangle = rectangle
+
+    def load(self):
+        pass
+
+    def unload(self):
+        pass

@@ -2,7 +2,7 @@ import pyglet
 
 from pygrunner.client.camera import Camera
 from pygrunner.client.scenes.base import Scene
-from pygrunner.core import components, physics
+from pygrunner.core import components, geom, physics
 
 
 class GameScene(Scene):
@@ -15,6 +15,7 @@ class GameScene(Scene):
         level = self.game.level
         camera_location = components.Location(0, level.height, self.game.level)
         self.camera = Camera(camera_location, components.Size(self.window.height + 64, self.window.width + 64), game)
+        print((self.camera.size.height, self.camera.size.width))
         self.camera.follow(self.game.level.game_objects[-1])
         self.physics_engine = physics.PhysicsEngine(0.01, 0.75, 0.9)
         self._previous_statics = set()
@@ -30,7 +31,7 @@ class GameScene(Scene):
             if game_object.recycle:
                 self.recycle_bin.add(game_object)
             self.camera.update_for_object(game_object)
-        self._update_static(dt, level)
+        self._update_static_all(dt, level)
         self.camera.update()
 
         if self.recycle_bin:
@@ -42,7 +43,23 @@ class GameScene(Scene):
     def handle_keymap_input(self, keymap_input):
         pass
 
-    def _update_static(self, dt, level):
+    def _update_static_all(self, dt, level):
+        camera_rect = self.camera.size.rectangle
+        camera_y_offset = level.height - camera_rect.y - camera_rect.height + 64
+        camera_rect = geom.Rectangle(camera_rect.x, camera_y_offset, camera_rect.width, camera_rect.height)
+
+        for static_object in level.statics:
+            static_object_sprite = static_object.display.sprite
+            if camera_rect.intersects(static_object.size.rectangle):
+                static_object.update(dt)
+                self.camera.update_for_object(static_object)
+                if static_object_sprite is not None and static_object_sprite.visible is False:
+                    static_object_sprite.visible = True
+            else:
+                if static_object_sprite is not None and static_object_sprite.visible is True:
+                    static_object_sprite.visible = False
+
+    def _update_static_chunk(self, dt, level):
         # TODO Currently statics being drawn from the map no longer allows drawing what is underneath
         # TODO We could store multiple statics in a single position but it would complicate physics.
         # TODO Alternatively we could store multiple arrays for each "tile layer"
