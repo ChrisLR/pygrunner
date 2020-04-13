@@ -18,6 +18,9 @@ class Stance(object):
     def start_or_continue(self, action_type):
         health = self.actor.health
         if health and health.is_dead:
+            if self.executing_action:
+                self.executing_action.on_stop()
+                self.executing_action = None
             self.actor.stance.change_stance('dead')
             return
 
@@ -109,6 +112,7 @@ class Climbing(Stance):
     name = "climbing"
 
     def do_keymaps(self, keymaps):
+        self.actor.physics.climbing = True
         if Keymap.Up in keymaps:
             self.start_or_continue(actions.ClimbUp)
         elif Keymap.Down in keymaps:
@@ -129,6 +133,7 @@ class Climbing(Stance):
                 self.executing_action = None
             self.actor.stance.change_stance('idle')
             self.actor.physics.affected_by_gravity = True
+            self.actor.physics.climbing = False
 
 
 class Punching(Stance):
@@ -160,6 +165,8 @@ class Flying(Idle):
         if not keymaps:
             self.actor.physics.velocity_x /= 1.2
             self.continue_current_action(stop_continuous=True)
+            self.actor.physics.velocity_y = 0
+
             return
 
         if Keymap.A in keymaps:

@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import math
+from pygrunner.core import util
 
 
 class Rectangle(object):
@@ -42,3 +43,12 @@ class Point:
 
     def distance_to(self, point):
         return round(math.sqrt((self.x - point.x) ** 2 + (self.y - point.y) ** 2))
+
+    def direction_to(self, point):
+        dx = util.sign(point.x - self.x)
+        dy = util.sign(point.y - self.y)
+
+        return Point(dx, dy)
+
+    def point_distance_to(self, point):
+        return Point(round(math.sqrt((self.x - point.x) ** 2)), round(math.sqrt((self.y - point.y) ** 2)))

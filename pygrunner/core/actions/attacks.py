@@ -27,6 +27,9 @@ class Punch(Action):
                 if target.size.center_rectangle.right <= actor_rectangle.left:
                     continue
             target_health = target.health
+            if target_health is None:
+                continue
+
             target_invincible = target_health.is_invincible if target_health else False
             target_is_dead = target_health.is_dead if target_health else False
             if target_health and not target_is_dead:
@@ -35,8 +38,9 @@ class Punch(Action):
 
             if not target_is_dead and not target_invincible:
                 # TODO Knockback force must vary
-                target.physics.velocity_y = -4
-                target.physics.velocity_x = util.sign(target.location.x - self.actor.location.x) * 4
+                ky = -4
+                kx = util.sign(target.location.x - self.actor.location.x) * 4
+                target.physics.knockback(kx, ky)
 
     def on_start(self):
         actor = self.actor
@@ -65,6 +69,7 @@ class Swoop(Action):
         return True
 
     def execute(self):
+        # TODO This has copypasta, remedy this
         self.updates += 1
         # TODO This must take factions into account
         facing_left = self.actor.flipped
@@ -78,6 +83,8 @@ class Swoop(Action):
                 if target.size.center_rectangle.right <= actor_rectangle.left:
                     continue
             target_health = target.health
+            if target_health is None:
+                continue
             target_invincible = target_health.is_invincible if target_health else False
             target_is_dead = target_health.is_dead if target_health else False
             if target_health and not target_is_dead:
@@ -86,8 +93,9 @@ class Swoop(Action):
 
             if not target_is_dead and not target_invincible:
                 # TODO Knockback force must vary
-                target.physics.velocity_y = -4
-                target.physics.velocity_x = util.sign(target.location.x - self.actor.location.x) * 4
+                ky = -4
+                kx = util.sign(target.location.x - self.actor.location.x) * 4
+                target.physics.knockback(kx, ky)
 
     def on_start(self):
         actor = self.actor

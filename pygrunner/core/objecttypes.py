@@ -7,13 +7,14 @@ class GameObject(ComponentHolder):
 
     This object has at a minimum a display, location, physics and size
     """
-    def __init__(self, name, display, location, physics, size, recipe=None):
+    def __init__(self, name, display, location, physics, size, recipe=None, game=None):
         super().__init__()
         self.name = name
         self.add_components((display, location, size, physics))
         self.flipped = False
         self.recipe = recipe
         self.recycle = False
+        self.game = game
 
 
 class StaticObject(GameObject):
@@ -24,8 +25,9 @@ class StaticObject(GameObject):
     at the cost of a more intensive move cost.
     """
 
-    def __init__(self, name, display, location, physics, size, recipe=None):
+    def __init__(self, name, display, location, physics, size, recipe=None, game=None):
         super().__init__(name, display, location, physics, size, recipe)
+        self.game = game
 
 
 class Actor(GameObject):

@@ -43,13 +43,15 @@ class KillTouch(Component):
         if not rect_name == self.zone:
             return
 
+        health = game_object.health
         if self.knockback:
-            if not game_object.health.is_invincible:
+            if health is not None and not health.is_invincible:
                 game_object.physics.velocity_y = -16
                 game_object.physics.velocity_x = util.sign(
                     game_object.location.x - self.host.location.x) * 4
 
-        game_object.health.damage(self.damage)
+        if health is not None:
+            game_object.health.damage(self.damage)
 
         self.triggered = True
 
