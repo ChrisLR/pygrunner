@@ -19,8 +19,9 @@ class ClientGame(object):
         self.window = None
         self.spriteloader = SpriteLoader()
         self.spriteloader.load_spritesheets(("packed.png",))
-        self.factory = Factory(self.spriteloader, ObjectPool())
+        self.factory = Factory(self.spriteloader, ObjectPool(), self)
         self.hud = None
+        self.players = []
         # DEBUG
         # self.iteration = 0
 
@@ -85,6 +86,7 @@ class ClientGame(object):
         self.factory.restock_all()
         #self.level = TmxLoader(self.factory).load_map('simple')
         #self.level = TmxLoader(self.factory).load_map('quickmountain')
+        self.level = TmxLoader(self.factory).load_map('ladderous')
         #self.level = TmxLoader(self.factory).load_map('phystest')
         self.level = basic.generate_level(self)
         bg_color = self.level.background_color
@@ -107,5 +109,8 @@ class ClientGame(object):
         # self.level.add_game_object(actor)
 
         self.hud = HUD(self, players, self.spriteloader)
+        self.players = players
+
+
 
 

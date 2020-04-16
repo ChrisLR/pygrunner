@@ -3,7 +3,6 @@ import math
 from pygrunner.core.components import listing
 from pygrunner.core.components.base import Component
 
-
 UNSET = object()
 
 
@@ -26,6 +25,7 @@ class Physics(Component):
         self.platform = platform
         self.climbable = climbable
         self.climbables = None
+        self.climbing = False
         self.climbing_down = False
         self.affected_by_gravity = True
         self.affected_by_velocity = True
@@ -60,6 +60,10 @@ class Physics(Component):
         self._center_collisions = UNSET
         self._can_climb_up = UNSET
         self._can_climb_down = UNSET
+        self._bottom_right = UNSET
+        self._bottom_left = UNSET
+        self._top_right = UNSET
+        self._top_left = UNSET
 
     def reset(self):
         self.velocity_x = 0
@@ -67,6 +71,92 @@ class Physics(Component):
         self.triggers = {}
         self.solid = self._initial_solid
         self.climbing_down = False
+
+    def knockback(self, x=0, y=0):
+        if self.climbing or self.climbing_down:
+            return
+        self.velocity_x += x
+        self.velocity_y += y
+
+    @property
+    def top_left(self):
+        if self._top_left is not UNSET:
+            return self._top_left
+
+        host_location = self.host.location
+        collision_map = host_location.level.static_collision_map
+        x, y = self._to_grid(host_location.x, host_location.y)
+        coords = self._coords_from_fract(x - 1, y, fract_x=True)
+        collisions = []
+        for coord in coords:
+            col = collision_map.check_collision(*coord)
+            if col:
+                collisions.append(col)
+
+        self._top_left = collisions
+
+        return collisions
+
+    @property
+    def top_right(self):
+        if self._top_right is not UNSET:
+            return self._top_right
+
+        host_location = self.host.location
+        collision_map = host_location.level.static_collision_map
+        x, y = self._to_grid(host_location.x, host_location.y)
+        coords = self._coords_from_fract(x + 1, y, fract_x=True)
+        collisions = []
+        for coord in coords:
+            col = collision_map.check_collision(*coord)
+            if col:
+                collisions.append(col)
+
+        self._top_right = collisions
+
+        return collisions
+
+    @property
+    def bottom_left(self):
+        if self._bottom_left is not UNSET:
+            return self._bottom_left
+
+        host_location = self.host.location
+        collision_map = host_location.level.static_collision_map
+        # TODO Adding +1 here fixes foot stuck in floor
+        # TODO So this hack is left here while we find out why
+        x, y = self._to_grid(host_location.x - 1, host_location.y + 1)
+        coords = self._coords_from_fract(x, y, fract_x=True, y_round_func=math.ceil)
+        collisions = []
+        for coord in coords:
+            col = collision_map.check_collision(*coord)
+            if col:
+                collisions.append(col)
+
+        self._bottom_left = collisions
+
+        return collisions
+
+    @property
+    def bottom_right(self):
+        if self._bottom_right is not UNSET:
+            return self._bottom_right
+
+        host_location = self.host.location
+        collision_map = host_location.level.static_collision_map
+        # TODO Adding +1 here fixes foot stuck in floor
+        # TODO So this hack is left here while we find out why
+        x, y = self._to_grid(host_location.x + 1, host_location.y + 1)
+        coords = self._coords_from_fract(x, y, fract_x=True, y_round_func=math.ceil)
+        collisions = []
+        for coord in coords:
+            col = collision_map.check_collision(*coord)
+            if col:
+                collisions.append(col)
+
+        self._bottom_right = collisions
+
+        return collisions
 
     @property
     def standing_on(self):

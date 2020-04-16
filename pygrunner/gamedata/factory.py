@@ -5,9 +5,10 @@ class Factory(object):
     """
     known_recipes = {}
 
-    def __init__(self, sprite_loader, object_pool):
+    def __init__(self, sprite_loader, object_pool, game=None):
         self.sprite_loader = sprite_loader
         self.object_pool = object_pool
+        self.game = game
 
     def destroy(self, game_object):
         self.object_pool.refund(game_object)
@@ -20,6 +21,8 @@ class Factory(object):
 
         if custom_properties is not None:
             recipe.modify(game_object, custom_properties)
+
+        game_object.game = self.game
 
         return game_object
 

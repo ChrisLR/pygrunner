@@ -104,3 +104,6 @@ class CollisionMap(object):
         for x in range(ox, ox + width_tiles):
             for y in range(oy, oy + height_tiles):
                 self._collision_map[x][y] = None
+
+    def get_array(self):
+        return self._collision_map

@@ -36,3 +36,27 @@ class GreenZombie(Enemy):
         actor.controller.ai = ZombieAI(actor)
 
         return actor
+
+
+@Factory.register
+class GreenOrc(Enemy):
+    name = "Green Orc"
+    move_speed = 4
+    jump_height = 20
+    animations = {
+        'idle': [SpriteInfo('packed', 'green_orc_idle_0', 30, 0)],
+        'run': [
+            SpriteInfo('packed', 'green_orc_run_0', 30, 0),
+            SpriteInfo('packed', 'green_orc_run_1', 30, 1),
+        ],
+        'climb':[
+            SpriteInfo('packed', 'green_orc_climb_0', 30, 3),
+            SpriteInfo('packed', 'green_orc_climb_1', 30, 3, True),
+        ],
+        'punch': [
+            SpriteInfo('packed', 'green_orc_punch_0', 30, 2),
+            SpriteInfo('packed', 'green_orc_punch_1', 30, 4),
+            SpriteInfo('packed', 'green_orc_punch_1', 30, 4),
+        ],
+        'dead': [SpriteInfo('packed', 'green_orc_dead_0', 30, 5)],
+    }

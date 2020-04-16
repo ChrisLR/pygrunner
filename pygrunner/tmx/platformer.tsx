@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.2" tiledversion="1.2.2" name="platformer" tilewidth="32" tileheight="32" tilecount="1271" columns="41">
  <image source="../client/graphics/sidescroller/packed.png" width="1312" height="992"/>
+ <tile id="0" type="Green Orc"/>
  <tile id="82" type="Green Zombie"/>
  <tile id="154" type="Yellow Jump Pad"/>
  <tile id="155" type="Horizontal Yellow Jump Pad"/>
@@ -35,4 +36,5 @@
  <tile id="913" type="Rocky Dirt Middle Shadow"/>
  <tile id="915" type="Old Bridge Middle Shadow"/>
  <tile id="932" type="Brown Spikes Bottom"/>
+ <tile id="1246" type="Turtle"/>
 </tileset>
