@@ -8,3 +8,4 @@ class Keymap(Enum):
     Right = auto()
     A = auto()
     B = auto()
+    C = auto()
