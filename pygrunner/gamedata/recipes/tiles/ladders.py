@@ -30,6 +30,12 @@ class RedLadder(Ladder):
 
 
 @Factory.register
+class WhiteLadder(Ladder):
+    name = "White Ladder"
+    animations = {'idle': [SpriteInfo('packed', 'white_ladder', 21, 18)]}
+
+
+@Factory.register
 class BrownLadder(Ladder):
     name = "Brown Ladder"
     animations = {'idle': [SpriteInfo('packed', 'brown_ladder', 21, 20)]}

@@ -3,6 +3,7 @@
  <image source="../client/graphics/sidescroller/packed.png" width="1312" height="992"/>
  <tile id="0" type="Green Orc"/>
  <tile id="26" type="Gray Round Door"/>
+ <tile id="53" type="Human Female 1"/>
  <tile id="82" type="Green Zombie"/>
  <tile id="129" type="Blue Ghost"/>
  <tile id="130" type="Blue Ghost"/>
@@ -15,6 +16,7 @@
  <tile id="305" type="Brown Chest"/>
  <tile id="306" type="Silver Chest"/>
  <tile id="307" type="Yellow Chest"/>
+ <tile id="387" type="White Ladder"/>
  <tile id="388" type="Red Ladder"/>
  <tile id="389" type="Brown Ladder"/>
  <tile id="391" type="Rope Ladder"/>

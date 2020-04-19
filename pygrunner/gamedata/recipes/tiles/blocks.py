@@ -1,5 +1,3 @@
-import pyglet
-
 from pygrunner.core import Layer
 from pygrunner.core.spriteinfo import SpriteInfo
 from pygrunner.gamedata.factory import Factory

@@ -33,3 +33,32 @@ class BlackBat(Enemy):
         actor.controller.ai = FlyingAI(actor)
 
         return actor
+
+
+@Factory.register
+class BlueGhost(Enemy):
+    name = "Blue Ghost"
+    move_speed = 4
+    jump_height = 20
+    start_stance = stances.Flying
+    stances = [stances.Flying, stances.Punching, stances.Dead]
+    animations = {
+        'idle': [
+            SpriteInfo('packed', 'blue_ghost_idle_0', 27, 6),
+        ],
+        'fly': [
+            SpriteInfo('packed', 'blue_ghost_idle_0', 27, 7),
+            SpriteInfo('packed', 'blue_ghost_idle_1', 27, 8),
+        ],
+        'dead': [SpriteInfo('packed', 'blue_ghost_dead_0', 27, 11)],
+    }
+
+    @classmethod
+    def create(cls, sprite_loader):
+        """
+        Creates a game object and assigns proper components
+        """
+        actor = super().create(sprite_loader)
+        actor.controller.ai = FlyingAI(actor)
+
+        return actor

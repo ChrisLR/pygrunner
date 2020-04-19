@@ -23,4 +23,5 @@ prefabs = [
     TmxPrefab("winter_house_grounded", anchor_type=AnchorType.Grounded),
     TmxPrefab("winter_ravine_underground", anchor_type=AnchorType.Underground),
     TmxPrefab("winter_stretch_grounded", anchor_type=AnchorType.Grounded),
+    TmxPrefab("house1", anchor_type=AnchorType.Grounded),
 ]

@@ -26,7 +26,7 @@ def prefab_based(game):
     factory = game.factory
     loader = tmx.TmxLoader(factory)
 
-    prefabs = [prefab.loading_set(loader.load_map(prefab.name)) for prefab in tmxprefabs.prefabs]
+    prefabs = [prefab.loading_set(loader.load_map(f"prefabs\\{prefab.name}")) for prefab in tmxprefabs.prefabs]
     random.shuffle(prefabs)
     total_width = sum((prefab.level.width for prefab in prefabs))
     total_height = max((prefab.level.height for prefab in prefabs)) * 4

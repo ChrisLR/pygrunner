@@ -26,7 +26,7 @@ class HumanMale1(Character):
 
 @Factory.register
 class HumanFemale1(Character):
-    name = "Human Male 1"
+    name = "Human Female 1"
     animations = {
         'idle': [SpriteInfo('packed', 'human_female_1_idle_0', 29, 12)],
         'run': [

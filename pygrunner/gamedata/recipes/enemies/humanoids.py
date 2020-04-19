@@ -60,3 +60,51 @@ class GreenOrc(Enemy):
         ],
         'dead': [SpriteInfo('packed', 'green_orc_dead_0', 30, 5)],
     }
+
+
+@Factory.register
+class BlueOrc(Enemy):
+    name = "Blue Orc"
+    move_speed = 4
+    jump_height = 20
+    animations = {
+        'idle': [SpriteInfo('packed', 'blue_orc_idle_0', 20, 11)],
+        'run': [
+            SpriteInfo('packed', 'blue_orc_run_0', 20, 11),
+            SpriteInfo('packed', 'blue_orc_run_1', 20, 12),
+        ],
+        'climb':[
+            SpriteInfo('packed', 'blue_orc_climb_0', 20, 14),
+            SpriteInfo('packed', 'blue_orc_climb_1', 20, 14, True),
+        ],
+        'punch': [
+            SpriteInfo('packed', 'blue_orc_punch_0', 20, 13),
+            SpriteInfo('packed', 'blue_orc_punch_1', 20, 15),
+            SpriteInfo('packed', 'blue_orc_punch_1', 20, 15),
+        ],
+        'dead': [SpriteInfo('packed', 'blue_orc_dead_0', 20, 16)],
+    }
+
+
+@Factory.register
+class BlueDemon(Enemy):
+    name = "Blue Demon"
+    move_speed = 4
+    jump_height = 20
+    animations = {
+        'idle': [SpriteInfo('packed', 'blue_demon_idle_0', 23, 11)],
+        'run': [
+            SpriteInfo('packed', 'blue_demon_run_0', 23, 11),
+            SpriteInfo('packed', 'blue_demon_run_1', 23, 12),
+        ],
+        'climb':[
+            SpriteInfo('packed', 'blue_demon_climb_0', 23, 14),
+            SpriteInfo('packed', 'blue_demon_climb_1', 23, 14, True),
+        ],
+        'punch': [
+            SpriteInfo('packed', 'blue_demon_punch_0', 23, 13),
+            SpriteInfo('packed', 'blue_demon_punch_1', 23, 15),
+            SpriteInfo('packed', 'blue_demon_punch_1', 23, 15),
+        ],
+        'dead': [SpriteInfo('packed', 'blue_demon_dead_0', 23, 16)],
+    }
