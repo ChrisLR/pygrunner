@@ -59,6 +59,18 @@ class BlackBlockMiddleShadow(BlockShadow):
 
 
 @Factory.register
+class YellowBlockTopShadow(BlockShadow):
+    name = "Yellow Block Top Shadow"
+    animations = {'idle': [SpriteInfo('packed', 'Yellow_block_top_shadow', 9, 3)]}
+
+
+@Factory.register
+class YellowBlockMiddleShadow(BlockShadow):
+    name = "Yellow Block Middle Shadow"
+    animations = {'idle': [SpriteInfo('packed', 'Yellow_block_middle_shadow', 8, 3)]}
+
+
+@Factory.register
 class RockyDirtTopShadow(BlockShadow):
     name = "Rocky Dirt Top Shadow"
     animations = {'idle': [SpriteInfo('packed', 'rocky_dirt_top_shadow', 9, 11)]}
@@ -68,6 +80,18 @@ class RockyDirtTopShadow(BlockShadow):
 class RockyDirtMiddleShadow(BlockShadow):
     name = "Rocky Dirt Middle Shadow"
     animations = {'idle': [SpriteInfo('packed', 'rocky_dirt_middle_shadow', 8, 11)]}
+
+
+@Factory.register
+class SnowyDirtTopShadow(BlockShadow):
+    name = "Snowy Dirt Top Shadow"
+    animations = {'idle': [SpriteInfo('packed', 'rocky_dirt_top_shadow', 9, 10)]}
+
+
+@Factory.register
+class SnowyDirtMiddleShadow(BlockShadow):
+    name = "Snowy Dirt Middle Shadow"
+    animations = {'idle': [SpriteInfo('packed', 'rocky_dirt_middle_shadow', 8, 10)]}
 
 
 @Factory.register

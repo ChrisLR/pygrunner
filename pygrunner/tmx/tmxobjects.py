@@ -87,6 +87,7 @@ class TmxMap(object):
                 tileset_tile = current_tileset.id_mapping.get(tile_id - current_tileset.first_gid)
                 if not tileset_tile:
                     _, tileset_tile = cls._handle_flipped(tile_id, properties, current_tileset)
+
                 properties.update(tileset_tile.properties)
                 layer_tile_data.append((tileset_tile.tile_type, properties))
             else:
