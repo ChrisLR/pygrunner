@@ -2,17 +2,24 @@
 <tileset version="1.2" tiledversion="1.3.3" name="platformer" tilewidth="32" tileheight="32" tilecount="1271" columns="41">
  <image source="../client/graphics/sidescroller/packed.png" width="1312" height="992"/>
  <tile id="0" type="Green Orc"/>
+ <tile id="26" type="Gray Round Door"/>
  <tile id="82" type="Green Zombie"/>
+ <tile id="129" type="Blue Ghost"/>
+ <tile id="130" type="Blue Ghost"/>
  <tile id="154" type="Yellow Jump Pad"/>
  <tile id="155" type="Horizontal Yellow Jump Pad"/>
  <tile id="164" type="Black Bat"/>
  <tile id="195" type="Yellow Jump Pad"/>
  <tile id="196" type="Horizontal Yellow Jump Pad"/>
+ <tile id="298" type="Blue Demon"/>
  <tile id="305" type="Brown Chest"/>
+ <tile id="306" type="Silver Chest"/>
+ <tile id="307" type="Yellow Chest"/>
  <tile id="388" type="Red Ladder"/>
  <tile id="389" type="Brown Ladder"/>
  <tile id="391" type="Rope Ladder"/>
  <tile id="394" type="Lava Top"/>
+ <tile id="421" type="Blue Orc"/>
  <tile id="435" type="Lava Middle"/>
  <tile id="492" type="Red Block Top"/>
  <tile id="493" type="Blue Block Top"/>
@@ -44,5 +51,15 @@
  <tile id="913" type="Rocky Dirt Middle Shadow"/>
  <tile id="915" type="Old Bridge Middle Shadow"/>
  <tile id="932" type="Brown Spikes Bottom"/>
+ <tile id="1014" type="Cloud 1 Left"/>
+ <tile id="1015" type="Cloud 1 Middle"/>
+ <tile id="1016" type="Cloud 1 Right"/>
+ <tile id="1017" type="Cloud 3 Left"/>
+ <tile id="1018" type="Cloud 3 Right"/>
+ <tile id="1055" type="Cloud 2 Left"/>
+ <tile id="1056" type="Cloud 2 Middle"/>
+ <tile id="1057" type="Cloud 2 Right"/>
+ <tile id="1058" type="Cloud 4 Left"/>
+ <tile id="1059" type="Cloud 4 Right"/>
  <tile id="1246" type="Turtle"/>
 </tileset>
