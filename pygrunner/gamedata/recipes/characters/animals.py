@@ -1,7 +1,7 @@
 from pyg2d.core.ai.follower import DumbFollowerAI
 from pyg2d.core.spriteinfo import SpriteInfo
 from pyg2d.gamedata import Factory
-from pygrunner.gamedata.recipes.characters.base import Character
+from pyg2d.gamedata.recipes.characters.base import Character
 
 
 @Factory.register

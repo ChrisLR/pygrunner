@@ -1,6 +1,6 @@
 from pyg2d.core.spriteinfo import SpriteInfo
 from pyg2d.gamedata import Factory
-from pygrunner.gamedata.recipes.terrain.base import Terrain
+from pyg2d.gamedata.recipes.terrain.base import Terrain
 
 
 @Factory.register

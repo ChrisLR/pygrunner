@@ -1,7 +1,7 @@
 from pyg2d.core.ai.basic import ZombieAI
 from pyg2d.core.spriteinfo import SpriteInfo
 from pyg2d.gamedata import Factory
-from pygrunner.gamedata.recipes.enemies.base import Enemy
+from pyg2d.gamedata.recipes.enemies.base import Enemy
 
 
 @Factory.register

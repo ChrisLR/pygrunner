@@ -1,7 +1,7 @@
 from pyg2d.core import Layer
 from pyg2d.core.spriteinfo import SpriteInfo
 from pyg2d.gamedata import Factory
-from pygrunner.gamedata.recipes.tiles.base import Tile
+from pyg2d.gamedata.recipes.tiles.base import Tile
 
 
 class Block(Tile):

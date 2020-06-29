@@ -1,6 +1,6 @@
 from pyg2d.core.spriteinfo import SpriteInfo
 from pyg2d.gamedata import Factory
-from pygrunner.gamedata.recipes.collectibles.base import Collectible
+from pyg2d.gamedata.recipes.collectibles.base import Collectible
 
 
 @Factory.register

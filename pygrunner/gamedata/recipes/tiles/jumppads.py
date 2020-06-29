@@ -2,7 +2,7 @@ from pyg2d.core import Layer, objecttypes
 from pyg2d.core import components
 from pyg2d.core.spriteinfo import SpriteInfo
 from pyg2d.gamedata import Factory
-from pygrunner.gamedata.recipes.base import Recipe
+from pyg2d.gamedata.recipes.base import Recipe
 
 
 class JumpPad(Recipe):
