@@ -1,4 +1,4 @@
-from pygrunner.core.geom import Rectangle, Point
+from pyg2d.core.geom import Rectangle, Point
 
 
 def test_intersects_horizontally():

@@ -1,15 +1,12 @@
-from pygrunner.client.clientgame import ClientGame
-from pygrunner.client.scenes.manager import SceneManager
-#import cProfile
-#from pyinstrument import Profiler
+from pyg2d.client import GameManager, GameOptions
+from pyg2d.core.game import GameContext
 
+from pygrunner.gamedata.recipes.characters import humans
 
 if __name__ == '__main__':
-    manager = SceneManager()
-    game = ClientGame(manager)
-    #profiler = Profiler()
-    #profiler.start()
+    options = GameOptions("sprites", "tmx", [humans.HumanMale1])
+    game_context = GameContext(options)
+    game_context.sprite_loader.load_spritesheets(["sidescroller/packed.png"])
+    game = GameManager(game_context)
+    game_context.level_manager.add_level("simple")
     game.start()
-    #profiler.stop()
-    # print(profiler.output_text(unicode=True, color=True))
-    #cProfile.run('game.start()', sort='cumulative')

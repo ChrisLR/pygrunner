@@ -1,3 +1,4 @@
 lxml
 pyglet
 pytest
+pyg2d

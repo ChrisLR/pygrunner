@@ -1,7 +1,7 @@
-from pygrunner.core import stances
-from pygrunner.core.ai.flying import FlyingAI
-from pygrunner.core.spriteinfo import SpriteInfo
-from pygrunner.gamedata.factory import Factory
+from pyg2d.core import stances
+from pyg2d.core.ai.flying import FlyingAI
+from pyg2d.core.spriteinfo import SpriteInfo
+from pyg2d.gamedata import Factory
 from pygrunner.gamedata.recipes.enemies.base import Enemy
 
 

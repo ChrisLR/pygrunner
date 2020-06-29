@@ -1,5 +1,5 @@
-from pygrunner.core import components, Layer
-from pygrunner.core.objecttypes import GameObject
+from pyg2d.core import components, Layer
+from pyg2d.core.objecttypes import GameObject
 from pygrunner.gamedata.recipes.base import Recipe
 
 

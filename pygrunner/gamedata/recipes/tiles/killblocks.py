@@ -1,7 +1,7 @@
-from pygrunner.core import Layer, objecttypes
-from pygrunner.core import components
-from pygrunner.core.spriteinfo import SpriteInfo
-from pygrunner.gamedata.factory import Factory
+from pyg2d.core import Layer, objecttypes
+from pyg2d.core import components
+from pyg2d.core.spriteinfo import SpriteInfo
+from pyg2d.gamedata import Factory
 from pygrunner.gamedata.recipes.base import Recipe
 
 

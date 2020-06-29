@@ -1,5 +1,6 @@
-from pygrunner.core import components, Layer, stances
-from pygrunner.core.objecttypes import Actor
+from pyg2d.core import components, Layer, stances
+from pyg2d.core.objecttypes import Actor
+
 from pygrunner.gamedata.recipes.base import Recipe
 
 
